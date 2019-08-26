@@ -39,4 +39,42 @@ Multithreading descriptions of files and classes --
 								( some minor details need to be changed for compiling) This class has all the generated code for accessing the variables of the
  								designated tree
 
-	histset.c -- 
+	histset.c -- this is the class that houses the physics analysis.  Here all of the threaded objects are created on instantiation, and filled with the function
+				 AnalyzeEntry. The objects are filled with the function Fill which manages the threaded ptrs and bookkeeping for each histogram. When the histograms
+				 are written to file a data tag is appended to every root object name to distinguish identical histograms in different data sets. The tagging and
+				 merging is automatically done by the class (which is made possible my carefully enumerating all of the histograms)
+
+					the input arguemnts for histset.c are:
+
+					--[1] the file tag
+
+
+Instructions for running the parallel template
+	
+	an example of the sequence of input arguments are given in runmyanalysis.sh
+
+ 	to run the template on the t3, simply compile then run the shell script
+		
+			(1) make
+			(2) ./runmyanalysis.sh
+
+	To use the template as a application to a different analysis i.e. different data and trees
+
+			(1) create a data.list which contains absolute paths to your rootfiles
+			(2) add this data.list as an input argument for your runmacro.py
+
+			(3) create your own TSelector from a tree in one of your input files
+					(3a) To create a TSelector open a tree ("mytree") in the ROOT CLI then type mytree->MakeSelector("myselector")
+						*I highly recommend naming the selector "myselector" this is the name hardcoded into the classes includes and makefile
+						*light modifications need to be done to the TSelector to get it to compile
+							-- add using namespace std to of myselector.h 
+							-- at the top of myselector.C add directive #ifndef myselector_cxx
+							-- at the end of myselector.C add directive #endif
+							-- in the class definition of myselector.h remove or comment ClassDef(myselector,0)
+
+			(4) create threaded histograms in histset.c
+			(5) enumerate each threaded histogram 
+			(6) write physics analysis in AnalyzeEntry
+				*highly recommend copying into local ptrs with auto, otherwise code gets very unreadable and errorprone from scope problems
+			(7) compile your changes with the Makefile
+			(8) run multithreaded your analysis with runmacro.py
