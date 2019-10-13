@@ -37,44 +37,28 @@ class histset{
 	//Tag for compiling multiple datasets into same file which share the same plots
 	std::string _tag{}; 
 	//this tag will automatically appended to the variable name in each histogram on write
-
-
-	ROOT::TThreadedObject<TTree>* thdtree{};
-
-	//my local reduced tree variables
-	double MET{};
-	std::vector<double> PTCM{};
-
-
 };
 
 histset::histset(std::string tag = ""){
 	_tag = tag; 
 	
-	 //std::vector<ROOT::TThreadedObject<TH1D>*>  Manager1(numTH1Hist);
-	//TH1Manager=Manager1;
+	 std::vector<ROOT::TThreadedObject<TH1D>*>  Manager1(numTH1Hist);
+	TH1Manager=Manager1;
 
-	 //std::vector<ROOT::TThreadedObject<TH2D>*>  Manager2(numTH2Hist);
-	//TH2Manager=Manager2;
+	 std::vector<ROOT::TThreadedObject<TH2D>*>  Manager2(numTH2Hist);
+	TH2Manager=Manager2;
 
-	//init();
-
-	thdtree = new ROOT::TThreadedObject<TTree>("mytree","reduced tree");
-	TTree* t = thdtree->Get();
-	t->Branch("metbranch", &MET);
-	t->Branch("PTCMbranch", &PTCM);
+	init();
 
 }
 void histset::init(){
 //init TH1D
-/*
 	TH1Manager.at(ind_METHist) = new ROOT::TThreadedObject<TH1D>("METHist", "MET;GeV;Entries per 5 GeV bin", 140, 100, 800);
 	TH1Manager.at(ind_cat0NjetSHist) = new ROOT::TThreadedObject<TH1D>("cat0NjetSHist", "cat0: Number of Sparticle Jets;Njet_S", 21, -0.5, 20.5);
 	TH1Manager.at(ind_cat1NjetSHist) = new ROOT::TThreadedObject<TH1D>("cat1NjetSHist", "cat1: Number of Sparticle Jets;Njet_S", 21, -0.5, 20.5);
 // init TH2D
 	TH2Manager.at(ind_cat0PtcmPtisrDphiCMIHist) = new ROOT::TThreadedObject<TH2D>("cat0PtcmPtisrDphiCMIHist", "cat0: PTCM/PTISR vs dphiCMI ;dphiCMI;PTCM/PTISR", 50, 0, 3.2, 50, 0,2);
 	TH2Manager.at(ind_cat1PtcmPtisrDphiCMIHist) = new ROOT::TThreadedObject<TH2D>("cat1PtcmPtisrDphiCMIHist", "cat1: PTCM/PTISR vs dphiCMI;dphiCMI;PTCM/PTSIR", 50, 0, 3.2,50, 0,2);
-*/
 
 }
 void histset::FillTH1(int index, double x, double w=1){
@@ -90,9 +74,7 @@ void histset::WriteHist(std::string outputfilename, std::string TFileOption){
 
 	TFile* outfile = new TFile(outputfilename.c_str(),TFileOption.c_str());
 
-	auto treemerge = thdtree->Merge();
-	outfile->WriteObject(treemerge, "treename");
-/*
+
 	for(int i=0; i<numTH1Hist; i++){
 		//do a check for entries, merge isnt safe on 0 entry histograms
 		auto hptr = TH1Manager.at(i)->Get();		
@@ -123,21 +105,22 @@ void histset::WriteHist(std::string outputfilename, std::string TFileOption){
 			outfile->WriteObject(h, (_tag+hname).c_str() );
 		}
 	}	
-*/
+
 }
 void histset::AnalyzeEntry(myselector& s){
    	
 	//always make a local copy, if its a value dereference.. if you dont do this scope/dereferencing will get really weird, clunky, and unmanageable
 	//have to auto& or myreader will try to register copy of the readerarray ptr
-	//auto MET = *(s.MET);
+	auto MET = *(s.MET);
+/*
+	auto& PTCM = s.PTCM;
+	auto& PTISR = s.PTISR;
+	auto& dphiCMI = s.dphiCMI;
+	auto& Njet_S = s.Njet_S;
+*/
 
-	//auto& PTCM = s.PTCM;
-
-	MET= *(s.MET);
-	PTCM = s.PTCM;
-	thdtree->Fill();
-/*	FillTH1(ind_METHist, MET);
-
+	FillTH1(ind_METHist, MET);
+/*
 	//loop over cat0 and cat1
 	for(int i=0; i<Njet_S.GetSize(); i++){
 		if(i==0){
@@ -151,8 +134,6 @@ void histset::AnalyzeEntry(myselector& s){
 
 	}
 */
-	
-
 
 }
 #endif
