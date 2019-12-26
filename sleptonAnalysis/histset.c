@@ -19,9 +19,11 @@ class histset{
 	 //  void AnalyzeEntry(mytreevalues& s);
 
 	   //bookeeping enumeration: (if we do this we dont need to worry about hist ptr copies and merging)
-	   enum th1d_index{ind_METHist, ind_cat0NjetSHist, ind_cat1NjetSHist, numTH1Hist};
-	   enum th2d_index{ind_cat0PtcmPtisrDphiCMIHist, ind_cat1PtcmPtisrDphiCMIHist, numTH2Hist};
-
+//	   enum th1d_index{ind_METHist, ind_cat0NjetSHist, ind_cat1NjetSHist, numTH1Hist};
+//	   enum th2d_index{ind_cat0PtcmPtisrDphiCMIHist, ind_cat1PtcmPtisrDphiCMIHist, numTH2Hist};
+	 enum th1d_index{ind_METHist,numTH1Hist};
+	 enum th2d_index{numTH2Hist};
+	
 
 	   // make a big vector and load enumerated histograms onto the vector
 	 std::vector<ROOT::TThreadedObject<TH1D>* >  TH1Manager{};
@@ -54,11 +56,11 @@ histset::histset(std::string tag = ""){
 void histset::init(){
 //init TH1D
 	TH1Manager.at(ind_METHist) = new ROOT::TThreadedObject<TH1D>("METHist", "MET;GeV;Entries per 5 GeV bin", 140, 100, 800);
-	TH1Manager.at(ind_cat0NjetSHist) = new ROOT::TThreadedObject<TH1D>("cat0NjetSHist", "cat0: Number of Sparticle Jets;Njet_S", 21, -0.5, 20.5);
-	TH1Manager.at(ind_cat1NjetSHist) = new ROOT::TThreadedObject<TH1D>("cat1NjetSHist", "cat1: Number of Sparticle Jets;Njet_S", 21, -0.5, 20.5);
+//	TH1Manager.at(ind_cat0NjetSHist) = new ROOT::TThreadedObject<TH1D>("cat0NjetSHist", "cat0: Number of Sparticle Jets;Njet_S", 21, -0.5, 20.5);
+//	TH1Manager.at(ind_cat1NjetSHist) = new ROOT::TThreadedObject<TH1D>("cat1NjetSHist", "cat1: Number of Sparticle Jets;Njet_S", 21, -0.5, 20.5);
 // init TH2D
-	TH2Manager.at(ind_cat0PtcmPtisrDphiCMIHist) = new ROOT::TThreadedObject<TH2D>("cat0PtcmPtisrDphiCMIHist", "cat0: PTCM/PTISR vs dphiCMI ;dphiCMI;PTCM/PTISR", 50, 0, 3.2, 50, 0,2);
-	TH2Manager.at(ind_cat1PtcmPtisrDphiCMIHist) = new ROOT::TThreadedObject<TH2D>("cat1PtcmPtisrDphiCMIHist", "cat1: PTCM/PTISR vs dphiCMI;dphiCMI;PTCM/PTSIR", 50, 0, 3.2,50, 0,2);
+//	TH2Manager.at(ind_cat0PtcmPtisrDphiCMIHist) = new ROOT::TThreadedObject<TH2D>("cat0PtcmPtisrDphiCMIHist", "cat0: PTCM/PTISR vs dphiCMI ;dphiCMI;PTCM/PTISR", 50, 0, 3.2, 50, 0,2);
+//	TH2Manager.at(ind_cat1PtcmPtisrDphiCMIHist) = new ROOT::TThreadedObject<TH2D>("cat1PtcmPtisrDphiCMIHist", "cat1: PTCM/PTISR vs dphiCMI;dphiCMI;PTCM/PTSIR", 50, 0, 3.2,50, 0,2);
 
 }
 void histset::FillTH1(int index, double x, double w=1){
@@ -113,16 +115,16 @@ void histset::AnalyzeEntry(myselector& s){
 	//have to auto& or myreader will try to register copy of the readerarray ptr
 	auto MET = *(s.MET);
 
-	auto& PTCM = s.PTCM;
+/*	auto& PTCM = s.PTCM;
 	auto& PTISR = s.PTISR;
 	auto& dphiCMI = s.dphiCMI;
 	auto& Njet_S = s.Njet_S;
-
+*/
 
 	FillTH1(ind_METHist, MET);
 
 	//loop over cat0 and cat1
-	for(int i=0; i<Njet_S.GetSize(); i++){
+/*	for(int i=0; i<Njet_S.GetSize(); i++){
 		if(i==0){
 			FillTH1(ind_cat0NjetSHist, Njet_S[i] );
 			FillTH2(ind_cat0PtcmPtisrDphiCMIHist,dphiCMI[i], PTCM[i]/PTISR[i]);
@@ -133,7 +135,7 @@ void histset::AnalyzeEntry(myselector& s){
 		}
 
 	}
-
+*/
 
 }
 #endif

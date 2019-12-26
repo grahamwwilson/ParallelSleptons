@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Mon Aug 19 15:37:41 2019 by ROOT version 6.12/07
-// from TTree KUAnalysis/KUAnalysis
-// found on file: /home/t3-ku/crogan/NTUPLES/SUSYNANO/Autum18_102X/ZJetsToNuNu_HT-200To400_13TeV-madgraph_Autumn18_102X.root
+// Thu Dec 26 15:36:12 2019 by ROOT version 6.18/00
+// from TTree SMS_450_50/SMS_450_50
+// found on file: /panfs/pfs.local/work/wilson/gwwilson/SUSYNANO/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X_8_9.root
 //////////////////////////////////////////////////////////
 
 #ifndef myselector_h
@@ -27,6 +27,7 @@ public :
    TTree          *fChain = 0;   //!pointer to the analyzed TTree or TChain
 
    // Readers to access the data (delete the ones you do not need).
+   TTreeReaderValue<Bool_t> event_skipped = {fReader, "event_skipped"};
    TTreeReaderValue<Double_t> weight = {fReader, "weight"};
    TTreeReaderValue<Double_t> MET = {fReader, "MET"};
    TTreeReaderValue<Double_t> MET_phi = {fReader, "MET_phi"};
@@ -42,8 +43,14 @@ public :
    TTreeReaderArray<double> M_lep = {fReader, "M_lep"};
    TTreeReaderArray<int> Charge_lep = {fReader, "Charge_lep"};
    TTreeReaderArray<int> PDGID_lep = {fReader, "PDGID_lep"};
-   TTreeReaderArray<int> RelIso_lep = {fReader, "RelIso_lep"};
-   TTreeReaderArray<int> MiniIso_lep = {fReader, "MiniIso_lep"};
+   TTreeReaderArray<double> RelIso_lep = {fReader, "RelIso_lep"};
+   TTreeReaderArray<double> MiniIso_lep = {fReader, "MiniIso_lep"};
+   TTreeReaderArray<double> Dxy_lep = {fReader, "Dxy_lep"};
+   TTreeReaderArray<double> DxyErr_lep = {fReader, "DxyErr_lep"};
+   TTreeReaderArray<double> Dz_lep = {fReader, "Dz_lep"};
+   TTreeReaderArray<double> DzErr_lep = {fReader, "DzErr_lep"};
+   TTreeReaderArray<double> IP3D_lep = {fReader, "IP3D_lep"};
+   TTreeReaderArray<double> SIP3D_lep = {fReader, "SIP3D_lep"};
    TTreeReaderArray<int> ID_lep = {fReader, "ID_lep"};
    TTreeReaderArray<int> Index_lep = {fReader, "Index_lep"};
    TTreeReaderValue<Int_t> Njet = {fReader, "Njet"};
@@ -53,7 +60,17 @@ public :
    TTreeReaderArray<double> Phi_jet = {fReader, "Phi_jet"};
    TTreeReaderArray<double> M_jet = {fReader, "M_jet"};
    TTreeReaderArray<double> Btag_jet = {fReader, "Btag_jet"};
+   TTreeReaderArray<int> BtagID_jet = {fReader, "BtagID_jet"};
    TTreeReaderArray<double> Flavor_jet = {fReader, "Flavor_jet"};
+   TTreeReaderArray<vector<int>> index_jet_a = {fReader, "index_jet_a"};
+   TTreeReaderArray<vector<int>> index_jet_b = {fReader, "index_jet_b"};
+   TTreeReaderArray<vector<int>> index_jet_ISR = {fReader, "index_jet_ISR"};
+   TTreeReaderArray<vector<int>> index_jet_S = {fReader, "index_jet_S"};
+   TTreeReaderValue<Int_t> NSV = {fReader, "NSV"};
+   TTreeReaderArray<double> PT_SV = {fReader, "PT_SV"};
+   TTreeReaderArray<double> Eta_SV = {fReader, "Eta_SV"};
+   TTreeReaderArray<double> Phi_SV = {fReader, "Phi_SV"};
+   TTreeReaderArray<double> M_SV = {fReader, "M_SV"};
    TTreeReaderValue<Int_t> genNele = {fReader, "genNele"};
    TTreeReaderValue<Int_t> genNmu = {fReader, "genNmu"};
    TTreeReaderValue<Int_t> genNlep = {fReader, "genNlep"};
@@ -85,88 +102,93 @@ public :
    TTreeReaderArray<double> genM_susy = {fReader, "genM_susy"};
    TTreeReaderArray<int> genPDGID_susy = {fReader, "genPDGID_susy"};
    TTreeReaderArray<int> genMomPDGID_susy = {fReader, "genMomPDGID_susy"};
-   TTreeReaderArray<int> Njet_a = {fReader, "Njet_a"};
-   TTreeReaderArray<int> Njet_b = {fReader, "Njet_b"};
-   TTreeReaderArray<int> Nbjet_a = {fReader, "Nbjet_a"};
-   TTreeReaderArray<int> Nbjet_b = {fReader, "Nbjet_b"};
-   TTreeReaderArray<int> Nlep_a = {fReader, "Nlep_a"};
-   TTreeReaderArray<int> Nlep_b = {fReader, "Nlep_b"};
-   TTreeReaderArray<int> Njet_ga = {fReader, "Njet_ga"};
-   TTreeReaderArray<int> Njet_gb = {fReader, "Njet_gb"};
-   TTreeReaderArray<int> Nbjet_ga = {fReader, "Nbjet_ga"};
-   TTreeReaderArray<int> Nbjet_gb = {fReader, "Nbjet_gb"};
-   TTreeReaderArray<int> Nlep_ga = {fReader, "Nlep_ga"};
-   TTreeReaderArray<int> Nlep_gb = {fReader, "Nlep_gb"};
-   TTreeReaderArray<vector<int>> index_jet_a = {fReader, "index_jet_a"};
-   TTreeReaderArray<vector<int>> index_jet_b = {fReader, "index_jet_b"};
-   TTreeReaderArray<vector<int>> index_lep_a = {fReader, "index_lep_a"};
-   TTreeReaderArray<vector<int>> index_lep_b = {fReader, "index_lep_b"};
-   TTreeReaderArray<vector<int>> index_jet_ga = {fReader, "index_jet_ga"};
-   TTreeReaderArray<vector<int>> index_jet_gb = {fReader, "index_jet_gb"};
-   TTreeReaderArray<vector<int>> index_lep_ga = {fReader, "index_lep_ga"};
-   TTreeReaderArray<vector<int>> index_lep_gb = {fReader, "index_lep_gb"};
-   TTreeReaderArray<double> MSS = {fReader, "MSS"};
-   TTreeReaderArray<double> PSS = {fReader, "PSS"};
-   TTreeReaderArray<double> cosSS = {fReader, "cosSS"};
-   TTreeReaderArray<double> dphiSS = {fReader, "dphiSS"};
-   TTreeReaderArray<double> PTSS = {fReader, "PTSS"};
-   TTreeReaderArray<double> PzSS = {fReader, "PzSS"};
-   TTreeReaderArray<double> MCa = {fReader, "MCa"};
-   TTreeReaderArray<double> cosCa = {fReader, "cosCa"};
-   TTreeReaderArray<double> MCb = {fReader, "MCb"};
-   TTreeReaderArray<double> cosCb = {fReader, "cosCb"};
-   TTreeReaderArray<double> MGCa = {fReader, "MGCa"};
-   TTreeReaderArray<double> cosGCa = {fReader, "cosGCa"};
-   TTreeReaderArray<double> MGCb = {fReader, "MGCb"};
-   TTreeReaderArray<double> cosGCb = {fReader, "cosGCb"};
-   TTreeReaderArray<double> H11SS = {fReader, "H11SS"};
-   TTreeReaderArray<double> H21SS = {fReader, "H21SS"};
-   TTreeReaderArray<double> HT21SS = {fReader, "HT21SS"};
-   TTreeReaderArray<double> H22SS = {fReader, "H22SS"};
-   TTreeReaderArray<double> HT22SS = {fReader, "HT22SS"};
-   TTreeReaderArray<double> H42SS = {fReader, "H42SS"};
-   TTreeReaderArray<double> HT42SS = {fReader, "HT42SS"};
-   TTreeReaderArray<double> H11Ca = {fReader, "H11Ca"};
-   TTreeReaderArray<double> H11Cb = {fReader, "H11Cb"};
-   TTreeReaderArray<double> H21Ca = {fReader, "H21Ca"};
-   TTreeReaderArray<double> H21Cb = {fReader, "H21Cb"};
-   TTreeReaderArray<double> MVa = {fReader, "MVa"};
-   TTreeReaderArray<double> PVa = {fReader, "PVa"};
-   TTreeReaderArray<double> cosVa = {fReader, "cosVa"};
-   TTreeReaderArray<double> MVb = {fReader, "MVb"};
-   TTreeReaderArray<double> PVb = {fReader, "PVb"};
-   TTreeReaderArray<double> cosVb = {fReader, "cosVb"};
-   TTreeReaderValue<Bool_t> Is_1L_2J = {fReader, "Is_1L_2J"};
-   TTreeReaderValue<Bool_t> Is_2L_2J = {fReader, "Is_2L_2J"};
-   TTreeReaderValue<Bool_t> Is_1L_1L = {fReader, "Is_1L_1L"};
-   TTreeReaderValue<Bool_t> Is_2L_1L = {fReader, "Is_2L_1L"};
-   TTreeReaderValue<Bool_t> Is_2L_2L = {fReader, "Is_2L_2L"};
-   TTreeReaderValue<Bool_t> Is_1L_B = {fReader, "Is_1L_B"};
-   TTreeReaderValue<Bool_t> Is_2L_B = {fReader, "Is_2L_B"};
-   TTreeReaderValue<Bool_t> Is_1LB_1LB = {fReader, "Is_1LB_1LB"};
-   TTreeReaderValue<Bool_t> Is_3L_B = {fReader, "Is_3L_B"};
    TTreeReaderArray<int> Njet_ISR = {fReader, "Njet_ISR"};
    TTreeReaderArray<int> Njet_S = {fReader, "Njet_S"};
    TTreeReaderArray<int> Nbjet_ISR = {fReader, "Nbjet_ISR"};
    TTreeReaderArray<int> Nbjet_S = {fReader, "Nbjet_S"};
    TTreeReaderArray<int> Nlep_ISR = {fReader, "Nlep_ISR"};
    TTreeReaderArray<int> Nlep_S = {fReader, "Nlep_S"};
-   TTreeReaderArray<vector<int>> index_jet_ISR = {fReader, "index_jet_ISR"};
-   TTreeReaderArray<vector<int>> index_jet_S = {fReader, "index_jet_S"};
+   TTreeReaderArray<int> NSV_ISR = {fReader, "NSV_ISR"};
+   TTreeReaderArray<int> NSV_S = {fReader, "NSV_S"};
+   TTreeReaderArray<vector<int>> index_SV_ISR = {fReader, "index_SV_ISR"};
+   TTreeReaderArray<vector<int>> index_SV_S = {fReader, "index_SV_S"};
    TTreeReaderArray<vector<int>> index_lep_ISR = {fReader, "index_lep_ISR"};
    TTreeReaderArray<vector<int>> index_lep_S = {fReader, "index_lep_S"};
-   TTreeReaderArray<double> PTISR = {fReader, "PTISR"};
+   TTreeReaderArray<vector<double>> dphi_lep_S = {fReader, "dphi_lep_S"};
+   TTreeReaderArray<vector<double>> cos_lep_S = {fReader, "cos_lep_S"};
+   TTreeReaderArray<int> Njet_a = {fReader, "Njet_a"};
+   TTreeReaderArray<int> Njet_b = {fReader, "Njet_b"};
+   TTreeReaderArray<int> Nbjet_a = {fReader, "Nbjet_a"};
+   TTreeReaderArray<int> Nbjet_b = {fReader, "Nbjet_b"};
+   TTreeReaderArray<int> Nlep_a = {fReader, "Nlep_a"};
+   TTreeReaderArray<int> Nlep_b = {fReader, "Nlep_b"};
+   TTreeReaderArray<int> NSV_a = {fReader, "NSV_a"};
+   TTreeReaderArray<int> NSV_b = {fReader, "NSV_b"};
+   TTreeReaderArray<vector<int>> index_lep_a = {fReader, "index_lep_a"};
+   TTreeReaderArray<vector<int>> index_lep_b = {fReader, "index_lep_b"};
+   TTreeReaderArray<vector<int>> index_SV_a = {fReader, "index_SV_a"};
+   TTreeReaderArray<vector<int>> index_SV_b = {fReader, "index_SV_b"};
    TTreeReaderArray<double> PTCM = {fReader, "PTCM"};
-   TTreeReaderArray<double> RISR = {fReader, "RISR"};
    TTreeReaderArray<double> cosCM = {fReader, "cosCM"};
-   TTreeReaderArray<double> cosS = {fReader, "cosS"};
-   TTreeReaderArray<double> MISR = {fReader, "MISR"};
-   TTreeReaderArray<double> MS = {fReader, "MS"};
-   TTreeReaderArray<double> MV = {fReader, "MV"};
-   TTreeReaderArray<double> ML = {fReader, "ML"};
+   TTreeReaderArray<double> dphiCM = {fReader, "dphiCM"};
    TTreeReaderArray<double> dphiCMI = {fReader, "dphiCMI"};
+   TTreeReaderArray<double> MS = {fReader, "MS"};
+   TTreeReaderArray<double> PS = {fReader, "PS"};
+   TTreeReaderArray<double> cosS = {fReader, "cosS"};
+   TTreeReaderArray<double> dphiS = {fReader, "dphiS"};
    TTreeReaderArray<double> dphiSI = {fReader, "dphiSI"};
-   TTreeReaderArray<double> dphiISRI = {fReader, "dphiISRI"};
+   TTreeReaderArray<double> PTS = {fReader, "PTS"};
+   TTreeReaderArray<double> PzS = {fReader, "PzS"};
+   TTreeReaderArray<double> MX3a = {fReader, "MX3a"};
+   TTreeReaderArray<double> cosX3a = {fReader, "cosX3a"};
+   TTreeReaderArray<double> MX3b = {fReader, "MX3b"};
+   TTreeReaderArray<double> cosX3b = {fReader, "cosX3b"};
+   TTreeReaderArray<double> EVa = {fReader, "EVa"};
+   TTreeReaderArray<double> EVb = {fReader, "EVb"};
+   TTreeReaderArray<double> PVa = {fReader, "PVa"};
+   TTreeReaderArray<double> PVb = {fReader, "PVb"};
+   TTreeReaderArray<double> EJa = {fReader, "EJa"};
+   TTreeReaderArray<double> EJb = {fReader, "EJb"};
+   TTreeReaderArray<double> PJa = {fReader, "PJa"};
+   TTreeReaderArray<double> PJb = {fReader, "PJb"};
+   TTreeReaderArray<double> MX2a = {fReader, "MX2a"};
+   TTreeReaderArray<double> cosX2a = {fReader, "cosX2a"};
+   TTreeReaderArray<double> MX2b = {fReader, "MX2b"};
+   TTreeReaderArray<double> cosX2b = {fReader, "cosX2b"};
+   TTreeReaderArray<double> ELa = {fReader, "ELa"};
+   TTreeReaderArray<double> ELb = {fReader, "ELb"};
+   TTreeReaderArray<double> PLa = {fReader, "PLa"};
+   TTreeReaderArray<double> PLb = {fReader, "PLb"};
+   TTreeReaderArray<double> MV = {fReader, "MV"};
+   TTreeReaderArray<double> PV = {fReader, "PV"};
+   TTreeReaderArray<double> MVa = {fReader, "MVa"};
+   TTreeReaderArray<double> MVb = {fReader, "MVb"};
+   TTreeReaderArray<double> MJa = {fReader, "MJa"};
+   TTreeReaderArray<double> MJb = {fReader, "MJb"};
+   TTreeReaderArray<double> MLa = {fReader, "MLa"};
+   TTreeReaderArray<double> MLb = {fReader, "MLb"};
+   TTreeReaderArray<double> cosJa = {fReader, "cosJa"};
+   TTreeReaderArray<double> cosJb = {fReader, "cosJb"};
+   TTreeReaderArray<double> cosLa = {fReader, "cosLa"};
+   TTreeReaderArray<double> cosLb = {fReader, "cosLb"};
+   TTreeReaderArray<double> H11S = {fReader, "H11S"};
+   TTreeReaderArray<double> H21S = {fReader, "H21S"};
+   TTreeReaderArray<double> HT21S = {fReader, "HT21S"};
+   TTreeReaderArray<double> H22S = {fReader, "H22S"};
+   TTreeReaderArray<double> HT22S = {fReader, "HT22S"};
+   TTreeReaderArray<double> H42S = {fReader, "H42S"};
+   TTreeReaderArray<double> HT42S = {fReader, "HT42S"};
+   TTreeReaderArray<double> H11X3a = {fReader, "H11X3a"};
+   TTreeReaderArray<double> H11X3b = {fReader, "H11X3b"};
+   TTreeReaderArray<double> H21X3a = {fReader, "H21X3a"};
+   TTreeReaderArray<double> H21X3b = {fReader, "H21X3b"};
+   TTreeReaderArray<double> PTISR = {fReader, "PTISR"};
+   TTreeReaderArray<double> RISR = {fReader, "RISR"};
+   TTreeReaderArray<double> MISR = {fReader, "MISR"};
+   TTreeReaderValue<Bool_t> Is_1L = {fReader, "Is_1L"};
+   TTreeReaderValue<Bool_t> Is_2L = {fReader, "Is_2L"};
+   TTreeReaderValue<Bool_t> Is_3L = {fReader, "Is_3L"};
+   TTreeReaderValue<Bool_t> Is_4L = {fReader, "Is_4L"};
 
 
    myselector(TTree * /*tree*/ =0) { }
@@ -185,7 +207,7 @@ public :
    virtual void    SlaveTerminate();
    virtual void    Terminate();
 
-   //ClassDef(myselector,0);
+  // ClassDef(myselector,0);
 
 };
 

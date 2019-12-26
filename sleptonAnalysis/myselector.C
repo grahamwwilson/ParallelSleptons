@@ -67,7 +67,7 @@ Bool_t myselector::Process(Long64_t entry)
    //
    // The return value is currently not used.
 
-   fReader.SetEntry(entry);
+   fReader.SetLocalEntry(entry);
 
    return kTRUE;
 }
