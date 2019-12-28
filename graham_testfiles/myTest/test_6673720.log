@@ -1,7 +1,7 @@
 Version testdata_R1
-/home/j342a201/slepton/ParallelPhysics/graham_testfiles/myTest
-r11r28n03
-Thu Dec 26 16:51:40 CST 2019
+/home/j342a201/slepton/ParallelSleptons/graham_testfiles/myTest
+r17r10n08
+Fri Dec 27 21:10:11 CST 2019
 PATH: 
 /panfs/pfs.local/work/wilson/gwwilson/FRoot/root/bin:/panfs/pfs.local/software/7/install/openmpi/4.0/gcc/8.3/bin:/panfs/pfs.local/software/7/install/binutils/2.32/bin:/panfs/pfs.local/software/7/install/gcc/8.3/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/ibutils/bin:/opt/dell/srvadmin/bin:/panfs/pfs.local/software/7/install/crc:/home/j342a201/.local/bin:/home/j342a201/bin
 LD_LIBRARY_PATH
@@ -11,14 +11,15 @@ Python 2.7.5
 /panfs/pfs.local/work/wilson/gwwilson/FRoot/root
 /panfs/pfs.local/work/wilson/gwwilson/FRoot/root
 Now in directory 
-/home/j342a201/slepton/ParallelPhysics/graham_testfiles/myTest
+/home/j342a201/slepton/ParallelSleptons/graham_testfiles/myTest
 Start execution
-Thu Dec 26 16:51:40 CST 2019
+Fri Dec 27 21:10:11 CST 2019
 testdata_R1 KUAnalysis DY
-/home/j342a201/slepton/ParallelPhysics/ExecutionDirectory/testdata_R1
+/home/j342a201/slepton/ParallelSleptons/ExecutionDirectory/testdata_R1
+was not SMS 
 ['/panfs/pfs.local/work/wilson/gwwilson/SUSYNANO/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X_9_9.root', '/panfs/pfs.local/work/wilson/gwwilson/SUSYNANO/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X_9_7.root', '/panfs/pfs.local/work/wilson/gwwilson/SUSYNANO/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X_9_8.root']
 ('from runmacro numFiles == ', 3, ' nthreads == ', '24')
-/home/j342a201/slepton/ParallelPhysics/sleptonAnalysis/compiledthreads 24 KUAnalysis DY susyHists.root RECREATE "/panfs/pfs.local/work/wilson/gwwilson/SUSYNANO/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X_9_9.root" "/panfs/pfs.local/work/wilson/gwwilson/SUSYNANO/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X_9_7.root" "/panfs/pfs.local/work/wilson/gwwilson/SUSYNANO/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X_9_8.root" 
-Thu Dec 26 16:51:49 CST 2019
-Thu Dec 26 16:51:49 CST 2019
-Thu Dec 26 16:51:49 CST 2019
+/home/j342a201/slepton/ParallelSleptons/sleptonAnalysis/compiledthreads 24 KUAnalysis DY susyHists.root RECREATE "/panfs/pfs.local/work/wilson/gwwilson/SUSYNANO/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X_9_9.root" "/panfs/pfs.local/work/wilson/gwwilson/SUSYNANO/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X_9_7.root" "/panfs/pfs.local/work/wilson/gwwilson/SUSYNANO/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X_9_8.root" 
+Fri Dec 27 21:10:13 CST 2019
+Fri Dec 27 21:10:13 CST 2019
+Fri Dec 27 21:10:13 CST 2019

@@ -4,18 +4,18 @@
 date
 
 #CODEDIR=/home/gwwilson/pc
-CODEDIR=/home/j342a201/slepton/ParallelPhysics/sleptonAnalysis
+CODEDIR=/home/j342a201/slepton/ParallelSleptons/sleptonAnalysis
 
 INPUT=${1-dataHPC}
 TREE=$2 
 TAG=$3
 echo ${INPUT} ${TREE} ${TAG}
 
-INPUTLIST=/home/j342a201/slepton/ParallelPhysics/graham_testfiles/myTest/${INPUT}.list
+INPUTLIST=/home/j342a201/slepton/ParallelSleptons/graham_testfiles/myTest/${INPUT}.list
 
 #Execute this from execution directory, so that we can have several output files in parallel
 
-EXEDIR=/home/j342a201/slepton/ParallelPhysics/ExecutionDirectory/${INPUT}
+EXEDIR=/home/j342a201/slepton/ParallelSleptons/ExecutionDirectory/${INPUT}
 rm -r ${EXEDIR}
 # Check if it exists. If not make it.
 mkdir ${EXEDIR}

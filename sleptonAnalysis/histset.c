@@ -106,7 +106,8 @@ void histset::WriteHist(std::string outputfilename, std::string TFileOption){
 			std:;string hname(h->GetName());
 			outfile->WriteObject(h, (_tag+hname).c_str() );
 		}
-	}	
+	}
+	outfile->Close();	
 
 }
 void histset::AnalyzeEntry(myselector& s){

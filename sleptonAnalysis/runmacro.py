@@ -23,7 +23,7 @@ ofileopt = str(sys.argv[7])
 if (numFiles == 0 ):
 	numFiles = len(idatafiles)
 print( "from runmacro numFiles == ", numFiles," nthreads == ",nthreads)
-cmd = "/home/j342a201/slepton/ParallelPhysics/sleptonAnalysis/compiledthreads "+str(nthreads)+" "+treename+" "+filetag+" "+ofilename+" "+ofileopt+" "
+cmd = "/home/j342a201/slepton/ParallelSleptons/sleptonAnalysis/compiledthreads "+str(nthreads)+" "+treename+" "+filetag+" "+ofilename+" "+ofileopt+" "
  
 for f in idatafiles:
 	if (ifile <= numFiles):

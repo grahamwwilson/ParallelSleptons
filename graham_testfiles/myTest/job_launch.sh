@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH --job-name=conversions          # Job name
+#SBATCH --job-name=testSleptons         # Job name
 #SBATCH --partition=sixhour   # Partition Name (Required)
 #SBATCH --mail-type=ALL                 # Mail events (NONE, BEGIN, END, FAIL, ALL)
-#SBATCH --mail-user=gwwilson@ku.edu     # Where to send mail	
+#SBATCH --mail-user=j342a201@ku.edu     # Where to send mail	
 #SBATCH --ntasks=1                      # Run 1 task on one node
 #SBATCH --cpus-per-task=24              # Number of threads to use
 #SBATCH --mem=2gb                       # Job memory request
@@ -33,7 +33,7 @@ python2 --version
 . /home/j342a201/setenv.sh
 echo $ROOTSYS
  
-MYWDIR=/home/j342a201/slepton/ParallelPhysics/graham_testfiles/myTest
+MYWDIR=/home/j342a201/slepton/ParallelSleptons/graham_testfiles/myTest
 cd ${MYWDIR}
 echo "Now in directory "
 pwd
