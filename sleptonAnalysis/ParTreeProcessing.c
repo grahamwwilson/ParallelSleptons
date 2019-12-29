@@ -41,6 +41,9 @@ int main(int argc, char *argv[])
   //set outputfileOption in 5th argument .. either recreate or udpate
   std::string ofileoption(argv[5]);
 
+  //set output eventselection filename
+  std::string evtselname = "EventSelTables_"+tag+".table";
+
    // First enable implicit multi-threading globally, so that the implicit parallelisation is on.
    // The parameter of the call specifies the number of threads to use.
    ROOT::EnableImplicitMT(nthreads);
@@ -81,6 +84,11 @@ int main(int argc, char *argv[])
     }
    // print out tree names
    // loop over tree sequence
+ 
+  //file for evt selection
+  ofstream evtSelFile;
+  evtSelFile.open(evtselname);
+ 
   std::cout<<"all tree print: "<<std::endl;
   for(int i=0; i<treenames.size(); i++){
 	std::cout<<treenames.at(i)<<std::endl;
@@ -104,8 +112,10 @@ int main(int argc, char *argv[])
 	else{
 		h.WriteHist(ofilename, "UPDATE");
 	}
-	
+
+	h.printSelectionTables(evtSelFile);
   }
+ evtSelFile.close();
 	
   return 0;	
   }
@@ -147,7 +157,14 @@ int main(int argc, char *argv[])
 	
   //automatically do all merging and writing
   h.WriteHist(ofilename, ofileoption);
-	
+
+   //process event selection tables
+  //create a text file 
+  ofstream evtSelFile;
+  evtSelFile.open(evtselname);
+  h.printSelectionTables(evtSelFile);
+  evtSelFile.close(); 
+
    return 0;
 
   }
