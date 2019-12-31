@@ -1,13 +1,13 @@
 #!/bin/bash
-#SBATCH --job-name=testSleptons         # Job name
+#SBATCH --job-name=Sleptons         # Job name
 #SBATCH --partition=sixhour   # Partition Name (Required)
-#SBATCH --mail-type=ALL                 # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-type=NONE                 # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=j342a201@ku.edu     # Where to send mail	
 #SBATCH --ntasks=1                      # Run 1 task on one node
 #SBATCH --cpus-per-task=24              # Number of threads to use
 #SBATCH --mem=2gb                       # Job memory request
 #SBATCH --time=0-06:00:00               # Time limit days-hrs:min:sec
-#SBATCH --output=test_%j.log     # Standard output and error log
+#SBATCH --output=%j.log     # Standard output and error log
 
 VERSION=$1
 TREE=$2

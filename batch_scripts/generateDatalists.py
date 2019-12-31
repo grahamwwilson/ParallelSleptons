@@ -18,6 +18,8 @@ def bash( bashCommand ):
 
 PATH="/home/gwwilson/work/SUSYNANO/"
 dirList = "Dirs.list"
+MAXNUMFILESPERLIST = 500
+
 
 #go to the each directory and LS the contents (with full path) into a file
 #save the file in a directory of the same name
@@ -34,10 +36,19 @@ for line in lines:
 	LS = LS[0].split('\n')
 	LS = [f for f in LS if ".root" in f]
 
-	out = open("datalists/"+dirname+".list", "w+")
+	out = open("datalists/"+dirname+"_0.list", "w+")
+	#count how many files we write to list, do not exceed max
+	listcounter = 0
+	filecounter = 1
 	for rootf in LS:
+		if listcounter > MAXNUMFILESPERLIST:
+			out.close()
+			out = open("datalists/"+dirname+"_"+str(filecounter)+".list", "w+")
+			filecounter = filecounter + 1
+			listcounter = 0
+			
         	out.write(PATH+dirname+"/"+rootf+"\n")
-
+		listcounter = listcounter + 1
 	
 	out.close()
 	

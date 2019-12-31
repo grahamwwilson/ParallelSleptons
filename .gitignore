@@ -12,3 +12,7 @@ compiledSerialr6
 compiledThreads
 compiledproofmacro
 compiledthreads
+
+*.swp
+ExecutionDirectory/*
+*.log
