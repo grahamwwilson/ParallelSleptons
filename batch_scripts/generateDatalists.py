@@ -16,7 +16,8 @@ def bash( bashCommand ):
         output, error = process.communicate()
         return output ,error
 
-PATH="/home/gwwilson/work/SUSYNANO/"
+#PATH="/home/gwwilson/work/SUSYNANO/"
+PATH=""
 dirList = "Dirs.list"
 MAXNUMFILESPERLIST = 500
 
@@ -31,19 +32,22 @@ lines = f.readlines()
 for line in lines:
 	dirname = line.rstrip()
 	print dirname
+	listname = dirname.split("/")
+	listname = listname[-1]
+	print listname
 	cmd = "ls "+PATH+dirname
 	LS = bash(cmd)
 	LS = LS[0].split('\n')
 	LS = [f for f in LS if ".root" in f]
 
-	out = open("datalists/"+dirname+"_0.list", "w+")
+	out = open("datalists/"+listname+"_0.list", "w+")
 	#count how many files we write to list, do not exceed max
 	listcounter = 0
 	filecounter = 1
 	for rootf in LS:
 		if listcounter > MAXNUMFILESPERLIST:
 			out.close()
-			out = open("datalists/"+dirname+"_"+str(filecounter)+".list", "w+")
+			out = open("datalists/"+listname+"_"+str(filecounter)+".list", "w+")
 			filecounter = filecounter + 1
 			listcounter = 0
 			
