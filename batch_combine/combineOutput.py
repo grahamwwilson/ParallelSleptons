@@ -13,8 +13,8 @@ def bash( bashCommand ):
 #CURRENTLY ONLY RUN THIS ON BG, signal is already settled in 1 job (for now)
 
 #masterkey = ["DYJetsToLL:KUAnalysis:DY", "TSlepSlep:SMS:SS", "TTJets:KUAnalysis:TT", "WJetsToLNu:KUAnalysis:WJ"]
-masterkey = ["DYJetsToLL:KUAnalysis:DY", "TTJets:KUAnalysis:TT", "WJetsToLNu:KUAnalysis:WJ"]
-
+#masterkey = ["DYJetsToLL:KUAnalysis:DY", "TTJets:KUAnalysis:TT", "WJetsToLNu:KUAnalysis:WJ"]
+masterkey = ["TTJets:KUAnalysis:TT"]
 
 #get a list of the job directories
 cmd = "ls ../ExecutionDirectory"
