@@ -1,0 +1,7 @@
+sbatch job_launch.sh SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X_0 SMS SS
+sbatch job_launch.sh TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X_0 KUAnalysis TT
+sbatch job_launch.sh TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X_1 KUAnalysis TT
+sbatch job_launch.sh TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X_2 KUAnalysis TT
+sbatch job_launch.sh TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X_3 KUAnalysis TT
+sbatch job_launch.sh TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X_4 KUAnalysis TT
+sbatch job_launch.sh TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X_5 KUAnalysis TT
