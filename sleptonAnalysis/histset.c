@@ -23,7 +23,8 @@ class histset{
 	 //bookeeping enumeration: (if we do this we dont need to worry about hist ptr copies and merging)
 
 	 enum th1d_index{ind_METHist, ind_MSHist, ind_MISRHist, 
-                     ind_CutFlowHist, ind_RISRHist,  
+                     ind_CutFlowHist, ind_RISRHist, 
+                     ind_LeptonsCategory, 
                      numTH1Hist};
 	 enum th2d_index{numTH2Hist};
 	
@@ -133,6 +134,8 @@ void histset::init(){
 	TH1Manager.at(ind_MSHist) = new MyTH1D("MSHist", "MS;GeV;Entries per 5 GeV bin", 50, 0.0, 250.0);
 	TH1Manager.at(ind_MISRHist) = new MyTH1D("MISRHist", "MISR;GeV;Entries per 5 GeV bin", 100, 0.0, 500.0);
 	TH1Manager.at(ind_RISRHist) = new MyTH1D("RISRHist", "RISR; RISR ;Entries per 0.01 bin", 120, 0.0, 1.2);
+	TH1Manager.at(ind_LeptonsCategory) = new MyTH1D("LeptonsCategory", 
+        "Lepton Exclusive Multiplicity; Category ;Entries per bin", 5, -0.5, 4.5 );
 // TODO  label bins of CutFlow
 	TH1Manager.at(ind_CutFlowHist) = new MyTH1D("CutFlowHist", "CutFlow; Cut; Weighted events", 6, -1.5, 4.5);
 }
@@ -277,6 +280,13 @@ void histset::AnalyzeEntry(myselector& s){
     cout << "cutmask: " << cutmask 
          << " bncuts: " << bncuts 
          << " bpcuts: " << bpcuts << endl;
+
+// Lepton categories. Firstly multiplicity.
+    FillTH1(ind_LeptonsCategory, 0.0, w);  // All events
+    if( Is_1L ) FillTH1(ind_LeptonsCategory, 1.0, w);
+    if( Is_2L ) FillTH1(ind_LeptonsCategory, 2.0, w);
+    if( Is_3L ) FillTH1(ind_LeptonsCategory, 3.0, w);
+    if( Is_4L ) FillTH1(ind_LeptonsCategory, 4.0, w);
 
     if(bpcuts.all()){
 // Require all cuts are passed
