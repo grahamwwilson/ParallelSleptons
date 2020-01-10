@@ -220,9 +220,9 @@ void histset::AnalyzeEntry(myselector& s){
 	//reco leptons
 	auto Nlep = *(s.Nlep);
 	auto& PT_lep = s.PT_lep;
-    auto& ID_lep = s.ID_lep;
 	auto& Eta_lep = s.Eta_lep;
 	auto& Phi_lep = s.Phi_lep;
+    auto& ID_lep = s.ID_lep;
 	auto& Charge_lep = s.Charge_lep;
 	auto& PDGID_lep = s.PDGID_lep;
 	auto& M_lep = s.M_lep;
@@ -246,6 +246,13 @@ void histset::AnalyzeEntry(myselector& s){
     auto Is_2L = *(s.Is_2L);
     auto Is_3L = *(s.Is_3L);
     auto Is_4L = *(s.Is_4L);
+
+// Dump variables
+    cout << "Is_Lepton: " << Is_1L << " " << Is_2L << " " << Is_3L << " " << Is_4L << endl;
+    cout << "Check sizes " << Nlep << endl;
+    cout << "PT " << PT_lep.GetSize() << endl;
+    cout << "Eta " << Eta_lep.GetSize() << endl;
+    cout << "Phi " << Phi_lep.GetSize() << endl;
 
     enum cutnames{kLeptons, kMET, kbjet, kPTISR, kRISR, NCUTS};
 // https://www.geeksforgeeks.org/c-bitset-and-its-application/
