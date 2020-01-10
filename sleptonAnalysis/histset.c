@@ -264,7 +264,7 @@ void histset::AnalyzeEntry(myselector& s){
 // Third method using bitset with positive logic
     if( Is_2L )         bpcuts[kLeptons] = 1;
     if( MET > 120.0 )   bpcuts[kMET] = 1;
-    if( Nbjet = 0 )     bpcuts[kbjet] = 1; 
+    if( Nbjet == 0 )    bpcuts[kbjet] = 1; 
     if( PTISR > 200.0 ) bpcuts[kPTISR] = 1;
     if( RISR > 0.95 )   bpcuts[kRISR] = 1;
 // Also could use bpcuts.set(kRISR) syntax
