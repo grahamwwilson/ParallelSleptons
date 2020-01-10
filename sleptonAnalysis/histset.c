@@ -23,7 +23,7 @@ class histset{
 	 //bookeeping enumeration: (if we do this we dont need to worry about hist ptr copies and merging)
 
 	 enum th1d_index{ind_METHist, ind_MSHist, ind_MISRHist, 
-                     ind_CutFlowHist, 
+                     ind_CutFlowHist, ind_RISRHist,  
                      numTH1Hist};
 	 enum th2d_index{numTH2Hist};
 	
@@ -132,6 +132,7 @@ void histset::init(){
 	TH1Manager.at(ind_METHist) = new MyTH1D("METHist", "MET;GeV;Entries per 5 GeV bin", 140, 100.0, 800.0);
 	TH1Manager.at(ind_MSHist) = new MyTH1D("MSHist", "MS;GeV;Entries per 5 GeV bin", 50, 0.0, 250.0);
 	TH1Manager.at(ind_MISRHist) = new MyTH1D("MISRHist", "MISR;GeV;Entries per 5 GeV bin", 100, 0.0, 500.0);
+	TH1Manager.at(ind_RISRHist) = new MyTH1D("RISRHist", "RISR; RISR ;Entries per 0.01 bin", 120, 0.0, 1.2);
 // TODO  label bins of CutFlow
 	TH1Manager.at(ind_CutFlowHist) = new MyTH1D("CutFlowHist", "CutFlow; Cut; Weighted events", 6, -1.5, 4.5);
 }
@@ -284,6 +285,8 @@ void histset::AnalyzeEntry(myselector& s){
 	   FillTH1(ind_MISRHist, MISR, w);
     }
 
+    if(bpcuts.all() || cutmask==16) FillTH1(ind_RISRHist, RISR, w);
+
 // Cut Flow
     FillTH1(ind_CutFlowHist, -1.0, w);
     for (int i=0; i<NCUTS; i++){
@@ -293,7 +296,6 @@ void histset::AnalyzeEntry(myselector& s){
        }
        if(pass)FillTH1(ind_CutFlowHist, i, w);
     }
-
 
 	//event selection
 	//iterate over cut sequence, apply operators and values
