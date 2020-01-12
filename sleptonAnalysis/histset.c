@@ -1,9 +1,10 @@
 #ifndef HISTS
 #define HISTS
 
-#include <bits/stdc++.h>  //For bitset
+#include <bitset>
 #include "TH1D.h"
 #include "TH2D.h"
+#include "TLorentzVector.h"
 #include "ROOT/TThreadedObject.hxx"
 #include "TTreeReader.h"
 #include "TTreeReaderValue.h"
@@ -239,6 +240,10 @@ void histset::AnalyzeEntry(myselector& s){
 	auto& MISR = s.MISR[0];
 
 	auto MET = *(s.MET);
+	auto MET_phi = *(s.MET_phi);
+	auto genMET = *(s.genMET);
+	auto genMET_phi = *(s.genMET_phi);
+
     auto Nbjet = *(s.Nbjet);
     auto Nmu = *(s.Nmu);
     auto Nele = *(s.Nele);
@@ -246,6 +251,68 @@ void histset::AnalyzeEntry(myselector& s){
     auto Is_2L = *(s.Is_2L);
     auto Is_3L = *(s.Is_3L);
     auto Is_4L = *(s.Is_4L);
+
+    double MET_x = MET*cos(MET_phi);
+    double MET_y = MET*sin(MET_phi);
+
+// x and y momentum components of each lepton
+    double px[4];
+    double py[4];
+    for(int i=0; i<4; i++){
+        if(i<Nlep){
+           px[i] = PT_lep[i]*cos(Phi_lep[i]);
+           py[i] = PT_lep[i]*sin(Phi_lep[i]);
+        }
+        else{
+           px[i] = 0.0;
+           py[i] = 0.0;
+        }
+    }
+
+// reconstruct tau-tau invariant mass squared under the collinear approximation
+// First solve for the (xi0, xi1) vector that satisfies
+// xi0*px[0] + xi1*px[1] = MET_x
+// xi0*py[0] + xi1*py[1] = MET_y
+// Ax = y with solution of x = A^-1 y
+
+    double det =  px[0]*py[1] - px[1]*py[0];
+    double xi0 =  py[1]*MET_x - px[1]*MET_y;
+    double xi1 = -py[0]*MET_x + px[0]*MET_y;
+    if(abs(det)<1.0e-8)cout << "Really small determinant ... " << det << endl;
+    if(Nlep>=2){
+       xi0 = xi0/det;
+       xi1 = xi1/det;
+       cout << "Found xi0, xi01 = " << xi0 << " " << xi1 << endl;
+       TLorentzVector v0,v1;
+       v0.SetPtEtaPhiM(PT_lep[0],Eta_lep[0],Phi_lep[0],M_lep[0]);
+       v1.SetPtEtaPhiM(PT_lep[1],Eta_lep[1],Phi_lep[1],M_lep[1]);
+       TLorentzVector vn0,vn1;
+       if(xi0>0.0){
+          vn0.SetPtEtaPhiM(xi0*PT_lep[0],Eta_lep[0],Phi_lep[0],0.0);
+       }
+       else{
+          vn0.SetPtEtaPhiM(-xi0*PT_lep[0],-Eta_lep[0],-Phi_lep[0],0.0);
+       }
+       if(xi1>0.0){
+          vn1.SetPtEtaPhiM(xi1*PT_lep[1],Eta_lep[1],Phi_lep[1],0.0);
+       }
+       else{
+          vn1.SetPtEtaPhiM(-xi1*PT_lep[1],-Eta_lep[1],-Phi_lep[1],0.0);
+       }
+       TLorentzVector vtau0,vtau1;
+       vtau0 = v0 + vn0;
+       vtau1 = v1 + vn1;
+       TLorentzVector vtt;
+       vtt = vtau0 + vtau1;
+       double mtautausq = vtt.M2();
+       double mtautau = vtt.M();   // should return -ve value if mass-squared is negative
+ 
+       cout << "tau-tau kinematics: " << det << " " << xi0 
+            << " " << xi1 << " M2: " << mtautausq << " M: " 
+            << mtautau << endl; 
+
+    }
+
 
 // Dump variables
     cout << "Is_Lepton: " << Is_1L << " " << Is_2L << " " << Is_3L << " " << Is_4L << endl;
