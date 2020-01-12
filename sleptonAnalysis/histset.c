@@ -252,6 +252,39 @@ void histset::AnalyzeEntry(myselector& s){
     auto Is_3L = *(s.Is_3L);
     auto Is_4L = *(s.Is_4L);
 
+//variables needed for gen level susy stuff
+    auto genNsusy = *(s.genNsusy);
+    auto& genPDGID_susy = s.genPDGID_susy;
+    auto& genPT_susy = s.genPT_susy;
+    auto& genEta_susy = s.genEta_susy;
+    auto& genPhi_susy = s.genPhi_susy;
+    auto& genM_susy = s.genM_susy;
+
+//gen leptons (we dont require susy)
+    auto genNlep = *(s.genNlep);
+    auto& genPDGID_lep = s.genPDGID_lep;
+    auto& genPT_lep = s.genPT_lep;
+    auto& genEta_lep = s.genEta_lep;
+    auto& genPhi_lep = s.genPhi_lep;
+    auto& genM_lep = s.genM_lep;
+
+    //loop over all generator leptons
+    if( genNlep > 0){      
+       for(int i=0; i<genPT_lep.GetSize(); i++){
+           TLorentzVector v;
+           v.SetPtEtaPhiM(genPT_lep[i], genEta_lep[i], genPhi_lep[i], genM_lep[i]);
+           cout << "genlep : " << i << " " << genPDGID_lep[i] << " " << v.Px() << " " << v.Py() << " " << v.Pz() << " " << v.M() << endl;
+       }
+    }
+    //loop over all generator sparticles
+    if( genNsusy > 0){      
+       for(int i=0; i<genPT_susy.GetSize(); i++){
+           TLorentzVector v;
+           v.SetPtEtaPhiM(genPT_susy[i], genEta_susy[i], genPhi_susy[i], genM_susy[i]);
+           cout << "gensusy: " << i << " " << genPDGID_susy[i] << " " << v.Px() << " " << v.Py() << " " << v.Pz() << " " << v.M() << endl;
+       }
+    }
+
     double MET_x = MET*cos(MET_phi);
     double MET_y = MET*sin(MET_phi);
 
@@ -283,10 +316,11 @@ void histset::AnalyzeEntry(myselector& s){
        xi0 = xi0/det;
        xi1 = xi1/det;
        cout << "Found xi0, xi01 = " << xi0 << " " << xi1 << endl;
-       TLorentzVector v0,v1,vMET;
+       TLorentzVector v0,v1,vMET,vgenMET;
        v0.SetPtEtaPhiM(PT_lep[0],Eta_lep[0],Phi_lep[0],M_lep[0]);
        v1.SetPtEtaPhiM(PT_lep[1],Eta_lep[1],Phi_lep[1],M_lep[1]);
        vMET.SetPtEtaPhiM(MET,0.0,MET_phi,0.0);  // Massless transverse 4-vector
+       vgenMET.SetPtEtaPhiM(genMET,0.0,genMET_phi,0.0);  // Massless transverse 4-vector
 
        TLorentzVector vn0,vn1;
        if(xi0>0.0){
@@ -310,6 +344,7 @@ void histset::AnalyzeEntry(myselector& s){
        double mtautau = vtt.M();   // should return -ve value if mass-squared is negative
 
        cout << "MET:    " << vMET.Px() << " " << vMET.Py() << " " << vMET.Pz() << " " << vMET.M() << endl;
+       cout << "genMET:    " << vgenMET.Px() << " " << vgenMET.Py() << " " << vgenMET.Pz() << " " << vgenMET.M() << endl;
        cout << "Leptons " << endl;
        cout << "L0:     " << v0.Px() << " " << v0.Py() << " " << v0.Pz() << " " << v0.M() << endl;
        cout << "L1:     " << v1.Px() << " " << v1.Py() << " " << v1.Pz() << " " << v1.M() << endl;
