@@ -214,6 +214,8 @@ void histset::AnalyzeEntry(myselector& s){
 	//have to auto& or myreader will try to register copy of 
     //the readerarray ptr
 
+    double PI =4.0*atan(1.0);
+
 	auto weight = *(s.weight);
  	_weight = weight;
     double w = 137.0*_weight;    //Normalize to 137 inverse fb
@@ -315,7 +317,7 @@ void histset::AnalyzeEntry(myselector& s){
     if(Nlep>=2){
        xi0 = xi0/det;
        xi1 = xi1/det;
-       cout << "Found xi0, xi01 = " << xi0 << " " << xi1 << endl;
+       cout << "Found xi0, xi1 = " << xi0 << " " << xi1 << endl;
        TLorentzVector v0,v1,vMET,vgenMET;
        v0.SetPtEtaPhiM(PT_lep[0],Eta_lep[0],Phi_lep[0],M_lep[0]);
        v1.SetPtEtaPhiM(PT_lep[1],Eta_lep[1],Phi_lep[1],M_lep[1]);
@@ -327,13 +329,13 @@ void histset::AnalyzeEntry(myselector& s){
           vn0.SetPtEtaPhiM(xi0*PT_lep[0],Eta_lep[0],Phi_lep[0],0.0);
        }
        else{
-          vn0.SetPtEtaPhiM(-xi0*PT_lep[0],-Eta_lep[0],-Phi_lep[0],0.0);
+          vn0.SetPtEtaPhiM(-xi0*PT_lep[0],-Eta_lep[0],PI+Phi_lep[0],0.0);
        }
        if(xi1>0.0){
           vn1.SetPtEtaPhiM(xi1*PT_lep[1],Eta_lep[1],Phi_lep[1],0.0);
        }
        else{
-          vn1.SetPtEtaPhiM(-xi1*PT_lep[1],-Eta_lep[1],-Phi_lep[1],0.0);
+          vn1.SetPtEtaPhiM(-xi1*PT_lep[1],-Eta_lep[1],PI+Phi_lep[1],0.0);
        }
        TLorentzVector vtau0,vtau1;
        vtau0 = v0 + vn0;
