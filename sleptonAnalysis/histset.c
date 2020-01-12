@@ -343,12 +343,12 @@ void histset::AnalyzeEntry(myselector& s){
        xi0 = xi0/det;
        xi1 = xi1/det;
        cout << "Found xi0, xi1 = " << xi0 << " " << xi1 << endl;
-       TLorentzVector v0,v1,vMET,vgenMET;
+       TLorentzVector v0,v1,vMET,vgenMET,vll;
        v0.SetPtEtaPhiM(PT_lep[0],Eta_lep[0],Phi_lep[0],M_lep[0]);
        v1.SetPtEtaPhiM(PT_lep[1],Eta_lep[1],Phi_lep[1],M_lep[1]);
        vMET.SetPtEtaPhiM(MET,0.0,MET_phi,0.0);  // Massless transverse 4-vector
        vgenMET.SetPtEtaPhiM(genMET,0.0,genMET_phi,0.0);  // Massless transverse 4-vector
-
+       vll = v0+v1;
        TLorentzVector vn0,vn1;
        if(xi0>0.0){
           vn0.SetPtEtaPhiM(xi0*PT_lep[0],Eta_lep[0],Phi_lep[0],0.0);
@@ -375,6 +375,7 @@ void histset::AnalyzeEntry(myselector& s){
        cout << "Leptons " << endl;
        cout << "L0:     " << v0.Px() << " " << v0.Py() << " " << v0.Pz() << " " << v0.M() << endl;
        cout << "L1:     " << v1.Px() << " " << v1.Py() << " " << v1.Pz() << " " << v1.M() << endl;
+       cout << "LL:     " << vll.Px() << " " << vll.Py() << " " << vll.Pz() << " " << vll.M() << endl;
        cout << "n0:     " << vn0.Px() << " " << vn0.Py() << " " << vn0.Pz() << " " << vn0.M() << endl;
        cout << "n1:     " << vn1.Px() << " " << vn1.Py() << " " << vn1.Pz() << " " << vn1.M() << endl;
        cout << "tau0:   " << vtau0.Px() << " " << vtau0.Py() << " " << vtau0.Pz() << " " << vtau0.M() << endl;
