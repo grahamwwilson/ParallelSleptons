@@ -257,6 +257,7 @@ void histset::AnalyzeEntry(myselector& s){
 //variables needed for gen level susy stuff
     auto genNsusy = *(s.genNsusy);
     auto& genPDGID_susy = s.genPDGID_susy;
+    auto& genMomPDGID_susy = s.genMomPDGID_susy;
     auto& genPT_susy = s.genPT_susy;
     auto& genEta_susy = s.genEta_susy;
     auto& genPhi_susy = s.genPhi_susy;
@@ -265,25 +266,49 @@ void histset::AnalyzeEntry(myselector& s){
 //gen leptons (we dont require susy)
     auto genNlep = *(s.genNlep);
     auto& genPDGID_lep = s.genPDGID_lep;
+    auto& genMomPDGID_lep = s.genMomPDGID_lep;
     auto& genPT_lep = s.genPT_lep;
     auto& genEta_lep = s.genEta_lep;
     auto& genPhi_lep = s.genPhi_lep;
     auto& genM_lep = s.genM_lep;
+
+//gen neutrinos
+    auto genNnu = *(s.genNnu);
+    auto& genPDGID_nu = s.genPDGID_nu;
+    auto& genMomPDGID_nu = s.genMomPDGID_nu;
+    auto& genPT_nu = s.genPT_nu;
+    auto& genEta_nu = s.genEta_nu;
+    auto& genPhi_nu = s.genPhi_nu;
 
     //loop over all generator leptons
     if( genNlep > 0){      
        for(int i=0; i<genPT_lep.GetSize(); i++){
            TLorentzVector v;
            v.SetPtEtaPhiM(genPT_lep[i], genEta_lep[i], genPhi_lep[i], genM_lep[i]);
-           cout << "genlep : " << i << " " << genPDGID_lep[i] << " " << v.Px() << " " << v.Py() << " " << v.Pz() << " " << v.M() << endl;
+           cout << "genlep : " << i << " " << genPDGID_lep[i] << " " 
+                << genMomPDGID_lep[i] << " " << v.Px() << " " << v.Py() 
+                << " " << v.Pz() << " " << v.M() << endl;
        }
     }
+    //loop over all generator neutrinos
+    if( genNnu > 0){      
+       for(int i=0; i<genPT_nu.GetSize(); i++){
+           TLorentzVector v;
+           v.SetPtEtaPhiM(genPT_nu[i], genEta_nu[i], genPhi_nu[i], 0.0);
+           cout << "gennu  : " << i << " " << genPDGID_nu[i] << " " 
+                << genMomPDGID_nu[i] << " " << v.Px() << " " << v.Py() 
+                << " " << v.Pz() << " " << v.M() << endl;
+       }
+    }
+
     //loop over all generator sparticles
     if( genNsusy > 0){      
        for(int i=0; i<genPT_susy.GetSize(); i++){
            TLorentzVector v;
            v.SetPtEtaPhiM(genPT_susy[i], genEta_susy[i], genPhi_susy[i], genM_susy[i]);
-           cout << "gensusy: " << i << " " << genPDGID_susy[i] << " " << v.Px() << " " << v.Py() << " " << v.Pz() << " " << v.M() << endl;
+           cout << "gensusy: " << i << " " << genPDGID_susy[i] << " " 
+                << genMomPDGID_susy[i] << " " << v.Px() << " " << v.Py()
+                << " " << v.Pz() << " " << v.M() << endl;
        }
     }
 
