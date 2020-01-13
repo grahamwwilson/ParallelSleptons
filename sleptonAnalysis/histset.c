@@ -392,7 +392,7 @@ void histset::AnalyzeEntry(myselector& s){
        TLorentzVector vtt;
        vtt = vtau0 + vtau1;
        double mtautausq = vtt.M2();
-       double mtautau = vtt.M();   // should return -ve value if mass-squared is negative??
+       mtautau = vtt.M();   // should return -ve value if mass-squared is negative??
 // Alternative value
        double mtautaupsq = (1.0 +xi0)*(1.0+xi1)*mll*mll;
 // Sometimes this is negative
@@ -418,8 +418,6 @@ void histset::AnalyzeEntry(myselector& s){
        }
     }
 
-
-
 // Lepton categories. Firstly multiplicity.
     FillTH1(ind_LeptonsCategory, 0.0, w);  // All events
     if( Is_1L ) FillTH1(ind_LeptonsCategory, 1.0, w);
@@ -443,7 +441,6 @@ void histset::AnalyzeEntry(myselector& s){
        FillTH1(ind_MTTpHist, mtautaup, w);
     }
     
-
 // Cut Flow
     FillTH1(ind_CutFlowHist, -1.0, w);
     for (int i=0; i<NCUTS; i++){

@@ -74,13 +74,13 @@ int main(int argc, char *argv[])
 	    std::cout<<nkeys<<std::endl;
 	    for(int j=0; j< nkeys; j++){
 		    std::string trnm = std::string(t_file->GetListOfKeys()->At(j)->GetName() );
-/*		    if (trnm.find("SMS") != std::string::npos) {
+		    if (trnm.find("SMS") != std::string::npos) {
  		       treenames.push_back( trnm );
-		    } */
+		    } 
 // For now only look at (300, 290)files.
-		    if (trnm.find("SMS_300_290") != std::string::npos) {
- 		       treenames.push_back( trnm );
-		    }
+//		    if (trnm.find("SMS_300_290") != std::string::npos) {
+// 		       treenames.push_back( trnm );
+//		    }
 	    }
     }
    // print out tree names
