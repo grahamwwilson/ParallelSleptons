@@ -295,7 +295,7 @@ void histset::AnalyzeEntry(myselector& s){
 // Move all the basic cuts etc here.
 
 // Dump variables
-    cout << "Is_Lepton: " << Is_1L << " " << Is_2L << " " << Is_3L << " " << Is_4L << endl;
+//    cout << "Is_Lepton: " << Is_1L << " " << Is_2L << " " << Is_3L << " " << Is_4L << endl;
 
     enum cutnames{kLeptons, kMET, kbjet, kPTISR, kRISR, NCUTS};
 // https://www.geeksforgeeks.org/c-bitset-and-its-application/
@@ -327,9 +327,9 @@ void histset::AnalyzeEntry(myselector& s){
 // Also could use bpcuts.set(kRISR) syntax
 
 // Compare
-    cout << "cutmask: " << cutmask 
-         << " bncuts: " << bncuts 
-         << " bpcuts: " << bpcuts << endl;
+//    cout << "cutmask: " << cutmask 
+//         << " bncuts: " << bncuts 
+//         << " bpcuts: " << bpcuts << endl;
 
 // x and y momentum components of each lepton
     double px[4];
