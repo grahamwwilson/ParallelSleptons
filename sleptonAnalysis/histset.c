@@ -13,6 +13,8 @@
 using MyTH1D = ROOT::TThreadedObject<TH1D>;
 using MyTH2D = ROOT::TThreadedObject<TH2D>;
 
+int nseen = 0;
+
 class histset{
 	
 	public:
@@ -24,8 +26,8 @@ class histset{
 	 //bookeeping enumeration: (if we do this we dont need to worry about hist ptr copies and merging)
 
 	 enum th1d_index{ind_METHist, ind_MSHist, ind_MISRHist, 
-                     ind_CutFlowHist, ind_RISRHist, 
-                     ind_LeptonsCategory, 
+                     ind_CutFlowHist, ind_RISRHist, ind_MLLHist, 
+                     ind_MTTHist, ind_LeptonsCategory, 
                      numTH1Hist};
 	 enum th2d_index{numTH2Hist};
 	
@@ -134,6 +136,8 @@ void histset::init(){
 	TH1Manager.at(ind_METHist) = new MyTH1D("METHist", "MET;GeV;Entries per 5 GeV bin", 140, 100.0, 800.0);
 	TH1Manager.at(ind_MSHist) = new MyTH1D("MSHist", "MS;GeV;Entries per 5 GeV bin", 50, 0.0, 250.0);
 	TH1Manager.at(ind_MISRHist) = new MyTH1D("MISRHist", "MISR;GeV;Entries per 5 GeV bin", 100, 0.0, 500.0);
+	TH1Manager.at(ind_MLLHist) = new MyTH1D("MLLHist", "MLL;GeV;Entries per 5 GeV bin", 100, 0.0, 500.0);
+	TH1Manager.at(ind_MTTHist) = new MyTH1D("MTTHist", "Mtautau;GeV;Entries per 5 GeV bin", 102, -10.0, 500.0);
 	TH1Manager.at(ind_RISRHist) = new MyTH1D("RISRHist", "RISR; RISR ;Entries per 0.01 bin", 120, 0.0, 1.2);
 	TH1Manager.at(ind_LeptonsCategory) = new MyTH1D("LeptonsCategory", 
         "Lepton Exclusive Multiplicity; Category ;Entries per bin", 5, -0.5, 4.5 );
@@ -214,6 +218,8 @@ void histset::AnalyzeEntry(myselector& s){
 	//have to auto& or myreader will try to register copy of 
     //the readerarray ptr
 
+    nseen += 1;
+
     double PI =4.0*atan(1.0);
 
 	auto weight = *(s.weight);
@@ -280,38 +286,8 @@ void histset::AnalyzeEntry(myselector& s){
     auto& genEta_nu = s.genEta_nu;
     auto& genPhi_nu = s.genPhi_nu;
 
-    //loop over all generator leptons
-    if( genNlep > 0){      
-       for(int i=0; i<genPT_lep.GetSize(); i++){
-           TLorentzVector v;
-           v.SetPtEtaPhiM(genPT_lep[i], genEta_lep[i], genPhi_lep[i], genM_lep[i]);
-           cout << "genlep : " << i << " " << genPDGID_lep[i] << " " 
-                << genMomPDGID_lep[i] << " " << v.Px() << " " << v.Py() 
-                << " " << v.Pz() << " " << v.M() << endl;
-       }
-    }
-    //loop over all generator neutrinos
-    if( genNnu > 0){      
-       for(int i=0; i<genPT_nu.GetSize(); i++){
-           TLorentzVector v;
-           v.SetPtEtaPhiM(genPT_nu[i], genEta_nu[i], genPhi_nu[i], 0.0);
-           cout << "gennu  : " << i << " " << genPDGID_nu[i] << " " 
-                << genMomPDGID_nu[i] << " " << v.Px() << " " << v.Py() 
-                << " " << v.Pz() << " " << v.M() << endl;
-       }
-    }
-
-    //loop over all generator sparticles
-    if( genNsusy > 0){      
-       for(int i=0; i<genPT_susy.GetSize(); i++){
-           TLorentzVector v;
-           v.SetPtEtaPhiM(genPT_susy[i], genEta_susy[i], genPhi_susy[i], genM_susy[i]);
-           cout << "gensusy: " << i << " " << genPDGID_susy[i] << " " 
-                << genMomPDGID_susy[i] << " " << v.Px() << " " << v.Py()
-                << " " << v.Pz() << " " << v.M() << endl;
-       }
-    }
-
+    double genMET_x = genMET*cos(genMET_phi);
+    double genMET_y = genMET*sin(genMET_phi);
     double MET_x = MET*cos(MET_phi);
     double MET_y = MET*sin(MET_phi);
 
@@ -339,16 +315,21 @@ void histset::AnalyzeEntry(myselector& s){
     double xi0 =  py[1]*MET_x - px[1]*MET_y;
     double xi1 = -py[0]*MET_x + px[0]*MET_y;
     if(abs(det)<1.0e-8)cout << "Really small determinant ... " << det << endl;
+
+    double mtautau=0.0;
+    double mll = 0.0;
+    bool ltaudebug = false;
     if(Nlep>=2){
        xi0 = xi0/det;
        xi1 = xi1/det;
-       cout << "Found xi0, xi1 = " << xi0 << " " << xi1 << endl;
+//       cout << "Found xi0, xi1 = " << xi0 << " " << xi1 << endl;
        TLorentzVector v0,v1,vMET,vgenMET,vll;
        v0.SetPtEtaPhiM(PT_lep[0],Eta_lep[0],Phi_lep[0],M_lep[0]);
        v1.SetPtEtaPhiM(PT_lep[1],Eta_lep[1],Phi_lep[1],M_lep[1]);
        vMET.SetPtEtaPhiM(MET,0.0,MET_phi,0.0);  // Massless transverse 4-vector
        vgenMET.SetPtEtaPhiM(genMET,0.0,genMET_phi,0.0);  // Massless transverse 4-vector
        vll = v0+v1;
+       mll = vll.M();
        TLorentzVector vn0,vn1;
        if(xi0>0.0){
           vn0.SetPtEtaPhiM(xi0*PT_lep[0],Eta_lep[0],Phi_lep[0],0.0);
@@ -369,7 +350,9 @@ void histset::AnalyzeEntry(myselector& s){
        vtt = vtau0 + vtau1;
        double mtautausq = vtt.M2();
        double mtautau = vtt.M();   // should return -ve value if mass-squared is negative
-
+       
+       if(ltaudebug || nseen < 1000){
+       cout << "nseen : " << nseen << endl;
        cout << "MET:    " << vMET.Px() << " " << vMET.Py() << " " << vMET.Pz() << " " << vMET.M() << endl;
        cout << "genMET:    " << vgenMET.Px() << " " << vgenMET.Py() << " " << vgenMET.Pz() << " " << vgenMET.M() << endl;
        cout << "Leptons " << endl;
@@ -381,20 +364,14 @@ void histset::AnalyzeEntry(myselector& s){
        cout << "tau0:   " << vtau0.Px() << " " << vtau0.Py() << " " << vtau0.Pz() << " " << vtau0.M() << endl;
        cout << "tau1:   " << vtau1.Px() << " " << vtau1.Py() << " " << vtau1.Pz() << " " << vtau1.M() << endl;
        cout << "tautau: " << vtt.Px() << " " << vtt.Py() << " " << vtt.Pz() << " " << vtt.M() << endl;
- 
-       cout << "tau-tau kinematics: " << det << " " << xi0 
-            << " " << xi1 << " M2: " << mtautausq << " M: " 
-            << mtautau << endl; 
-
+       cout << "tau-tau kinematics  det: " << det << " xi0: " << xi0 
+            << " xi1: " << xi1 << " M2: " << mtautausq << " M: " 
+            << mtautau << endl;
+       }
     }
-
 
 // Dump variables
     cout << "Is_Lepton: " << Is_1L << " " << Is_2L << " " << Is_3L << " " << Is_4L << endl;
-    cout << "Check sizes " << Nlep << endl;
-    cout << "PT " << PT_lep.GetSize() << endl;
-    cout << "Eta " << Eta_lep.GetSize() << endl;
-    cout << "Phi " << Phi_lep.GetSize() << endl;
 
     enum cutnames{kLeptons, kMET, kbjet, kPTISR, kRISR, NCUTS};
 // https://www.geeksforgeeks.org/c-bitset-and-its-application/
@@ -446,6 +423,13 @@ void histset::AnalyzeEntry(myselector& s){
 
     if(bpcuts.all() || cutmask==16) FillTH1(ind_RISRHist, RISR, w);
 
+// Histograms for potential additional cuts
+    if(bpcuts.all()){
+       FillTH1(ind_MLLHist, mll, w);
+       FillTH1(ind_MTTHist, mll, w);
+    }
+    
+
 // Cut Flow
     FillTH1(ind_CutFlowHist, -1.0, w);
     for (int i=0; i<NCUTS; i++){
@@ -456,30 +440,39 @@ void histset::AnalyzeEntry(myselector& s){
        if(pass)FillTH1(ind_CutFlowHist, i, w);
     }
 
-	//event selection
-	//iterate over cut sequence, apply operators and values
-	bool pass;
-        for(unsigned int i=0; i<_cutsequence.size(); i++){
-                std::string cut = _cutsequence.at(i);
-		double cutvalue = _cutval.at(i);
-
-		if(cut.compare("nocut")==0){
-			pass = nocut(_npass[i], 1);
-			pass = nocut(_npassw[i], w);
-		}
-		if( cut.compare("minMET")==0){
-			pass = performcut( _npass[i], 1, MET, cutvalue, std::greater<double>());
-			pass = performcut( _npassw[i], w, MET, cutvalue, std::greater<double>());		
-                        if(!pass) break;
-                }
-                if( cut.compare("minMu")==0){
-               		pass = performcut( _npass[i],1, Nmu, cutvalue, std::greater_equal<double>());
-                        pass = performcut( _npassw[i], w, Nmu, cutvalue, std::greater_equal<double>());
-			if(!pass) break;
-		}
-             
-	}//end cut sequence loop	
-
+  if(bpcuts.all()){
+    cout << "genMET: " << genMET << " " << genMET_x << " " << genMET_y << endl;
+    //loop over all generator leptons
+    if( genNlep > 0){      
+       for(int i=0; i<genPT_lep.GetSize(); i++){
+           TLorentzVector v;
+           v.SetPtEtaPhiM(genPT_lep[i], genEta_lep[i], genPhi_lep[i], genM_lep[i]);
+           cout << "genlep : " << i << " " << genPDGID_lep[i] << " " 
+                << genMomPDGID_lep[i] << " " << v.Px() << " " << v.Py() 
+                << " " << v.Pz() << " " << v.M() << endl;
+       }
+    }
+    //loop over all generator neutrinos
+    if( genNnu > 0){      
+       for(int i=0; i<genPT_nu.GetSize(); i++){
+           TLorentzVector v;
+           v.SetPtEtaPhiM(genPT_nu[i], genEta_nu[i], genPhi_nu[i], 0.0);
+           cout << "gennu  : " << i << " " << genPDGID_nu[i] << " " 
+                << genMomPDGID_nu[i] << " " << v.Px() << " " << v.Py() 
+                << " " << v.Pz() << " " << v.M() << endl;
+       }
+    }
+    //loop over all generator sparticles
+    if( genNsusy > 0){      
+       for(int i=0; i<genPT_susy.GetSize(); i++){
+           TLorentzVector v;
+           v.SetPtEtaPhiM(genPT_susy[i], genEta_susy[i], genPhi_susy[i], genM_susy[i]);
+           cout << "gensusy: " << i << " " << genPDGID_susy[i] << " " 
+                << genMomPDGID_susy[i] << " " << v.Px() << " " << v.Py()
+                << " " << v.Pz() << " " << v.M() << endl;
+       }
+    }
+  }
 
 }
 #endif
