@@ -27,7 +27,7 @@ class histset{
 
 	 enum th1d_index{ind_METHist, ind_MSHist, ind_MISRHist, 
                      ind_CutFlowHist, ind_RISRHist, ind_MLLHist, 
-                     ind_MTTHist, ind_LeptonsCategory, 
+                     ind_MTTHist, ind_MTTpHist, ind_LeptonsCategory, 
                      numTH1Hist};
 	 enum th2d_index{numTH2Hist};
 	
@@ -138,6 +138,7 @@ void histset::init(){
 	TH1Manager.at(ind_MISRHist) = new MyTH1D("MISRHist", "MISR;GeV;Entries per 5 GeV bin", 100, 0.0, 500.0);
 	TH1Manager.at(ind_MLLHist) = new MyTH1D("MLLHist", "MLL;GeV;Entries per 5 GeV bin", 100, 0.0, 500.0);
 	TH1Manager.at(ind_MTTHist) = new MyTH1D("MTTHist", "Mtautau;GeV;Entries per 5 GeV bin", 102, -10.0, 500.0);
+	TH1Manager.at(ind_MTTpHist) = new MyTH1D("MTTpHist", "Mtautaup;GeV;Entries per 5 GeV bin", 200, -500.0, 500.0);
 	TH1Manager.at(ind_RISRHist) = new MyTH1D("RISRHist", "RISR; RISR ;Entries per 0.01 bin", 120, 0.0, 1.2);
 	TH1Manager.at(ind_LeptonsCategory) = new MyTH1D("LeptonsCategory", 
         "Lepton Exclusive Multiplicity; Category ;Entries per bin", 5, -0.5, 4.5 );
@@ -309,6 +310,7 @@ void histset::AnalyzeEntry(myselector& s){
 // First solve for the (xi0, xi1) vector that satisfies
 // xi0*px[0] + xi1*px[1] = MET_x
 // xi0*py[0] + xi1*py[1] = MET_y
+// ie. explains the MET in terms of two neutrino 4-vectors.
 // Ax = y with solution of x = A^-1 y
 
 // this only makes sense if Nlep>=2 ...
@@ -317,7 +319,8 @@ void histset::AnalyzeEntry(myselector& s){
     double xi1 = -py[0]*MET_x + px[0]*MET_y;
     if(Nlep>=2 && abs(det)<1.0e-8)cout << "Really small determinant ... " << det << endl;
 
-    double mtautau=0.0;
+    double mtautau = 0.0;
+    double mtautaup = 0.0;
     double mll = 0.0;
     bool ltaudebug = false;
     if(Nlep>=2){
@@ -350,8 +353,12 @@ void histset::AnalyzeEntry(myselector& s){
        TLorentzVector vtt;
        vtt = vtau0 + vtau1;
        double mtautausq = vtt.M2();
-       double mtautau = vtt.M();   // should return -ve value if mass-squared is negative
-       
+       double mtautau = vtt.M();   // should return -ve value if mass-squared is negative??
+// Alternative value
+       double mtautaupsq = (1.0 +xi0)*(1.0+xi1)*mll*mll;
+// Sometimes this is negative
+       mtautaup = (mtautaupsq < 0.0) ? -sqrt(-mtautaupsq) : sqrt(mtautaupsq);
+
        if(ltaudebug || nseen < 1000){
        cout << "nseen : " << nseen << endl;
        cout << "MET:    " << vMET.Px() << " " << vMET.Py() << " " << vMET.Pz() << " " << vMET.M() << endl;
@@ -366,8 +373,8 @@ void histset::AnalyzeEntry(myselector& s){
        cout << "tau1:   " << vtau1.Px() << " " << vtau1.Py() << " " << vtau1.Pz() << " " << vtau1.M() << endl;
        cout << "tautau: " << vtt.Px() << " " << vtt.Py() << " " << vtt.Pz() << " " << vtt.M() << endl;
        cout << "tau-tau kinematics  det: " << det << " xi0: " << xi0 
-            << " xi1: " << xi1 << " M2: " << mtautausq << " M: " 
-            << mtautau << endl;
+            << " xi1: " << xi1 << " M2: " << mtautausq << " M: "
+            << mtautau << " M' " << mtautaup << endl;
        }
     }
 
@@ -424,10 +431,11 @@ void histset::AnalyzeEntry(myselector& s){
 
     if(bpcuts.all() || cutmask==16) FillTH1(ind_RISRHist, RISR, w);
 
-// Histograms for potential additional cuts
+// Histograms for potential additional cuts - here both require 2 leptons
     if(bpcuts.all()){
        FillTH1(ind_MLLHist, mll, w);
-       FillTH1(ind_MTTHist, mll, w);
+       FillTH1(ind_MTTHist, mtautau, w);
+       FillTH1(ind_MTTpHist, mtautaup, w);
     }
     
 
