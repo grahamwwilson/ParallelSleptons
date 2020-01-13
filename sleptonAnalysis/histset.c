@@ -292,6 +292,45 @@ void histset::AnalyzeEntry(myselector& s){
     double MET_x = MET*cos(MET_phi);
     double MET_y = MET*sin(MET_phi);
 
+// Move all the basic cuts etc here.
+
+// Dump variables
+    cout << "Is_Lepton: " << Is_1L << " " << Is_2L << " " << Is_3L << " " << Is_4L << endl;
+
+    enum cutnames{kLeptons, kMET, kbjet, kPTISR, kRISR, NCUTS};
+// https://www.geeksforgeeks.org/c-bitset-and-its-application/
+    bitset<NCUTS> bncuts{};
+    bitset<NCUTS> bpcuts{};
+
+// First method for cut accounting (as I used to use ..)
+// Disadvantage is that we specify things using negative logic.
+    unsigned int cutmask = 0; // Events passing ALL cuts => cutmask=0
+    if( !Is_2L )        cutmask +=  1;
+    if( MET < 120.0 )   cutmask +=  2;
+    if( Nbjet > 0 )     cutmask +=  4; 
+    if( PTISR < 200.0 ) cutmask +=  8;
+    if( RISR < 0.95 )   cutmask += 16;
+
+// Second method using bitset with negative logic
+    if( !Is_2L )        bncuts[kLeptons] = 1;
+    if( MET < 120.0 )   bncuts[kMET] = 1;
+    if( Nbjet > 0 )     bncuts[kbjet] = 1; 
+    if( PTISR < 200.0 ) bncuts[kPTISR] = 1;
+    if( RISR < 0.95 )   bncuts[kRISR]= 1;
+
+// Third method using bitset with positive logic
+    if( Is_2L )         bpcuts[kLeptons] = 1;
+    if( MET > 120.0 )   bpcuts[kMET] = 1;
+    if( Nbjet == 0 )    bpcuts[kbjet] = 1; 
+    if( PTISR > 200.0 ) bpcuts[kPTISR] = 1;
+    if( RISR > 0.95 )   bpcuts[kRISR] = 1;
+// Also could use bpcuts.set(kRISR) syntax
+
+// Compare
+    cout << "cutmask: " << cutmask 
+         << " bncuts: " << bncuts 
+         << " bpcuts: " << bpcuts << endl;
+
 // x and y momentum components of each lepton
     double px[4];
     double py[4];
@@ -359,8 +398,9 @@ void histset::AnalyzeEntry(myselector& s){
 // Sometimes this is negative
        mtautaup = (mtautaupsq < 0.0) ? -sqrt(-mtautaupsq) : sqrt(mtautaupsq);
 
-       if(ltaudebug || nseen < 1000){
+       if(ltaudebug || nseen < 1000 || bpcuts.all() ){
        cout << "nseen : " << nseen << endl;
+       cout << "Event selection " << bpcuts.all() << endl;
        cout << "MET:    " << vMET.Px() << " " << vMET.Py() << " " << vMET.Pz() << " " << vMET.M() << endl;
        cout << "genMET:    " << vgenMET.Px() << " " << vgenMET.Py() << " " << vgenMET.Pz() << " " << vgenMET.M() << endl;
        cout << "Leptons " << endl;
@@ -378,42 +418,7 @@ void histset::AnalyzeEntry(myselector& s){
        }
     }
 
-// Dump variables
-    cout << "Is_Lepton: " << Is_1L << " " << Is_2L << " " << Is_3L << " " << Is_4L << endl;
 
-    enum cutnames{kLeptons, kMET, kbjet, kPTISR, kRISR, NCUTS};
-// https://www.geeksforgeeks.org/c-bitset-and-its-application/
-    bitset<NCUTS> bncuts{};
-    bitset<NCUTS> bpcuts{};
-
-// First method for cut accounting (as I used to use ..)
-// Disadvantage is that we specify things using negative logic.
-    unsigned int cutmask = 0; // Events passing ALL cuts => cutmask=0
-    if( !Is_2L )        cutmask +=  1;
-    if( MET < 120.0 )   cutmask +=  2;
-    if( Nbjet > 0 )     cutmask +=  4; 
-    if( PTISR < 200.0 ) cutmask +=  8;
-    if( RISR < 0.95 )   cutmask += 16;
-
-// Second method using bitset with negative logic
-    if( !Is_2L )        bncuts[kLeptons] = 1;
-    if( MET < 120.0 )   bncuts[kMET] = 1;
-    if( Nbjet > 0 )     bncuts[kbjet] = 1; 
-    if( PTISR < 200.0 ) bncuts[kPTISR] = 1;
-    if( RISR < 0.95 )   bncuts[kRISR]= 1;
-
-// Third method using bitset with positive logic
-    if( Is_2L )         bpcuts[kLeptons] = 1;
-    if( MET > 120.0 )   bpcuts[kMET] = 1;
-    if( Nbjet == 0 )    bpcuts[kbjet] = 1; 
-    if( PTISR > 200.0 ) bpcuts[kPTISR] = 1;
-    if( RISR > 0.95 )   bpcuts[kRISR] = 1;
-// Also could use bpcuts.set(kRISR) syntax
-
-// Compare
-    cout << "cutmask: " << cutmask 
-         << " bncuts: " << bncuts 
-         << " bpcuts: " << bpcuts << endl;
 
 // Lepton categories. Firstly multiplicity.
     FillTH1(ind_LeptonsCategory, 0.0, w);  // All events
