@@ -311,10 +311,11 @@ void histset::AnalyzeEntry(myselector& s){
 // xi0*py[0] + xi1*py[1] = MET_y
 // Ax = y with solution of x = A^-1 y
 
+// this only makes sense if Nlep>=2 ...
     double det =  px[0]*py[1] - px[1]*py[0];
     double xi0 =  py[1]*MET_x - px[1]*MET_y;
     double xi1 = -py[0]*MET_x + px[0]*MET_y;
-    if(abs(det)<1.0e-8)cout << "Really small determinant ... " << det << endl;
+    if(Nlep>=2 && abs(det)<1.0e-8)cout << "Really small determinant ... " << det << endl;
 
     double mtautau=0.0;
     double mll = 0.0;
