@@ -27,7 +27,8 @@ class histset{
 
 	 enum th1d_index{ind_METHist, ind_MSHist, ind_MISRHist, 
                      ind_CutFlowHist, ind_RISRHist, ind_MLLHist, 
-                     ind_MTTHist, ind_MTTpHist, ind_LeptonsCategory, 
+                     ind_MTTHist, ind_MTTpHist, ind_LeptonsCategory,
+                     ind_NjetHist, 
                      numTH1Hist};
 	 enum th2d_index{numTH2Hist};
 	
@@ -140,10 +141,10 @@ void histset::init(){
 	TH1Manager.at(ind_MTTHist) = new MyTH1D("MTTHist", "Mtautau;GeV;Entries per 5 GeV bin", 102, -10.0, 500.0);
 	TH1Manager.at(ind_MTTpHist) = new MyTH1D("MTTpHist", "Mtautaup;GeV;Entries per 5 GeV bin", 200, -500.0, 500.0);
 	TH1Manager.at(ind_RISRHist) = new MyTH1D("RISRHist", "RISR; RISR ;Entries per 0.01 bin", 120, 0.0, 1.2);
+	TH1Manager.at(ind_NjetHist) = new MyTH1D("NjetHist", "Njet; Njet ;Entries per multiplicity bin", 10, -0.5, 9.5);
 	TH1Manager.at(ind_LeptonsCategory) = new MyTH1D("LeptonsCategory", 
         "Lepton Exclusive Multiplicity; Category ;Entries per bin", 5, -0.5, 4.5 );
-// TODO  label bins of CutFlow
-	TH1Manager.at(ind_CutFlowHist) = new MyTH1D("CutFlowHist", "CutFlow; Cut; Weighted events", 6, -1.5, 4.5);
+	TH1Manager.at(ind_CutFlowHist) = new MyTH1D("CutFlowHist", "CutFlow; Cut; Weighted events", 8, -1.5, 6.5);
 }
 template <class type>
 void printvec(std::ofstream& f, std::vector<type> vec){
@@ -253,6 +254,7 @@ void histset::AnalyzeEntry(myselector& s){
 	auto genMET = *(s.genMET);
 	auto genMET_phi = *(s.genMET_phi);
 
+    auto Njet = *(s.Njet);
     auto Nbjet = *(s.Nbjet);
     auto Nmu = *(s.Nmu);
     auto Nele = *(s.Nele);
@@ -292,39 +294,62 @@ void histset::AnalyzeEntry(myselector& s){
     double MET_x = MET*cos(MET_phi);
     double MET_y = MET*sin(MET_phi);
 
+    int Nposl = 0;
+    int Nnegl = 0;
+// Count positive and negative leptons ...
+    for(int i=0; i<Nlep; i++){
+        if(Charge_lep[i] >= 1){
+           Nposl += 1;
+        }
+        else if(Charge_lep[i] <= -1){
+           Nnegl += 1;
+        }
+        else{
+           cout << "Funny charge ?? " << i << " " << Charge_lep[i] << endl;
+        }
+    }
+
 // Move all the basic cuts etc here.
 
 // Dump variables
 //    cout << "Is_Lepton: " << Is_1L << " " << Is_2L << " " << Is_3L << " " << Is_4L << endl;
 
-    enum cutnames{kLeptons, kMET, kbjet, kPTISR, kRISR, NCUTS};
+    enum cutnames{kLeptons, kSF, kOS, kMET, kbjet, kPTISR, kRISR, numCuts};
 // https://www.geeksforgeeks.org/c-bitset-and-its-application/
-    bitset<NCUTS> bncuts{};
-    bitset<NCUTS> bpcuts{};
+    bitset<numCuts> bncuts{};
+    bitset<numCuts> bpcuts{};
 
 // First method for cut accounting (as I used to use ..)
 // Disadvantage is that we specify things using negative logic.
     unsigned int cutmask = 0; // Events passing ALL cuts => cutmask=0
-    if( !Is_2L )        cutmask +=  1;
-    if( MET < 120.0 )   cutmask +=  2;
-    if( Nbjet > 0 )     cutmask +=  4; 
-    if( PTISR < 200.0 ) cutmask +=  8;
-    if( RISR < 0.95 )   cutmask += 16;
+    if( !Is_2L )                   cutmask += pow(2, int(kLeptons));
+    if( Nele < 2 && Nmu < 2 )      cutmask += pow(2, int(kSF));
+    if( Nnegl == 0 || Nposl == 0 ) cutmask += pow(2, int(kOS));
+    if( MET < 200.0 )              cutmask += pow(2, int(kMET));
+    if( Nbjet > 0 )                cutmask += pow(2, int(kbjet)); 
+    if( PTISR < 200.0 )            cutmask += pow(2, int(kPTISR));
+    if( RISR < 0.95 )              cutmask += pow(2, int(kRISR));
 
 // Second method using bitset with negative logic
-    if( !Is_2L )        bncuts[kLeptons] = 1;
-    if( MET < 120.0 )   bncuts[kMET] = 1;
-    if( Nbjet > 0 )     bncuts[kbjet] = 1; 
-    if( PTISR < 200.0 ) bncuts[kPTISR] = 1;
-    if( RISR < 0.95 )   bncuts[kRISR]= 1;
+    if( !Is_2L )                   bncuts[kLeptons] = 1;
+    if( Nele < 2 && Nmu < 2)       bncuts[kSF] = 1;
+    if( Nnegl == 0 || Nposl == 0 ) bncuts[kOS] = 1;
+    if( MET < 200.0 )              bncuts[kMET] = 1;
+    if( Nbjet > 0 )                bncuts[kbjet] = 1; 
+    if( PTISR < 200.0 )            bncuts[kPTISR] = 1;
+    if( RISR < 0.95 )              bncuts[kRISR]= 1;
 
 // Third method using bitset with positive logic
-    if( Is_2L )         bpcuts[kLeptons] = 1;
-    if( MET > 120.0 )   bpcuts[kMET] = 1;
-    if( Nbjet == 0 )    bpcuts[kbjet] = 1; 
-    if( PTISR > 200.0 ) bpcuts[kPTISR] = 1;
-    if( RISR > 0.95 )   bpcuts[kRISR] = 1;
+    if( Is_2L )                    bpcuts[kLeptons] = 1;
+    if( Nele>=2 || Nmu >=2 )       bpcuts[kSF] = 1;
+    if( Nnegl > 0 && Nposl > 0)    bpcuts[kOS] = 1;
+    if( MET > 200.0 )              bpcuts[kMET] = 1;
+    if( Nbjet == 0 )               bpcuts[kbjet] = 1; 
+    if( PTISR > 200.0 )            bpcuts[kPTISR] = 1;
+    if( RISR > 0.95 )              bpcuts[kRISR] = 1;
 // Also could use bpcuts.set(kRISR) syntax
+// Maybe we can just use +ve logic and use bitset flip 
+// to fairly seamlessly form the negative logic bitset/cutmask?
 
 // Compare
 //    cout << "cutmask: " << cutmask 
@@ -430,9 +455,10 @@ void histset::AnalyzeEntry(myselector& s){
        FillTH1(ind_METHist, MET, w);
 	   FillTH1(ind_MSHist, MS, w);
 	   FillTH1(ind_MISRHist, MISR, w);
+	   FillTH1(ind_NjetHist, Njet, w);
     }
 
-    if(bpcuts.all() || cutmask==16) FillTH1(ind_RISRHist, RISR, w);
+    if(bpcuts.all() || cutmask==pow(2, int(kRISR))) FillTH1(ind_RISRHist, RISR, w);
 
 // Histograms for potential additional cuts - here both require 2 leptons
     if(bpcuts.all()){
@@ -443,7 +469,7 @@ void histset::AnalyzeEntry(myselector& s){
     
 // Cut Flow
     FillTH1(ind_CutFlowHist, -1.0, w);
-    for (int i=0; i<NCUTS; i++){
+    for (int i=0; i<numCuts; i++){
        bool pass = true;
        for (int j=0; j<=i; j++){
           if(!bpcuts.test(j))pass = false;
