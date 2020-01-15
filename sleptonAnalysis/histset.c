@@ -9,11 +9,21 @@
 #include "TTreeReader.h"
 #include "TTreeReaderValue.h"
 #include "myselector.C"
+#include <boost/dynamic_bitset.hpp>
 
 using MyTH1D = ROOT::TThreadedObject<TH1D>;
 using MyTH2D = ROOT::TThreadedObject<TH2D>;
 
 int nseen = 0;
+enum cutNames{kLeptons, kSF, kOS, k2L, kMET, kbjet, kPTISR, kRISR, numCuts};
+const char *cutStrings[ ] = {" >= 2 leptons ", 
+                " Same-flavor lepton pair ", 
+                " Opposite-sign lepton pair ",
+                " Exactly two leptons ",
+                " MET > 200 GeV ",
+                " No b-jets ",
+                " PTISR > 200 GeV ", 
+                " RISR > 0.95 "};
 
 class histset{
 	
@@ -76,18 +86,90 @@ histset::histset(std::string tag = ""){
 	initCounts();
 
 }
+
+bool xcut2(bitset<numCuts> mybits, int kCut){
+// Old style using STL bitset.
+// Read in bitset with all the cuts that are satisfied
+// and check whether all the cuts are satisfied or the event only 
+// fails one specific cut
+   bitset<numCuts>bpcuts = mybits;
+   bitset<numCuts>bncuts = mybits.flip();
+
+   bool pass = false;
+   if(bpcuts.all()){
+      pass = true;
+   }
+   else{
+      unsigned long testvalue = bncuts.to_ulong();
+      if(testvalue == pow(2, kCut)) pass = true;
+   } 
+   return pass;
+}
+
+void PrintCuts(boost::dynamic_bitset<> mybits){
+
+// Here we assume that the passed bitset is the one corresponding 
+// to our current list. Eventually this may need some additional 
+// arguments, but this is tied to the 
+// definitions of cutNames and cutStrings
+
+   unsigned int num_bits = mybits.size();
+   if(num_bits == numCuts){
+      for (unsigned int i=0; i<numCuts; i++){
+         string mystring = cutStrings[i];
+         if (mybits.test(i)) {
+            cout << mystring << " PASS " << endl;
+         }
+         else{
+            cout << mystring << " FAIL " << endl;
+         }
+      }
+   }
+}
+
+
+bool xcut(boost::dynamic_bitset<> mybits, int kCut){
+// New style with boost:dynamic_bitset.
+// Read in bitset with all the cuts that are satisfied
+// and check whether all the cuts are satisfied or the event only 
+// fails one specific cut
+
+// With dynamic_bitset need to figure out the current size
+
+   unsigned int num_bits = mybits.size();
+
+   boost::dynamic_bitset<> bpcuts(num_bits);
+   boost::dynamic_bitset<> bncuts(num_bits);
+
+   bpcuts = mybits;
+   bncuts = mybits.flip();
+
+   bool pass = false;
+   if(bpcuts.all()){
+      pass = true;
+   }
+   else{
+      unsigned long testvalue = bncuts.to_ulong();
+      if(testvalue == pow(2, kCut)) pass = true;
+   } 
+   return pass;
+}
+
 bool nocut(double& count, double weight){
 	count = count + weight;
 	return true;
 	}
-bool performcut(double& count, double weight,  double observedvalue, double cutvalue, std::function<bool(double,double)> func ){
+
+bool performcut(double& count, double weight,  double observedvalue, 
+          double cutvalue, std::function<bool(double,double)> func ){
 	if( func(observedvalue, cutvalue) ){
 		count = count + weight;
 		return true;
 	}
 	return false;
-
 }
+
+
 ///CUT LIST I/O
 template <typename Out>
 void split(const std::string &s, char delim, Out result) {
@@ -309,47 +391,25 @@ void histset::AnalyzeEntry(myselector& s){
         }
     }
 
-// Move all the basic cuts etc here.
+// Move all the basic cuts etc here. The enum definition that 
+// defines numCuts is now global allowing use of the xcut function
+// that depends on a fixed length bitset.
+// Boost also has dynamic_bitset which may give more flexibility.
+//    bitset<numCuts> bpcuts{};
+    boost::dynamic_bitset<> bpcuts(numCuts);
+    if( Nlep >= 2 )                bpcuts.set(kLeptons);
+    if( Nele >= 2 || Nmu >= 2 )    bpcuts.set(kSF);
+    if( Nnegl > 0 && Nposl > 0)    bpcuts.set(kOS);
+    if( Nlep == 2 )                bpcuts.set(k2L);
+    if( MET > 200.0 )              bpcuts.set(kMET);
+    if( Nbjet == 0 )               bpcuts.set(kbjet); 
+    if( PTISR > 200.0 )            bpcuts.set(kPTISR);
+    if( RISR > 0.95 )              bpcuts.set(kRISR);
 
-// Dump variables
-//    cout << "Is_Lepton: " << Is_1L << " " << Is_2L << " " << Is_3L << " " << Is_4L << endl;
+// Make the negative logic copy - but may be better to move 
+// all this stuff to a function
+//    bncuts = bpcuts; bncuts = bncuts.flip();
 
-    enum cutnames{kLeptons, kSF, kOS, k2L, kMET, kbjet, kPTISR, kRISR, numCuts};
-// https://www.geeksforgeeks.org/c-bitset-and-its-application/
-    bitset<numCuts> bncuts{};
-    bitset<numCuts> bpcuts{};
-
-// First method for cut accounting (as I used to use ..)
-// Disadvantage is that we specify things using negative logic.
-    unsigned int cutmask = 0; // Events passing ALL cuts => cutmask=0
-    if( Nlep < 2 )                 cutmask += pow(2, int(kLeptons));
-    if( Nele < 2 && Nmu < 2 )      cutmask += pow(2, int(kSF));
-    if( Nnegl == 0 || Nposl == 0 ) cutmask += pow(2, int(kOS));
-    if( Nlep > 2 )                 cutmask += pow(2, int(k2L));
-    if( MET < 200.0 )              cutmask += pow(2, int(kMET));
-    if( Nbjet > 0 )                cutmask += pow(2, int(kbjet)); 
-    if( PTISR < 200.0 )            cutmask += pow(2, int(kPTISR));
-    if( RISR < 0.95 )              cutmask += pow(2, int(kRISR));
-
-// Second method using bitset with negative logic
-    if( Nlep < 2 )                 bncuts[kLeptons] = 1;
-    if( Nele < 2 && Nmu < 2 )      bncuts[kSF] = 1;
-    if( Nnegl == 0 || Nposl == 0 ) bncuts[kOS] = 1;
-    if( Nlep > 2 )                 bncuts[k2L] = 1;
-    if( MET < 200.0 )              bncuts[kMET] = 1;
-    if( Nbjet > 0 )                bncuts[kbjet] = 1; 
-    if( PTISR < 200.0 )            bncuts[kPTISR] = 1;
-    if( RISR < 0.95 )              bncuts[kRISR]= 1;
-
-// Third method using bitset with positive logic
-    if( Nlep >= 2 )                bpcuts[kLeptons] = 1;
-    if( Nele >= 2 || Nmu >= 2 )    bpcuts[kSF] = 1;
-    if( Nnegl > 0 && Nposl > 0)    bpcuts[kOS] = 1;
-    if( Nlep == 2 )                bpcuts[k2L] = 1;
-    if( MET > 200.0 )              bpcuts[kMET] = 1;
-    if( Nbjet == 0 )               bpcuts[kbjet] = 1; 
-    if( PTISR > 200.0 )            bpcuts[kPTISR] = 1;
-    if( RISR > 0.95 )              bpcuts[kRISR] = 1;
 // Also could use bpcuts.set(kRISR) syntax
 // Maybe we can just use +ve logic and use bitset flip 
 // to fairly seamlessly form the negative logic bitset/cutmask?
@@ -429,8 +489,10 @@ void histset::AnalyzeEntry(myselector& s){
        if(ltaudebug || nseen < 1000 || bpcuts.all() ){
        cout << "nseen : " << nseen << endl;
        cout << "Event selection " << bpcuts.all() << endl;
-       cout << "MET:    " << vMET.Px() << " " << vMET.Py() << " " << vMET.Pz() << " " << vMET.M() << endl;
-       cout << "genMET:    " << vgenMET.Px() << " " << vgenMET.Py() << " " << vgenMET.Pz() << " " << vgenMET.M() << endl;
+       cout << "MET:    " << vMET.Px() << " " << vMET.Py() << " " 
+                          << vMET.Pz() << " " << vMET.M() << endl;
+       cout << "genMET:    " << vgenMET.Px() << " " << vgenMET.Py() 
+            << " " << vgenMET.Pz() << " " << vgenMET.M() << endl;
        cout << "Leptons " << endl;
        cout << "L0:     " << v0.Px() << " " << v0.Py() << " " << v0.Pz() << " " << v0.M() << endl;
        cout << "L1:     " << v1.Px() << " " << v1.Py() << " " << v1.Pz() << " " << v1.M() << endl;
@@ -461,7 +523,8 @@ void histset::AnalyzeEntry(myselector& s){
 	   FillTH1(ind_NjetHist, Njet, w);
     }
 
-    if(bpcuts.all() || cutmask==pow(2, int(kRISR))) FillTH1(ind_RISRHist, RISR, w);
+// xcut removes a particular cut
+//    if(xcut(bpcuts, kRISR)) FillTH1(ind_RISRHist, RISR, w);
 
 // Histograms for potential additional cuts - here both require 2 leptons
     if(bpcuts.all()){
@@ -513,6 +576,7 @@ void histset::AnalyzeEntry(myselector& s){
        }
     }
   }
+  if(nseen <=10)PrintCuts(bpcuts);
 
 }
 #endif
