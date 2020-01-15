@@ -144,7 +144,7 @@ void histset::init(){
 	TH1Manager.at(ind_NjetHist) = new MyTH1D("NjetHist", "Njet; Njet ;Entries per multiplicity bin", 10, -0.5, 9.5);
 	TH1Manager.at(ind_LeptonsCategory) = new MyTH1D("LeptonsCategory", 
         "Lepton Exclusive Multiplicity; Category ;Entries per bin", 5, -0.5, 4.5 );
-	TH1Manager.at(ind_CutFlowHist) = new MyTH1D("CutFlowHist", "CutFlow; Cut; Weighted events", 8, -1.5, 6.5);
+	TH1Manager.at(ind_CutFlowHist) = new MyTH1D("CutFlowHist", "CutFlow; Cut; Weighted events", 9, -1.5, 7.5);
 }
 template <class type>
 void printvec(std::ofstream& f, std::vector<type> vec){
@@ -314,7 +314,7 @@ void histset::AnalyzeEntry(myselector& s){
 // Dump variables
 //    cout << "Is_Lepton: " << Is_1L << " " << Is_2L << " " << Is_3L << " " << Is_4L << endl;
 
-    enum cutnames{kLeptons, kSF, kOS, kMET, kbjet, kPTISR, kRISR, numCuts};
+    enum cutnames{kLeptons, kSF, kOS, k2L, kMET, kbjet, kPTISR, kRISR, numCuts};
 // https://www.geeksforgeeks.org/c-bitset-and-its-application/
     bitset<numCuts> bncuts{};
     bitset<numCuts> bpcuts{};
@@ -322,27 +322,30 @@ void histset::AnalyzeEntry(myselector& s){
 // First method for cut accounting (as I used to use ..)
 // Disadvantage is that we specify things using negative logic.
     unsigned int cutmask = 0; // Events passing ALL cuts => cutmask=0
-    if( !Is_2L )                   cutmask += pow(2, int(kLeptons));
+    if( Nlep < 2 )                 cutmask += pow(2, int(kLeptons));
     if( Nele < 2 && Nmu < 2 )      cutmask += pow(2, int(kSF));
     if( Nnegl == 0 || Nposl == 0 ) cutmask += pow(2, int(kOS));
+    if( Nlep > 2 )                 cutmask += pow(2, int(k2L));
     if( MET < 200.0 )              cutmask += pow(2, int(kMET));
     if( Nbjet > 0 )                cutmask += pow(2, int(kbjet)); 
     if( PTISR < 200.0 )            cutmask += pow(2, int(kPTISR));
     if( RISR < 0.95 )              cutmask += pow(2, int(kRISR));
 
 // Second method using bitset with negative logic
-    if( !Is_2L )                   bncuts[kLeptons] = 1;
-    if( Nele < 2 && Nmu < 2)       bncuts[kSF] = 1;
+    if( Nlep < 2 )                 bncuts[kLeptons] = 1;
+    if( Nele < 2 && Nmu < 2 )      bncuts[kSF] = 1;
     if( Nnegl == 0 || Nposl == 0 ) bncuts[kOS] = 1;
+    if( Nlep > 2 )                 bncuts[k2L] = 1;
     if( MET < 200.0 )              bncuts[kMET] = 1;
     if( Nbjet > 0 )                bncuts[kbjet] = 1; 
     if( PTISR < 200.0 )            bncuts[kPTISR] = 1;
     if( RISR < 0.95 )              bncuts[kRISR]= 1;
 
 // Third method using bitset with positive logic
-    if( Is_2L )                    bpcuts[kLeptons] = 1;
-    if( Nele>=2 || Nmu >=2 )       bpcuts[kSF] = 1;
+    if( Nlep >= 2 )                bpcuts[kLeptons] = 1;
+    if( Nele >= 2 || Nmu >= 2 )    bpcuts[kSF] = 1;
     if( Nnegl > 0 && Nposl > 0)    bpcuts[kOS] = 1;
+    if( Nlep == 2 )                bpcuts[k2L] = 1;
     if( MET > 200.0 )              bpcuts[kMET] = 1;
     if( Nbjet == 0 )               bpcuts[kbjet] = 1; 
     if( PTISR > 200.0 )            bpcuts[kPTISR] = 1;
