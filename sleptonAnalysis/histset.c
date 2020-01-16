@@ -383,6 +383,8 @@ void histset::AnalyzeEntry(myselector& s){
     double MET_x = MET*cos(MET_phi);
     double MET_y = MET*sin(MET_phi);
 
+    if(genNsusy>0.0)w*=2.76;
+
     int Nposl = 0;
     int Nnegl = 0;
     int Nidentified = 0;
