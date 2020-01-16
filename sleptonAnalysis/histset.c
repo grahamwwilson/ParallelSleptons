@@ -15,11 +15,15 @@ using MyTH1D = ROOT::TThreadedObject<TH1D>;
 using MyTH2D = ROOT::TThreadedObject<TH2D>;
 
 int nseen = 0;
-enum cutNames{kLeptons, kSF, kOS, k2L, kMET, kbjet, kPTISR, kRISR, numCuts};
-const char *cutStrings[ ] = {" >= 2 leptons ", 
+enum cutNames{kLeptons, kID, kISO, kPROMPT, kSF, kOS, k2L, kMET, kbjet, kPTISR, kRISR, numCuts};
+const char *cutStrings[ ] = {" >= 2 leptons ",
+                " ID'd lepton pair ",
+                " Isolated lepton pair ",
+                " Prompt lepton pair ", 
                 " Same-flavor lepton pair ", 
                 " Opposite-sign lepton pair ",
                 " Exactly two leptons ",
+                " Lepton ID ",
                 " MET > 200 GeV ",
                 " No b-jets ",
                 " PTISR > 200 GeV ", 
@@ -54,7 +58,7 @@ class histset{
 
 	//Tag for compiling multiple datasets into same file which share the same plots
 	std::string _tag{}; 
-	//this tag will automatically appended to the variable name in each histogram on write
+	//this tag will be automatically prepended to the variable name in each histogram on write
 	
 	//cut sequence and event selection variables
 	void initCounts();
@@ -64,7 +68,6 @@ class histset{
 	std::vector<std::string> _cutsequence{"nocut"}; //cut names read from cut list
 	std::vector<double> _npass{};//raw
 	std::vector<double> _npassw{};//weighted
- 	double _weight{};
 	std::vector<double> _cutval{1.}; //cut values read from cut list
 
 	//for now add absolute path of cut file
@@ -115,6 +118,7 @@ void PrintCuts(boost::dynamic_bitset<> mybits){
 
    unsigned int num_bits = mybits.size();
    if(num_bits == numCuts){
+      cout << "   " << endl;
       for (unsigned int i=0; i<numCuts; i++){
          string mystring = cutStrings[i];
          if (mybits.test(i)) {
@@ -124,6 +128,7 @@ void PrintCuts(boost::dynamic_bitset<> mybits){
             cout << mystring << " FAIL " << endl;
          }
       }
+      cout << " -----------cutStrings---------------------" << endl;
    }
 }
 
@@ -201,6 +206,7 @@ void histset::processCutFile(std::string cutfile){
 	
         file.close();
 }
+
 //END CUT LIST I/O
 void histset::initCounts(){
         std::vector<double> c(_cutsequence.size());	
@@ -226,7 +232,7 @@ void histset::init(){
 	TH1Manager.at(ind_NjetHist) = new MyTH1D("NjetHist", "Njet; Njet ;Entries per multiplicity bin", 10, -0.5, 9.5);
 	TH1Manager.at(ind_LeptonsCategory) = new MyTH1D("LeptonsCategory", 
         "Lepton Exclusive Multiplicity; Category ;Entries per bin", 5, -0.5, 4.5 );
-	TH1Manager.at(ind_CutFlowHist) = new MyTH1D("CutFlowHist", "CutFlow; Cut; Weighted events", 9, -1.5, 7.5);
+	TH1Manager.at(ind_CutFlowHist) = new MyTH1D("CutFlowHist", "CutFlow; Cut; Weighted events", 12, -1.5, 10.5);
 }
 template <class type>
 void printvec(std::ofstream& f, std::vector<type> vec){
@@ -303,23 +309,24 @@ void histset::AnalyzeEntry(myselector& s){
     //the readerarray ptr
 
     nseen += 1;
+    if(nseen==1)cout << "Saw tag " << _tag << endl;
 
     double PI =4.0*atan(1.0);
 
 	auto weight = *(s.weight);
- 	_weight = weight;
-    double w = 137.0*_weight;    //Normalize to 137 inverse fb
+    double w = 137.0*weight;    //Normalize to 137 inverse fb
 
 	//reco leptons
 	auto Nlep = *(s.Nlep);
 	auto& PT_lep = s.PT_lep;
 	auto& Eta_lep = s.Eta_lep;
 	auto& Phi_lep = s.Phi_lep;
-    auto& ID_lep = s.ID_lep;
+    auto& ID_lep = s.ID_lep;            //int
+    auto& SIP3D_lep = s.SIP3D_lep;      //double 
 	auto& Charge_lep = s.Charge_lep;
 	auto& PDGID_lep = s.PDGID_lep;
 	auto& M_lep = s.M_lep;
-    auto& MiniIso_lep = s.MiniIso_lep;
+    auto& MiniIso_lep = s.MiniIso_lep;  //double
 
 	//susy variables for category 0 (leptons to S)
 	auto& Njet_ISR = s.Njet_ISR[0];
@@ -378,8 +385,14 @@ void histset::AnalyzeEntry(myselector& s){
 
     int Nposl = 0;
     int Nnegl = 0;
+    int Nidentified = 0;
+    int Nisolated = 0;
+    int Nprompt = 0;
 // Count positive and negative leptons ...
     for(int i=0; i<Nlep; i++){
+        if(ID_lep[i] >=3)Nidentified +=1;
+        if(MiniIso_lep[i]*PT_lep[i] < 6.0)Nisolated +=1;
+        if(abs(SIP3D_lep[i]) < 4.0)Nprompt +=1;
         if(Charge_lep[i] >= 1){
            Nposl += 1;
         }
@@ -390,14 +403,17 @@ void histset::AnalyzeEntry(myselector& s){
            cout << "Funny charge ?? " << i << " " << Charge_lep[i] << endl;
         }
     }
-
+    
 // Move all the basic cuts etc here. The enum definition that 
 // defines numCuts is now global allowing use of the xcut function
 // that depends on a fixed length bitset.
 // Boost also has dynamic_bitset which may give more flexibility.
-//    bitset<numCuts> bpcuts{};
+
     boost::dynamic_bitset<> bpcuts(numCuts);
     if( Nlep >= 2 )                bpcuts.set(kLeptons);
+    if( Nidentified >= 2)          bpcuts.set(kID);
+    if( Nisolated >= 2)            bpcuts.set(kISO);
+    if( Nprompt >= 2)              bpcuts.set(kPROMPT);
     if( Nele >= 2 || Nmu >= 2 )    bpcuts.set(kSF);
     if( Nnegl > 0 && Nposl > 0)    bpcuts.set(kOS);
     if( Nlep == 2 )                bpcuts.set(k2L);
