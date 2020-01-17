@@ -10,24 +10,25 @@
 #include "TTreeReaderValue.h"
 #include "myselector.C"
 #include <boost/dynamic_bitset.hpp>
+#include <boost/algorithm/string.hpp>
 
 using MyTH1D = ROOT::TThreadedObject<TH1D>;
 using MyTH2D = ROOT::TThreadedObject<TH2D>;
 
 int nseen = 0;
-enum cutNames{kLeptons, kID, kISO, kPROMPT, kSF, kOS, k2L, kMET, kbjet, kPTISR, kRISR, numCuts};
+enum cutNames{kLeptons, kID, kISO, kPROMPT, kSF, kOS, k2L, kbjet, kMET, kPTISR, kRISR, numCuts};
 const char *cutStrings[ ] = {" >= 2 leptons ",
-                " ID'd lepton pair ",
-                " Isolated lepton pair ",
-                " Prompt lepton pair ", 
-                " Same-flavor lepton pair ", 
-                " Opposite-sign lepton pair ",
-                " Exactly two leptons ",
-                " Lepton ID ",
-                " MET > 200 GeV ",
-                " No b-jets ",
-                " PTISR > 200 GeV ", 
-                " RISR > 0.95 "};
+                             " ID'd lepton pair ",
+                             " Isolated lepton pair ",
+                             " Prompt lepton pair ", 
+                             " Same-flavor lepton pair ", 
+                             " Opposite-sign lepton pair ",
+                             " Exactly two leptons ",
+                             " Lepton ID ",
+                             " No b-jets ",
+                             " MET > 200 GeV ",
+                             " PTISR > 200 GeV ", 
+                             " RISR > 0.95 "};
 
 class histset{
 	
@@ -39,39 +40,39 @@ class histset{
 
 	 //bookeeping enumeration: (if we do this we dont need to worry about hist ptr copies and merging)
 
-	 enum th1d_index{ind_METHist, ind_MSHist, ind_MISRHist, 
-                     ind_CutFlowHist, ind_RISRHist, ind_MLLHist, 
-                     ind_MTTHist, ind_MTTpHist, ind_LeptonsCategory,
-                     ind_NjetHist, 
-                     numTH1Hist};
-	 enum th2d_index{numTH2Hist};
+       enum th1d_index{ind_METHist, ind_MSHist, ind_MISRHist, 
+                       ind_CutFlowHist, ind_RISRHist, ind_MLLHist, 
+                       ind_MTTHist, ind_MTTpHist, ind_LeptonsCategory,
+                       ind_NjetHist, ind_PTISRHist,
+                       numTH1Hist};
+       enum th2d_index{numTH2Hist};
 	
 	   // make a big vector and load enumerated histograms onto the vector
-	 std::vector<MyTH1D*> TH1Manager{};
-	 std::vector<MyTH2D*> TH2Manager{};
+       std::vector<MyTH1D*> TH1Manager{};
+	   std::vector<MyTH2D*> TH2Manager{};
 
 	  //locate the histogram and perform ptr copying 
-	  void FillTH1(int index, double x, double w);
-	  void FillTH2(int index, double x, double y);
+	   void FillTH1(int index, double x, double w);
+	   void FillTH2(int index, double x, double y);
 	
-	  void WriteHist(std::string outputfilename, std::string TFileOption);
+	   void WriteHist(std::string outputfilename, std::string TFileOption);
 
 	//Tag for compiling multiple datasets into same file which share the same plots
-	std::string _tag{}; 
+	   std::string _tag{}; 
 	//this tag will be automatically prepended to the variable name in each histogram on write
 	
 	//cut sequence and event selection variables
-	void initCounts();
-	void processCutFile(std::string cutfile);
-	void printSelectionTables(std::ofstream& f );
+	   void initCounts();
+	   void processCutFile(std::string cutfile);
+	   void printSelectionTables(std::ofstream& f );
 
-	std::vector<std::string> _cutsequence{"nocut"}; //cut names read from cut list
-	std::vector<double> _npass{};//raw
-	std::vector<double> _npassw{};//weighted
-	std::vector<double> _cutval{1.}; //cut values read from cut list
+	   std::vector<std::string> _cutsequence{"nocut"}; //cut names read from cut list
+	   std::vector<double> _npass{};//raw
+	   std::vector<double> _npassw{};//weighted
+	   std::vector<double> _cutval{1.}; //cut values read from cut list
 
 	//for now add absolute path of cut file
-	std::string cutlist = "/home/gwwilson/slepton/ParallelSleptons/sleptonAnalysis/cutfile.list";
+	   std::string cutlist = "/home/gwwilson/slepton/ParallelSleptons/sleptonAnalysis/cutfile.list";
 
 };
 
@@ -90,29 +91,11 @@ histset::histset(std::string tag = ""){
 
 }
 
-bool xcut2(bitset<numCuts> mybits, int kCut){
-// Old style using STL bitset.
-// Read in bitset with all the cuts that are satisfied
-// and check whether all the cuts are satisfied or the event only 
-// fails one specific cut
-   bitset<numCuts>bpcuts = mybits;
-   bitset<numCuts>bncuts = mybits.flip();
-
-   bool pass = false;
-   if(bpcuts.all()){
-      pass = true;
-   }
-   else{
-      unsigned long testvalue = bncuts.to_ulong();
-      if(testvalue == pow(2, kCut)) pass = true;
-   } 
-   return pass;
-}
-
 void PrintCuts(boost::dynamic_bitset<> mybits){
 
 // Here we assume that the passed bitset is the one corresponding 
-// to our current list. Eventually this may need some additional 
+// to our current list. 
+// TODO this need some additional 
 // arguments, but this is tied to the 
 // definitions of cutNames and cutStrings
 
@@ -131,7 +114,6 @@ void PrintCuts(boost::dynamic_bitset<> mybits){
       cout << " -----------cutStrings---------------------" << endl;
    }
 }
-
 
 bool xcut(boost::dynamic_bitset<> mybits, int kCut){
 // New style with boost:dynamic_bitset.
@@ -174,6 +156,31 @@ bool performcut(double& count, double weight,  double observedvalue,
 	return false;
 }
 
+bool GetMasses(std::string s, int* MP, int* MC){
+//
+// Read input string for SMS and background samples.
+// Use the boolean return argument to signify 
+// signal (true) and background (false).
+// The parent and child masses for signal are returned using pointers.
+//
+// The masses are only valid when this function returns true.
+//
+   bool pass;
+   std::vector<std::string> results;
+   boost::split(results, s, [](char c){return c == '_';});
+
+   if(results.size()==3){   
+      pass = true;    // SMS files should be SMS_400_200 etc
+      *MP = std::stoi(results[1]);
+      *MC = std::stoi(results[2]);
+   }
+   else{
+      pass = false;   // Background file
+      *MP = -999;
+      *MC = -999;
+   }
+   return pass;
+}
 
 ///CUT LIST I/O
 template <typename Out>
@@ -184,11 +191,13 @@ void split(const std::string &s, char delim, Out result) {
         *result++ = item;
     }
 }
+
 std::vector<std::string> split(const std::string &s, char delim) {
     std::vector<std::string> elems;
     split(s, delim, std::back_inserter(elems));
     return elems;
 }
+
 void histset::processCutFile(std::string cutfile){
         ifstream file;
         file.open (cutfile);
@@ -229,6 +238,7 @@ void histset::init(){
 	TH1Manager.at(ind_MTTHist) = new MyTH1D("MTTHist", "Mtautau;GeV;Entries per 5 GeV bin", 102, -10.0, 500.0);
 	TH1Manager.at(ind_MTTpHist) = new MyTH1D("MTTpHist", "Mtautaup;GeV;Entries per 5 GeV bin", 200, -500.0, 500.0);
 	TH1Manager.at(ind_RISRHist) = new MyTH1D("RISRHist", "RISR; RISR ;Entries per 0.01 bin", 120, 0.0, 1.2);
+	TH1Manager.at(ind_PTISRHist) = new MyTH1D("PTISRHist", "PTISR; PTISR (GeV);Entries per 10 GeV bin", 100, 0.0, 1000.0);
 	TH1Manager.at(ind_NjetHist) = new MyTH1D("NjetHist", "Njet; Njet ;Entries per multiplicity bin", 10, -0.5, 9.5);
 	TH1Manager.at(ind_LeptonsCategory) = new MyTH1D("LeptonsCategory", 
         "Lepton Exclusive Multiplicity; Category ;Entries per bin", 5, -0.5, 4.5 );
@@ -311,6 +321,19 @@ void histset::AnalyzeEntry(myselector& s){
     nseen += 1;
     if(nseen==1)cout << "Saw tag " << _tag << endl;
 
+    int MP,MC;
+    bool SignalSample = GetMasses(_tag, &MP, &MC);
+
+    if(nseen<10){
+       if(SignalSample){
+          cout << "Signal: MP = " << MP << endl;
+          cout << "Signal: MC = " << MC << endl;
+       }
+       else{
+          cout << "Bkgd sample" << endl;
+       }
+    }
+
     double PI =4.0*atan(1.0);
 
 	auto weight = *(s.weight);
@@ -390,7 +413,7 @@ void histset::AnalyzeEntry(myselector& s){
     int Nidentified = 0;
     int Nisolated = 0;
     int Nprompt = 0;
-// Count positive and negative leptons ...
+// Count leptons: positive, negative, IDd, isolated, prompt.
     for(int i=0; i<Nlep; i++){
         if(ID_lep[i] >=3)Nidentified +=1;
         if(MiniIso_lep[i]*PT_lep[i] < 6.0)Nisolated +=1;
@@ -406,10 +429,10 @@ void histset::AnalyzeEntry(myselector& s){
         }
     }
     
-// Move all the basic cuts etc here. The enum definition that 
-// defines numCuts is now global allowing use of the xcut function
-// that depends on a fixed length bitset.
-// Boost also has dynamic_bitset which may give more flexibility.
+// Move all the basic cuts etc here. 
+// The order of application is immaterial. The enum definition that 
+// defines numCuts and the bitset indices is currently global.
+// (this was necessary when using STL bitset - but is no longer).
 
     boost::dynamic_bitset<> bpcuts(numCuts);
     if( Nlep >= 2 )                bpcuts.set(kLeptons);
@@ -419,23 +442,10 @@ void histset::AnalyzeEntry(myselector& s){
     if( Nele >= 2 || Nmu >= 2 )    bpcuts.set(kSF);
     if( Nnegl > 0 && Nposl > 0)    bpcuts.set(kOS);
     if( Nlep == 2 )                bpcuts.set(k2L);
+    if( Nbjet == 0 )               bpcuts.set(kbjet);
     if( MET > 200.0 )              bpcuts.set(kMET);
-    if( Nbjet == 0 )               bpcuts.set(kbjet); 
     if( PTISR > 200.0 )            bpcuts.set(kPTISR);
     if( RISR > 0.95 )              bpcuts.set(kRISR);
-
-// Make the negative logic copy - but may be better to move 
-// all this stuff to a function
-//    bncuts = bpcuts; bncuts = bncuts.flip();
-
-// Also could use bpcuts.set(kRISR) syntax
-// Maybe we can just use +ve logic and use bitset flip 
-// to fairly seamlessly form the negative logic bitset/cutmask?
-
-// Compare
-//    cout << "cutmask: " << cutmask 
-//         << " bncuts: " << bncuts 
-//         << " bpcuts: " << bpcuts << endl;
 
 // x and y momentum components of each lepton
     double px[4];
@@ -542,7 +552,8 @@ void histset::AnalyzeEntry(myselector& s){
     }
 
 // xcut removes a particular cut
-//    if(xcut(bpcuts, kRISR)) FillTH1(ind_RISRHist, RISR, w);
+    if(xcut(bpcuts, kRISR)) FillTH1(ind_RISRHist, RISR, w);
+    if(xcut(bpcuts, kPTISR)) FillTH1(ind_PTISRHist, PTISR, w);
 
 // Histograms for potential additional cuts - here both require 2 leptons
     if(bpcuts.all()){
