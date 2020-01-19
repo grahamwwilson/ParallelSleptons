@@ -16,19 +16,8 @@ using MyTH1D = ROOT::TThreadedObject<TH1D>;
 using MyTH2D = ROOT::TThreadedObject<TH2D>;
 
 int nseen = 0;
-enum cutNames{kLeptons, kID, kISO, kPROMPT, kSF, kOS, k2L, kbjet, kMET, kPTISR, kRISR, numCuts};
-const char *cutStrings[ ] = {" >= 2 leptons ",
-                             " ID'd lepton pair ",
-                             " Isolated lepton pair ",
-                             " Prompt lepton pair ", 
-                             " Same-flavor lepton pair ", 
-                             " Opposite-sign lepton pair ",
-                             " Exactly two leptons ",
-                             " Lepton ID ",
-                             " No b-jets ",
-                             " MET > 200 GeV ",
-                             " PTISR > 200 GeV ", 
-                             " RISR > 0.95 "};
+
+
 
 class histset{
 	
@@ -40,10 +29,10 @@ class histset{
 
 	 //bookeeping enumeration: (if we do this we dont need to worry about hist ptr copies and merging)
 
-       enum th1d_index{ind_METHist, ind_MSHist, ind_MISRHist, 
-                       ind_CutFlowHist, ind_RISRHist, ind_MLLHist, 
+       enum th1d_index{ind_METHist, ind_MS0Hist, ind_MISR0Hist, 
+                       ind_CutFlowHist, ind_RISR0Hist, ind_MLLHist, 
                        ind_MTTHist, ind_MTTpHist, ind_LeptonsCategory,
-                       ind_NjetHist, ind_PTISRHist,
+                       ind_NjetHist, ind_PTISR0Hist,
                        numTH1Hist};
        enum th2d_index{numTH2Hist};
 	
@@ -95,14 +84,23 @@ void PrintCuts(boost::dynamic_bitset<> mybits){
 
 // Here we assume that the passed bitset is the one corresponding 
 // to our current list. 
-// TODO this need some additional 
-// arguments, but this is tied to the 
-// definitions of cutNames and cutStrings
+
+   const char *cutStrings[ ] = {" >= 2 leptons ",
+                                " ID'd lepton pair ",
+                                " Isolated lepton pair ",
+                                " Prompt lepton pair ", 
+                                " Same-flavor lepton pair ", 
+                                " Opposite-sign lepton pair ",
+                                " Exactly two leptons ",
+                                " Lepton ID ",
+                                " No b-jets ",
+                                " MET > 200 GeV ",
+                                " PTISR0 > 200 GeV ", 
+                                " RISR0 > 0.95 "};
 
    unsigned int num_bits = mybits.size();
-   if(num_bits == numCuts){
       cout << "   " << endl;
-      for (unsigned int i=0; i<numCuts; i++){
+      for (unsigned int i=0; i<num_bits; i++){
          string mystring = cutStrings[i];
          if (mybits.test(i)) {
             cout << mystring << " PASS " << endl;
@@ -112,7 +110,6 @@ void PrintCuts(boost::dynamic_bitset<> mybits){
          }
       }
       cout << " -----------cutStrings---------------------" << endl;
-   }
 }
 
 bool xcut(boost::dynamic_bitset<> mybits, int kCut){
@@ -232,13 +229,13 @@ void histset::init(){
 
 //init TH1D
 	TH1Manager.at(ind_METHist) = new MyTH1D("METHist", "MET;GeV;Entries per 5 GeV bin", 140, 100.0, 800.0);
-	TH1Manager.at(ind_MSHist) = new MyTH1D("MSHist", "MS;GeV;Entries per 5 GeV bin", 50, 0.0, 250.0);
-	TH1Manager.at(ind_MISRHist) = new MyTH1D("MISRHist", "MISR;GeV;Entries per 5 GeV bin", 100, 0.0, 500.0);
+	TH1Manager.at(ind_MS0Hist) = new MyTH1D("MS0Hist", "MS0;GeV;Entries per 5 GeV bin", 50, 0.0, 250.0);
+	TH1Manager.at(ind_MISR0Hist) = new MyTH1D("MISR0Hist", "MISR0;GeV;Entries per 5 GeV bin", 100, 0.0, 500.0);
 	TH1Manager.at(ind_MLLHist) = new MyTH1D("MLLHist", "MLL;GeV;Entries per 5 GeV bin", 100, 0.0, 500.0);
 	TH1Manager.at(ind_MTTHist) = new MyTH1D("MTTHist", "Mtautau;GeV;Entries per 5 GeV bin", 102, -10.0, 500.0);
 	TH1Manager.at(ind_MTTpHist) = new MyTH1D("MTTpHist", "Mtautaup;GeV;Entries per 5 GeV bin", 200, -500.0, 500.0);
-	TH1Manager.at(ind_RISRHist) = new MyTH1D("RISRHist", "RISR; RISR ;Entries per 0.01 bin", 120, 0.0, 1.2);
-	TH1Manager.at(ind_PTISRHist) = new MyTH1D("PTISRHist", "PTISR; PTISR (GeV);Entries per 10 GeV bin", 100, 0.0, 1000.0);
+	TH1Manager.at(ind_RISR0Hist) = new MyTH1D("RISR0Hist", "RISR0; RISR0 ;Entries per 0.01 bin", 120, 0.0, 1.2);
+	TH1Manager.at(ind_PTISR0Hist) = new MyTH1D("PTISR0Hist", "PTISR0; PTISR0 (GeV);Entries per 10 GeV bin", 100, 0.0, 1000.0);
 	TH1Manager.at(ind_NjetHist) = new MyTH1D("NjetHist", "Njet; Njet ;Entries per multiplicity bin", 10, -0.5, 9.5);
 	TH1Manager.at(ind_LeptonsCategory) = new MyTH1D("LeptonsCategory", 
         "Lepton Exclusive Multiplicity; Category ;Entries per bin", 5, -0.5, 4.5 );
@@ -355,11 +352,11 @@ void histset::AnalyzeEntry(myselector& s){
 	auto& Njet_ISR = s.Njet_ISR[0];
 	auto& Njet_S = s.Njet_S[0];
 	auto& Nlep_S = s.Nlep_S[0];
-	auto& MS = s.MS[0];
-	auto& PS = s.PS[0];
-	auto& PTISR = s.PTISR[0];
-	auto& RISR = s.RISR[0];
-	auto& MISR = s.MISR[0];
+	auto& MS0 = s.MS[0];
+	auto& PS0 = s.PS[0];
+	auto& PTISR0 = s.PTISR[0];
+	auto& RISR0 = s.RISR[0];
+	auto& MISR0 = s.MISR[0];
 
 	auto MET = *(s.MET);
 	auto MET_phi = *(s.MET_phi);
@@ -434,6 +431,9 @@ void histset::AnalyzeEntry(myselector& s){
 // defines numCuts and the bitset indices is currently global.
 // (this was necessary when using STL bitset - but is no longer).
 
+    enum cutNames{kLeptons, kID, kISO, kPROMPT, kSF, kOS, k2L, kbjet, kMET, kPTISR0, kRISR0, numCuts};
+//    enum cutNames2{kLeptons, kID, kISO, kPROMPT, kSF, kOS, k2L, kbjet, kMET, kPTISR0, kRISR0, numCuts2};
+
     boost::dynamic_bitset<> bpcuts(numCuts);
     if( Nlep >= 2 )                bpcuts.set(kLeptons);
     if( Nidentified >= 2)          bpcuts.set(kID);
@@ -444,8 +444,8 @@ void histset::AnalyzeEntry(myselector& s){
     if( Nlep == 2 )                bpcuts.set(k2L);
     if( Nbjet == 0 )               bpcuts.set(kbjet);
     if( MET > 200.0 )              bpcuts.set(kMET);
-    if( PTISR > 200.0 )            bpcuts.set(kPTISR);
-    if( RISR > 0.95 )              bpcuts.set(kRISR);
+    if( PTISR0 > 200.0 )           bpcuts.set(kPTISR0);
+    if( RISR0 > 0.95 )             bpcuts.set(kRISR0);
 
 // x and y momentum components of each lepton
     double px[4];
@@ -546,14 +546,14 @@ void histset::AnalyzeEntry(myselector& s){
     if(bpcuts.all()){
 // Require all cuts are passed
        FillTH1(ind_METHist, MET, w);
-	   FillTH1(ind_MSHist, MS, w);
-	   FillTH1(ind_MISRHist, MISR, w);
+	   FillTH1(ind_MS0Hist, MS0, w);
+	   FillTH1(ind_MISR0Hist, MISR0, w);
 	   FillTH1(ind_NjetHist, Njet, w);
     }
 
 // xcut removes a particular cut
-    if(xcut(bpcuts, kRISR)) FillTH1(ind_RISRHist, RISR, w);
-    if(xcut(bpcuts, kPTISR)) FillTH1(ind_PTISRHist, PTISR, w);
+    if(xcut(bpcuts, kRISR0)) FillTH1(ind_RISR0Hist, RISR0, w);
+    if(xcut(bpcuts, kPTISR0)) FillTH1(ind_PTISR0Hist, PTISR0, w);
 
 // Histograms for potential additional cuts - here both require 2 leptons
     if(bpcuts.all()){
