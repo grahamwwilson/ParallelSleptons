@@ -30,7 +30,8 @@ class histset{
 	   //bookeeping enumeration: (if we do this we dont need to worry about hist ptr copies and merging)
 
        enum th1d_index{ind_METHist, ind_MS0Hist, ind_MISR0Hist, 
-                       ind_CutFlowHist, ind_RISR0Hist, ind_MLLHist, 
+                       ind_CutFlowHist, ind_CutFlowHist2, ind_RISR0Hist, ind_MLLHist, 
+                       ind_CategoryHist,
                        ind_MTTHist, ind_MTTpHist, ind_LeptonsCategory,
                        ind_NjetHist, ind_PTISR0Hist,
                        numTH1Hist};
@@ -92,7 +93,6 @@ void PrintCuts(boost::dynamic_bitset<> mybits){
                                 " Same-flavor lepton pair ", 
                                 " Opposite-sign lepton pair ",
                                 " Exactly two leptons ",
-                                " Lepton ID ",
                                 " No b-jets ",
                                 " MET > 200 GeV ",
                                 " PTISR0 > 200 GeV ", 
@@ -240,6 +240,8 @@ void histset::init(){
 	TH1Manager.at(ind_LeptonsCategory) = new MyTH1D("LeptonsCategory", 
         "Lepton Exclusive Multiplicity; Category ;Entries per bin", 5, -0.5, 4.5 );
 	TH1Manager.at(ind_CutFlowHist) = new MyTH1D("CutFlowHist", "CutFlow; Cut; Weighted events", 12, -1.5, 10.5);
+	TH1Manager.at(ind_CutFlowHist2) = new MyTH1D("CutFlowHist2", "CutFlow; Cut; Weighted events", 14, -1.5, 12.5);
+	TH1Manager.at(ind_CategoryHist) = new MyTH1D("CategoryHist", "Categories; Category; Weighted events", 5, -0.5, 4.5);
 }
 template <class type>
 void printvec(std::ofstream& f, std::vector<type> vec){
@@ -363,8 +365,8 @@ void histset::AnalyzeEntry(myselector& s){
 // defines numCuts and the bitset indices is currently global.
 // (this was necessary when using STL bitset - but is no longer).
 
-    enum cutNames{kLeptons, kID, kISO, kPROMPT, kSF, kOS, k2L, kbjet, kMET, kPTISR0, kRISR0, numCuts};
-//    enum cutNames2{kLeptons, kID, kISO, kPROMPT, kSF, kOS, k2L, kbjet, kMET, kPTISR0, kRISR0, numCuts2};
+    enum  cutNames{kLeptons=0, kID=1, kISO=2, kPROMPT=3, kSF=4, kOS=5, k2L=6, kbjet=7, kMET=8, kPTISR0=9, kRISR0=10, numCuts=11};
+    enum cutNames2{kNlepS1=9, kNjetS1=10, kPTISR1=11, kRISR1=12, numCuts2=13};
 
     boost::dynamic_bitset<> bpcuts(numCuts);
     if( Nlep >= 2 )                bpcuts.set(kLeptons);
@@ -378,6 +380,27 @@ void histset::AnalyzeEntry(myselector& s){
     if( MET > 200.0 )              bpcuts.set(kMET);
     if( PTISR0 > 200.0 )           bpcuts.set(kPTISR0);
     if( RISR0 > 0.95 )             bpcuts.set(kRISR0);
+
+    boost::dynamic_bitset<> bcuts(numCuts2);
+    if( Nlep >= 2 )                bcuts.set(kLeptons);
+    if( Nidentified >= 2)          bcuts.set(kID);
+    if( Nisolated >= 2)            bcuts.set(kISO);
+    if( Nprompt >= 2)              bcuts.set(kPROMPT);
+    if( Nele >= 2 || Nmu >= 2 )    bcuts.set(kSF);
+    if( Nnegl > 0 && Nposl > 0)    bcuts.set(kOS);
+    if( Nlep == 2 )                bcuts.set(k2L);
+    if( Nbjet == 0 )               bcuts.set(kbjet);
+    if( MET > 200.0 )              bcuts.set(kMET);
+    if( Nlep_S1 == 2)              bcuts.set(kNlepS1);
+    if( Njet_S1 == 0)              bcuts.set(kNjetS1);
+    if( PTISR1 > 250.0 )           bcuts.set(kPTISR1);
+    if( RISR1 > 0.95 )             bcuts.set(kRISR1);
+
+    if(bpcuts.all())FillTH1(ind_CategoryHist,0.0,w);
+    if(bcuts.all())FillTH1(ind_CategoryHist,1.0,w);
+    if(bcuts.all()&&bpcuts.all())FillTH1(ind_CategoryHist,2.0,w);
+    if(bcuts.all()||bpcuts.all())FillTH1(ind_CategoryHist,3.0,w);
+
 
 // x and y momentum components of each lepton
     double px[4];
@@ -494,7 +517,7 @@ void histset::AnalyzeEntry(myselector& s){
        FillTH1(ind_MTTpHist, mtautaup, w);
     }
     
-// Cut Flow
+// Cut Flow 1
     FillTH1(ind_CutFlowHist, -1.0, w);
     for (int i=0; i<numCuts; i++){
        bool pass = true;
@@ -502,6 +525,16 @@ void histset::AnalyzeEntry(myselector& s){
           if(!bpcuts.test(j))pass = false;
        }
        if(pass)FillTH1(ind_CutFlowHist, i, w);
+    }
+
+// Cut Flow 2
+    FillTH1(ind_CutFlowHist2, -1.0, w);
+    for (int i=0; i<numCuts2; i++){
+       bool pass = true;
+       for (int j=0; j<=i; j++){
+          if(!bcuts.test(j))pass = false;
+       }
+       if(pass)FillTH1(ind_CutFlowHist2, i, w);
     }
 
   if(bpcuts.all()){

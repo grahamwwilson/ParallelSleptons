@@ -20,7 +20,7 @@
 	auto& M_lep = s.M_lep;
     auto& MiniIso_lep = s.MiniIso_lep;  //double
 
-	//susy variables for category 0 (leptons to S)
+	//susy variables for category 0 
 	auto& Njet_ISR0 = s.Njet_ISR[0];
 	auto& Njet_S0 = s.Njet_S[0];
 	auto& Nlep_S0 = s.Nlep_S[0];
@@ -29,6 +29,16 @@
 	auto& PTISR0 = s.PTISR[0];
 	auto& RISR0 = s.RISR[0];
 	auto& MISR0 = s.MISR[0];
+
+	//susy variables for category 1
+	auto& Njet_ISR1 = s.Njet_ISR[1];
+	auto& Njet_S1 = s.Njet_S[1];
+	auto& Nlep_S1 = s.Nlep_S[1];
+	auto& MS1 = s.MS[1];
+	auto& PS1 = s.PS[1];
+	auto& PTISR1 = s.PTISR[1];
+	auto& RISR1 = s.RISR[1];
+	auto& MISR1 = s.MISR[1];
 
 	auto MET = *(s.MET);
 	auto MET_phi = *(s.MET_phi);
