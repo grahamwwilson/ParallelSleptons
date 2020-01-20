@@ -27,7 +27,7 @@ class histset{
 
 	   void AnalyzeEntry(myselector& s); 
 
-	 //bookeeping enumeration: (if we do this we dont need to worry about hist ptr copies and merging)
+	   //bookeeping enumeration: (if we do this we dont need to worry about hist ptr copies and merging)
 
        enum th1d_index{ind_METHist, ind_MS0Hist, ind_MISR0Hist, 
                        ind_CutFlowHist, ind_RISR0Hist, ind_MLLHist, 
