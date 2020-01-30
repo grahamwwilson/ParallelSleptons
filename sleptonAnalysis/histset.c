@@ -15,9 +15,8 @@
 using MyTH1D = ROOT::TThreadedObject<TH1D>;
 using MyTH2D = ROOT::TThreadedObject<TH2D>;
 
-int nseen = 0;
-
-
+//ROOT::TThreadedObject<int> nseen;
+int nseen = 0;  // TODO FIX could be race condition
 
 class histset{
 	
@@ -30,7 +29,8 @@ class histset{
 	   //bookeeping enumeration: (if we do this we dont need to worry about hist ptr copies and merging)
 
        enum th1d_index{ind_METHist, ind_MS0Hist, ind_MISR0Hist, 
-                       ind_CutFlowHist, ind_CutFlowHist2, ind_RISR0Hist, ind_MLLHist, 
+                       ind_CutFlowHist, ind_CutFlowHist2, ind_RISR0Hist, ind_MLLHist,
+                       ind_ECutFlowHist, ind_ECutFlowHist2,
                        ind_CategoryHist,
                        ind_MTTHist, ind_MTTpHist, ind_LeptonsCategory,
                        ind_NjetHist, ind_PTISR0Hist,
@@ -116,7 +116,7 @@ bool xcut(boost::dynamic_bitset<> mybits, int kCut){
 // New style with boost:dynamic_bitset.
 // Read in bitset with all the cuts that are satisfied
 // and check whether all the cuts are satisfied or the event only 
-// fails one specific cut
+// fails the one specific cut
 
 // With dynamic_bitset need to figure out the current size
 
@@ -138,6 +138,27 @@ bool xcut(boost::dynamic_bitset<> mybits, int kCut){
    } 
    return pass;
 }
+
+bool ecut(boost::dynamic_bitset<> mybits, int kCut){
+// New style with boost:dynamic_bitset.
+// Check whether all except one cut is satisfied.
+// ie. assess how many events would recovered if this cut was removed
+
+   unsigned int num_bits = mybits.size();
+
+   boost::dynamic_bitset<> bpcuts(num_bits);
+   boost::dynamic_bitset<> bncuts(num_bits);
+
+   bpcuts = mybits;
+   bncuts = mybits.flip();
+
+   bool pass = false;
+   unsigned long testvalue = bncuts.to_ulong();
+   if(testvalue == pow(2, kCut)) pass = true; 
+   return pass;
+}
+
+
 
 bool nocut(double& count, double weight){
 	count = count + weight;
@@ -241,7 +262,9 @@ void histset::init(){
         "Lepton Exclusive Multiplicity; Category ;Entries per bin", 5, -0.5, 4.5 );
 	TH1Manager.at(ind_CutFlowHist) = new MyTH1D("CutFlowHist", "CutFlow; Cut; Weighted events", 12, -1.5, 10.5);
 	TH1Manager.at(ind_CutFlowHist2) = new MyTH1D("CutFlowHist2", "CutFlow; Cut; Weighted events", 14, -1.5, 12.5);
-	TH1Manager.at(ind_CategoryHist) = new MyTH1D("CategoryHist", "Categories; Category; Weighted events", 5, -0.5, 4.5);
+	TH1Manager.at(ind_ECutFlowHist) = new MyTH1D("ECutFlowHist", "ECutFlow; Cut; Weighted events", 12, -1.5, 10.5);
+	TH1Manager.at(ind_ECutFlowHist2) = new MyTH1D("ECutFlowHist2", "ECutFlow; Cut; Weighted events", 14, -1.5, 12.5);
+	TH1Manager.at(ind_CategoryHist) = new MyTH1D("CategoryHist", "Categories; Category; Weighted events", 8, -0.5, 7.5);
 }
 template <class type>
 void printvec(std::ofstream& f, std::vector<type> vec){
@@ -396,10 +419,17 @@ void histset::AnalyzeEntry(myselector& s){
     if( PTISR1 > 250.0 )           bcuts.set(kPTISR1);
     if( RISR1 > 0.95 )             bcuts.set(kRISR1);
 
+    bool elepair = (Nele >=2);
+    bool mupair = (Nmu >=2);
+
     if(bpcuts.all())FillTH1(ind_CategoryHist,0.0,w);
     if(bcuts.all())FillTH1(ind_CategoryHist,1.0,w);
     if(bcuts.all()&&bpcuts.all())FillTH1(ind_CategoryHist,2.0,w);
     if(bcuts.all()||bpcuts.all())FillTH1(ind_CategoryHist,3.0,w);
+    if(bpcuts.all() && elepair )FillTH1(ind_CategoryHist,4.0,w);
+    if(bpcuts.all() && mupair  )FillTH1(ind_CategoryHist,5.0,w);
+    if(bcuts.all() && elepair  )FillTH1(ind_CategoryHist,6.0,w);
+    if(bcuts.all() && mupair   )FillTH1(ind_CategoryHist,7.0,w);
 
 
 // x and y momentum components of each lepton
@@ -525,6 +555,7 @@ void histset::AnalyzeEntry(myselector& s){
           if(!bpcuts.test(j))pass = false;
        }
        if(pass)FillTH1(ind_CutFlowHist, i, w);
+       if(ecut(bpcuts,i))FillTH1(ind_ECutFlowHist, i, w);
     }
 
 // Cut Flow 2
@@ -535,6 +566,7 @@ void histset::AnalyzeEntry(myselector& s){
           if(!bcuts.test(j))pass = false;
        }
        if(pass)FillTH1(ind_CutFlowHist2, i, w);
+       if(ecut(bcuts,i))FillTH1(ind_ECutFlowHist2, i, w);
     }
 
   if(bpcuts.all()){
