@@ -158,8 +158,6 @@ bool ecut(boost::dynamic_bitset<> mybits, int kCut){
    return pass;
 }
 
-
-
 bool nocut(double& count, double weight){
 	count = count + weight;
 	return true;
@@ -388,8 +386,11 @@ void histset::AnalyzeEntry(myselector& s){
 // defines numCuts and the bitset indices is currently global.
 // (this was necessary when using STL bitset - but is no longer).
 
-    enum  cutNames{kLeptons=0, kID=1, kISO=2, kPROMPT=3, kSF=4, kOS=5, k2L=6, kbjet=7, kMET=8, kPTISR0=9, kRISR0=10, numCuts=11};
-    enum cutNames2{kNlepS1=9, kNjetS1=10, kPTISR1=11, kRISR1=12, numCuts2=13};
+    enum cutNames {kLeptons=0, kID=1, kISO=2, kPROMPT=3, kSF=4, kOS=5,
+                   k2L=6, kbjet=7, kMET=8, kPTISR0=9, kRISR0=10, 
+                   numCuts=11};
+    enum cutNames2{kNlepS1=9, kNjetS1=10, kPTISR1=11, kRISR1=12, 
+                   numCuts2=13};
 
     boost::dynamic_bitset<> bpcuts(numCuts);
     if( Nlep >= 2 )                bpcuts.set(kLeptons);

@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Sun Feb  2 16:40:49 2020 by ROOT version 6.18/04
-// from TTree KUAnalysis/KUAnalysis
-// found on file: NewTTree.root
+// Thu Dec 26 15:36:12 2019 by ROOT version 6.18/00
+// from TTree SMS_450_50/SMS_450_50
+// found on file: /panfs/pfs.local/work/wilson/gwwilson/SUSYNANO/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X_8_9.root
 //////////////////////////////////////////////////////////
 
 #ifndef myselector_h
@@ -19,7 +19,7 @@
 // Headers needed by this particular selector
 #include <vector>
 
-using namespace std;  //GWW
+using namespace std;
 
 class myselector : public TSelector {
 public :
@@ -171,25 +171,6 @@ public :
    TTreeReaderArray<double> cosJb = {fReader, "cosJb"};
    TTreeReaderArray<double> cosLa = {fReader, "cosLa"};
    TTreeReaderArray<double> cosLb = {fReader, "cosLb"};
-   TTreeReaderArray<double> MJ = {fReader, "MJ"};
-   TTreeReaderArray<double> ML = {fReader, "ML"};
-   TTreeReaderArray<double> EJ = {fReader, "EJ"};
-   TTreeReaderArray<double> EL = {fReader, "EL"};
-   TTreeReaderArray<double> PJ = {fReader, "PJ"};
-   TTreeReaderArray<double> PL = {fReader, "PL"};
-   TTreeReaderArray<double> PX3 = {fReader, "PX3"};
-   TTreeReaderArray<double> PX3_BoostT = {fReader, "PX3_BoostT"};
-   TTreeReaderArray<double> MX3a_BoostT = {fReader, "MX3a_BoostT"};
-   TTreeReaderArray<double> MX3b_BoostT = {fReader, "MX3b_BoostT"};
-   TTreeReaderArray<double> PV_BoostT = {fReader, "PV_BoostT"};
-   TTreeReaderArray<double> EVa_BoostT = {fReader, "EVa_BoostT"};
-   TTreeReaderArray<double> EVb_BoostT = {fReader, "EVb_BoostT"};
-   TTreeReaderArray<double> PVa_BoostT = {fReader, "PVa_BoostT"};
-   TTreeReaderArray<double> PVb_BoostT = {fReader, "PVb_BoostT"};
-   TTreeReaderArray<double> EJ_BoostT = {fReader, "EJ_BoostT"};
-   TTreeReaderArray<double> EL_BoostT = {fReader, "EL_BoostT"};
-   TTreeReaderArray<double> PJ_BoostT = {fReader, "PJ_BoostT"};
-   TTreeReaderArray<double> PL_BoostT = {fReader, "PL_BoostT"};
    TTreeReaderArray<double> H11S = {fReader, "H11S"};
    TTreeReaderArray<double> H21S = {fReader, "H21S"};
    TTreeReaderArray<double> HT21S = {fReader, "HT21S"};
@@ -226,7 +207,7 @@ public :
    virtual void    SlaveTerminate();
    virtual void    Terminate();
 
-   // ClassDef(myselector,0);    // GWW
+  // ClassDef(myselector,0);
 
 };
 

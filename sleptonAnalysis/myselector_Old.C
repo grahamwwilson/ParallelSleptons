@@ -1,4 +1,4 @@
-#ifndef myselector_cxx   //GWW
+#ifndef myselector_cxx
 #define myselector_cxx
 // The class definition in myselector.h has been generated automatically
 // by the ROOT utility TTree::MakeSelector(). This class is derived
@@ -87,4 +87,4 @@ void myselector::Terminate()
    // the results graphically or save the results to file.
 
 }
-#endif //GWW
+#endif
