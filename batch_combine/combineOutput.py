@@ -13,8 +13,10 @@ def bash( bashCommand ):
 #CURRENTLY ONLY RUN THIS ON BG, signal is already settled in 1 job (for now)
 
 #masterkey = ["DYJetsToLL:KUAnalysis:DY", "TSlepSlep:SMS:SS", "TTJets:KUAnalysis:TT", "WJetsToLNu:KUAnalysis:WJ"]
-#masterkey = ["DYJetsToLL:KUAnalysis:DY", "TTJets:KUAnalysis:TT", "WJetsToLNu:KUAnalysis:WJ"]
-masterkey = ["TTJets:KUAnalysis:TT"]
+masterkey = ["DY:KUAnalysis:DY", "TT:KUAnalysis:TT", "WJ:KUAnalysis:WJ",
+             "WW:KUAnalysis:WW", "WZ:KUAnalysis:WZ", "ZZ:KUAnalysis:ZZ",
+             "ST:KUAnalysis:ST", "ZJ:KUAnalysis:ZJ"]
+#masterkey = ["TTJets:KUAnalysis:TT"]
 
 #get a list of the job directories
 cmd = "ls ../ExecutionDirectory"
@@ -93,6 +95,7 @@ for ikey in range(len(masterkey)):
 	#print histfile_list
 
 	#specify output path and create key directory for output if it doesnt exist
+        bash("rm -r "+name)
 	bash("mkdir "+name)
 	out = open(name+"/EventSelTables_"+tag+".table","w+")
 	out.write(tableheader_now+"\n")
