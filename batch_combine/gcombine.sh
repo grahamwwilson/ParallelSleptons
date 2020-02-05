@@ -18,7 +18,7 @@ for lfile in $(cat ${flistfile})
 
 do
    name=$(echo "$lfile" | cut -f 1 -d '.')
-   echo $name
+#   echo $name
    rfile=${rpath}/${name}/susyHists.root
 
    if [ ! -f tmp.root ]
@@ -34,6 +34,7 @@ do
 
 # Add some diagnostics related to event counts?
    root -l -b -q 'getbkg.C()'
+   echo ${name}
 
 done
 
