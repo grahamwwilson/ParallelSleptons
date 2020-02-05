@@ -6,6 +6,8 @@ echo $ROOTSYS
 
 fl=${1-ZJets}
 
+echo 'fl  = ' ${fl}
+
 path=/home/gwwilson/slepton/ParallelSleptons/batch_scripts/datalists2
 flistfile=${path}/${fl}.flist
 
