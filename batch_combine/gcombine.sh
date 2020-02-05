@@ -1,6 +1,7 @@
 #!/bin/sh
 #
 # Add the various ROOT files specified.
+# Also need to track errors.   TODO
 #
 echo $ROOTSYS
 

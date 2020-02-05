@@ -4,6 +4,11 @@ date
 
 . ~/setenv.sh
 
+./gcombine.sh DY_All
+./gcombine.sh Higgs
+./gcombine.sh WW
+./gcombine.sh WZ
+./gcombine.sh ZZ
 ./gcombine.sh ZJets
 ./gcombine.sh WJets
 ./gcombine.sh DY_Low
