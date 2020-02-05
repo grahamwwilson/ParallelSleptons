@@ -209,7 +209,6 @@ public :
    TTreeReaderValue<Bool_t> Is_3L = {fReader, "Is_3L"};
    TTreeReaderValue<Bool_t> Is_4L = {fReader, "Is_4L"};
 
-
    myselector(TTree * /*tree*/ =0) { }
    virtual ~myselector() { }
    virtual Int_t   Version() const { return 2; }

@@ -33,7 +33,8 @@ class histset{
                        ind_ECutFlowHist, ind_ECutFlowHist2,
                        ind_CategoryHist,
                        ind_MTTHist, ind_MTTpHist, ind_LeptonsCategory,
-                       ind_NjetHist, ind_PTISR0Hist,
+                       ind_NjetHist, ind_PTISR0Hist, ind_PTISR1Hist, 
+                       ind_RISR1Hist,
                        numTH1Hist};
        enum th2d_index{numTH2Hist};
 	
@@ -158,6 +159,43 @@ bool ecut(boost::dynamic_bitset<> mybits, int kCut){
    return pass;
 }
 
+bool ecut2(const boost::dynamic_bitset<>& mybits, int kCut){
+// New style with boost:dynamic_bitset.
+// Check whether all except one cut is satisfied.
+// ie. assess how many events would recovered if this cut was removed
+
+   unsigned int num_bits = mybits.size();
+
+   boost::dynamic_bitset<> bpcuts(num_bits);
+   boost::dynamic_bitset<> bncuts(num_bits);
+
+   bpcuts = mybits;
+   bncuts = mybits;
+   bncuts.flip();
+//   bncuts = mybits.flip();  // this would modify mybits - so does not obey the const specification
+
+   bool pass = false;
+   unsigned long testvalue = bncuts.to_ulong();
+   if(testvalue == pow(2, kCut)) pass = true; 
+   return pass;
+}
+
+bool ecut3(const boost::dynamic_bitset<>& mybits, int kCut){
+// New style with boost:dynamic_bitset.
+// Check whether all except one cut is satisfied.
+// ie. assess how many events would recovered if this cut was removed
+
+   unsigned int num_bits = mybits.size();
+   boost::dynamic_bitset<> bpcuts(num_bits);
+   bpcuts = mybits;
+   bool pass = false;
+   unsigned long testvalue = (bpcuts.flip()).to_ulong();
+   if(testvalue == pow(2, kCut)) pass = true; 
+   return pass;
+}
+
+
+
 bool nocut(double& count, double weight){
 	count = count + weight;
 	return true;
@@ -255,6 +293,8 @@ void histset::init(){
 	TH1Manager.at(ind_MTTpHist) = new MyTH1D("MTTpHist", "Mtautaup;GeV;Entries per 5 GeV bin", 200, -500.0, 500.0);
 	TH1Manager.at(ind_RISR0Hist) = new MyTH1D("RISR0Hist", "RISR0; RISR0 ;Entries per 0.01 bin", 120, 0.0, 1.2);
 	TH1Manager.at(ind_PTISR0Hist) = new MyTH1D("PTISR0Hist", "PTISR0; PTISR0 (GeV);Entries per 10 GeV bin", 100, 0.0, 1000.0);
+	TH1Manager.at(ind_RISR1Hist) = new MyTH1D("RISR1Hist", "RISR1; RISR1 ;Entries per 0.01 bin", 120, 0.0, 1.2);
+	TH1Manager.at(ind_PTISR1Hist) = new MyTH1D("PTISR1Hist", "PTISR1; PTISR1 (GeV);Entries per 10 GeV bin", 100, 0.0, 1000.0);
 	TH1Manager.at(ind_NjetHist) = new MyTH1D("NjetHist", "Njet; Njet ;Entries per multiplicity bin", 10, -0.5, 9.5);
 	TH1Manager.at(ind_LeptonsCategory) = new MyTH1D("LeptonsCategory", 
         "Lepton Exclusive Multiplicity; Category ;Entries per bin", 5, -0.5, 4.5 );
@@ -332,13 +372,13 @@ void histset::WriteHist(std::string outputfilename, std::string TFileOption){
 }
 void histset::AnalyzeEntry(myselector& s){
    	
+    bool lprint = false;
+
     nseen += 1;
     if(nseen==1)cout << "Saw tag " << _tag << endl;
-
     int MP,MC;
     bool SignalSample = GetMasses(_tag, &MP, &MC);
-
-    if(nseen<10){
+    if(nseen==1){
        if(SignalSample){
           cout << "Signal: MP = " << MP << endl;
           cout << "Signal: MC = " << MC << endl;
@@ -500,7 +540,8 @@ void histset::AnalyzeEntry(myselector& s){
 // Sometimes this is negative
        mtautaup = (mtautaupsq < 0.0) ? -sqrt(-mtautaupsq) : sqrt(mtautaupsq);
 
-       if(ltaudebug || nseen < 1000 || bpcuts.all() ){
+       if(ltaudebug){
+//|| nseen < 1000 || bpcuts.all() ){
        cout << "nseen : " << nseen << endl;
        cout << "Event selection " << bpcuts.all() << endl;
        cout << "MET:    " << vMET.Px() << " " << vMET.Py() << " " 
@@ -540,6 +581,8 @@ void histset::AnalyzeEntry(myselector& s){
 // xcut removes a particular cut
     if(xcut(bpcuts, kRISR0)) FillTH1(ind_RISR0Hist, RISR0, w);
     if(xcut(bpcuts, kPTISR0)) FillTH1(ind_PTISR0Hist, PTISR0, w);
+    if(xcut(bcuts, kRISR1)) FillTH1(ind_RISR1Hist, RISR1, w);
+    if(xcut(bcuts, kPTISR1)) FillTH1(ind_PTISR1Hist, PTISR1, w);
 
 // Histograms for potential additional cuts - here both require 2 leptons
     if(bpcuts.all()){
@@ -570,6 +613,9 @@ void histset::AnalyzeEntry(myselector& s){
        if(ecut(bcuts,i))FillTH1(ind_ECutFlowHist2, i, w);
     }
 
+  bool lgeninfo = false;
+
+  if(lgeninfo){
   if(bpcuts.all()){
     cout << "genMET: " << genMET << " " << genMET_x << " " << genMET_y << endl;
     //loop over all generator leptons
@@ -603,6 +649,8 @@ void histset::AnalyzeEntry(myselector& s){
        }
     }
   }
+  }
+
   if(nseen <=10)PrintCuts(bpcuts);
 
 }
