@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# 
+# Add the various ROOT files specified.
 #
 echo $ROOTSYS
 path=/home/gwwilson/slepton/ParallelSleptons/batch_scripts/datalists2
@@ -10,6 +10,7 @@ flistfile=${path}/${fl}.flist
 rpath=/home/gwwilson/slepton/ParallelSleptons/ExecutionDirectory
 
 ofile=${fl}.root
+rm ${ofile}
 
 for lfile in $(cat ${flistfile})
 
@@ -26,7 +27,11 @@ do
 # subsequent files
       hadd out.root ${rfile} tmp.root
    fi
+
    mv out.root tmp.root
+
+# Add some diagnostics related to event counts?
+   root -l -b -q 'getbkg.C()'
 
 done
 
