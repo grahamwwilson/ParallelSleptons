@@ -181,12 +181,14 @@ public :
    TTreeReaderArray<double> PX3_BoostT = {fReader, "PX3_BoostT"};
    TTreeReaderArray<double> MX3a_BoostT = {fReader, "MX3a_BoostT"};
    TTreeReaderArray<double> MX3b_BoostT = {fReader, "MX3b_BoostT"};
+// Mperp = sqrt(0.5 *(MX3a**2 + MX3b**2))
    TTreeReaderArray<double> PV_BoostT = {fReader, "PV_BoostT"};
    TTreeReaderArray<double> EVa_BoostT = {fReader, "EVa_BoostT"};
    TTreeReaderArray<double> EVb_BoostT = {fReader, "EVb_BoostT"};
    TTreeReaderArray<double> PVa_BoostT = {fReader, "PVa_BoostT"};
    TTreeReaderArray<double> PVb_BoostT = {fReader, "PVb_BoostT"};
    TTreeReaderArray<double> EJ_BoostT = {fReader, "EJ_BoostT"};
+// One lepton pt-rel quantity.
    TTreeReaderArray<double> EL_BoostT = {fReader, "EL_BoostT"};
    TTreeReaderArray<double> PJ_BoostT = {fReader, "PJ_BoostT"};
    TTreeReaderArray<double> PL_BoostT = {fReader, "PL_BoostT"};

@@ -34,12 +34,19 @@ do
 
    mv out.root tmp.root
 
-# Add some diagnostics related to event counts?
-   root -l -b -q 'getbkg.C()'
+   cp ${rfile} specific.root
+
+# Add some diagnostics related to event counts for this sample
+   root -l -b -q 'getbkg2.C()'
    echo ${name}
 
 done
 
+# Diagnostics related to event counts for all subsamples
+root -l -b -q 'getbkg.C()'
+
 mv tmp.root ${ofile}
+
+rm specific.root
 
 exit
