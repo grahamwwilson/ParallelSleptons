@@ -3,8 +3,10 @@
 # Add the various ROOT files specified.
 #
 echo $ROOTSYS
+
+fl=${1-ZJets}
+
 path=/home/gwwilson/slepton/ParallelSleptons/batch_scripts/datalists2
-fl=ZJets
 flistfile=${path}/${fl}.flist
 
 rpath=/home/gwwilson/slepton/ParallelSleptons/ExecutionDirectory
