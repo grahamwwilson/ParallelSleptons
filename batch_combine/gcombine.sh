@@ -25,7 +25,7 @@ do
       cp ${rfile} out.root
    else
 # subsequent files
-      hadd out.root ${rfile} tmp.root
+      hadd -v 0 out.root ${rfile} tmp.root
    fi
 
    mv out.root tmp.root
