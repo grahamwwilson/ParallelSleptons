@@ -5,8 +5,9 @@
 echo $ROOTSYS
 
 fl=${1-ZJets}
-
+echo ' '
 echo 'fl  = ' ${fl}
+echo ' '
 
 path=/home/gwwilson/slepton/ParallelSleptons/batch_scripts/datalists2
 flistfile=${path}/${fl}.flist
@@ -48,5 +49,7 @@ root -l -b -q 'getbkg.C()'
 mv tmp.root ${ofile}
 
 rm specific.root
+
+echo '-------------------------------------'
 
 exit
