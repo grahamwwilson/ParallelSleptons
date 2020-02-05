@@ -1,5 +1,7 @@
 #!/bin/sh
 
+date
+
 . ~/setenv.sh
 
 ./gcombine.sh ZJets
@@ -10,5 +12,7 @@
 ./gcombine.sh TT
 ./gcombine.sh ST
 ./gcombine.sh ST_all
+
+date
 
 exit
