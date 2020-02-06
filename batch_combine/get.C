@@ -1,5 +1,11 @@
-void gets2(string rootfile="All.root", string dtype="BKG", 
-           string histtype="CutFlowHist2"){
+void get(string rootfile="All.root", string dtype="BKG", 
+         string histtype="CutFlowHist2"){
+
+// Print cut-flow type things for Selection 2 on specific data-set.
+// Default is all SM backgrounds 
+// root -l -b -q 'get.C("LLVV.root")'
+// root -l -b -q 'get.C("Slep.root","SMS_250_240")'
+// root -l -b -q 'get.C("Slep.root","SMS_250_240","ECutFlowHist2")'
 
    string histname = dtype+histtype;
    cout << "Statistics constructed from rootfile: " << rootfile << endl;

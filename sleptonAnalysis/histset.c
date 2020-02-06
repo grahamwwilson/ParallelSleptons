@@ -429,7 +429,9 @@ void histset::AnalyzeEntry(myselector& s){
     enum cutNames {kLeptons=0, kID=1, kISO=2, kPROMPT=3, kSF=4, kOS=5,
                    k2L=6, kbjet=7, kMET=8, kPTISR0=9, kRISR0=10, 
                    numCuts=11};
-    enum cutNames2{kNlepS1=9, kNjetS1=10, kPTISR1=11, kRISR1=12, 
+//    enum cutNames2{kNlepS1=9, kNjetS1=10, kPTISR1=11, kRISR1=12, 
+//                   numCuts2=13};
+    enum cutNames2{kNjetISR1=9, kNjetS1=10, kPTISR1=11, kRISR1=12, 
                    numCuts2=13};
 
     boost::dynamic_bitset<> bpcuts(numCuts);
@@ -455,8 +457,8 @@ void histset::AnalyzeEntry(myselector& s){
     if( Nlep == 2 )                bcuts.set(k2L);
     if( Nbjet == 0 )               bcuts.set(kbjet);
     if( MET > 200.0 )              bcuts.set(kMET);
-    if( Nlep_S1 == 2)              bcuts.set(kNlepS1);
-    if( Njet_S1 == 0)              bcuts.set(kNjetS1);
+    if( Njet_ISR1 > 0 )            bcuts.set(kNjetISR1);
+    if( Njet_S1 == 0 )             bcuts.set(kNjetS1);
     if( PTISR1 > 250.0 )           bcuts.set(kPTISR1);
     if( RISR1 > 0.95 )             bcuts.set(kRISR1);
 
