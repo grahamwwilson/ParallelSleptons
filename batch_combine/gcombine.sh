@@ -4,16 +4,17 @@
 # Also need to track errors.   TODO
 #
 echo $ROOTSYS
+echo $USER
 
 fl=${1-ZJets}
 echo ' '
 echo 'fl  = ' ${fl}
 echo ' '
 
-path=/home/gwwilson/slepton/ParallelSleptons/batch_scripts/datalists2
+path=/home/${USER}/slepton/ParallelSleptons/batch_scripts/datalists2
 flistfile=${path}/${fl}.flist
 
-rpath=/home/gwwilson/slepton/ParallelSleptons/ExecutionDirectory
+rpath=/home/${USER}/slepton/ParallelSleptons/ExecutionDirectory
 
 ofile=${fl}.root
 rm ${ofile}

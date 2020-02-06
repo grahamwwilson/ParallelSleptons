@@ -1,0 +1,155 @@
+
+Processing getb.C("DY")...
+Cut flow for DY events 
+Weighted events passing each cut sequentially
+ 1                          None     690679
+ 2                  >= 2 leptons     191234
+ 3              ID'd lepton pair     158004
+ 4          Isolated lepton pair     144104
+ 5            Prompt lepton pair     117188
+ 6       Same-flavor lepton pair     109498
+ 7     Opposite-sign lepton pair     108404
+ 8           Exactly two leptons    99517.7
+ 9                     No b-jets    85848.3
+10                 MET > 200 GeV    922.701
+11                  Nlep_S1 == 2    909.245
+12                 Njets_S1 == 0    407.617
+13              PTISR1 > 250 GeV    236.214
+14                  RISR1 > 0.95    9.89393
+
+Processing getb.C("TT")...
+Cut flow for TT events 
+Weighted events passing each cut sequentially
+ 1                          None 3.50324e+06
+ 2                  >= 2 leptons     969048
+ 3              ID'd lepton pair     744923
+ 4          Isolated lepton pair     518230
+ 5            Prompt lepton pair     428577
+ 6       Same-flavor lepton pair     256158
+ 7     Opposite-sign lepton pair     239944
+ 8           Exactly two leptons     163028
+ 9                     No b-jets    17355.9
+10                 MET > 200 GeV    1424.97
+11                  Nlep_S1 == 2    1392.65
+12                 Njets_S1 == 0    575.852
+13              PTISR1 > 250 GeV    182.637
+14                  RISR1 > 0.95    25.3823
+
+Processing getb.C("WJ")...
+Cut flow for WJ events 
+Weighted events passing each cut sequentially
+ 1                          None 1.59546e+07
+ 2                  >= 2 leptons     801746
+ 3              ID'd lepton pair     311249
+ 4          Isolated lepton pair     119402
+ 5            Prompt lepton pair    89054.4
+ 6       Same-flavor lepton pair      51829
+ 7     Opposite-sign lepton pair    31746.9
+ 8           Exactly two leptons    23139.4
+ 9                     No b-jets    20637.6
+10                 MET > 200 GeV       1177
+11                  Nlep_S1 == 2    1160.97
+12                 Njets_S1 == 0    610.675
+13              PTISR1 > 250 GeV    347.064
+14                  RISR1 > 0.95    55.2392
+
+Processing getb.C("ZJ")...
+Cut flow for ZJ events 
+Weighted events passing each cut sequentially
+ 1                          None     410157
+ 2                  >= 2 leptons    23389.5
+ 3              ID'd lepton pair    4851.29
+ 4          Isolated lepton pair    1189.76
+ 5            Prompt lepton pair    667.255
+ 6       Same-flavor lepton pair    514.084
+ 7     Opposite-sign lepton pair     418.02
+ 8           Exactly two leptons    330.822
+ 9                     No b-jets    272.291
+10                 MET > 200 GeV     31.918
+11                  Nlep_S1 == 2    30.9336
+12                 Njets_S1 == 0    16.8238
+13              PTISR1 > 250 GeV    6.06774
+14                  RISR1 > 0.95    4.99765
+
+Processing getb.C("ST")...
+Cut flow for ST events 
+Weighted events passing each cut sequentially
+ 1                          None 1.20275e+06
+ 2                  >= 2 leptons     244347
+ 3              ID'd lepton pair     183901
+ 4          Isolated lepton pair     125311
+ 5            Prompt lepton pair     100394
+ 6       Same-flavor lepton pair    57973.6
+ 7     Opposite-sign lepton pair    52704.8
+ 8           Exactly two leptons      38943
+ 9                     No b-jets    9918.93
+10                 MET > 200 GeV    608.702
+11                  Nlep_S1 == 2    557.351
+12                 Njets_S1 == 0    314.572
+13              PTISR1 > 250 GeV    113.759
+14                  RISR1 > 0.95    16.6581
+
+Processing getb.C("WW")...
+Cut flow for WW events 
+Weighted events passing each cut sequentially
+ 1                          None     276864
+ 2                  >= 2 leptons      46793
+ 3              ID'd lepton pair    35859.2
+ 4          Isolated lepton pair    30464.3
+ 5            Prompt lepton pair    26369.5
+ 6       Same-flavor lepton pair    13860.6
+ 7     Opposite-sign lepton pair    13511.6
+ 8           Exactly two leptons    12367.6
+ 9                     No b-jets    11746.8
+10                 MET > 200 GeV    1200.37
+11                  Nlep_S1 == 2    1137.67
+12                 Njets_S1 == 0    761.593
+13              PTISR1 > 250 GeV    467.067
+14                  RISR1 > 0.95    67.3252
+
+Processing getb.C("WZ")...
+Cut flow for WZ events 
+Weighted events passing each cut sequentially
+ 1                          None     105275
+ 2                  >= 2 leptons    19928.1
+ 3              ID'd lepton pair    15811.2
+ 4          Isolated lepton pair    13566.3
+ 5            Prompt lepton pair      11995
+ 6       Same-flavor lepton pair    10225.6
+ 7     Opposite-sign lepton pair    9344.78
+ 8           Exactly two leptons    4759.24
+ 9                     No b-jets    4235.76
+10                 MET > 200 GeV    358.377
+11                  Nlep_S1 == 2    327.965
+12                 Njets_S1 == 0    156.458
+13              PTISR1 > 250 GeV    49.9325
+14                  RISR1 > 0.95    8.72579
+
+Processing getb.C("ZZ")...
+Cut flow for ZZ events 
+Weighted events passing each cut sequentially
+ 1                          None    9481.54
+ 2                  >= 2 leptons    5172.82
+ 3              ID'd lepton pair     4768.7
+ 4          Isolated lepton pair    4536.65
+ 5            Prompt lepton pair     4074.7
+ 6       Same-flavor lepton pair    3964.73
+ 7     Opposite-sign lepton pair    3921.17
+ 8           Exactly two leptons    3530.03
+ 9                     No b-jets    3225.46
+10                 MET > 200 GeV    398.554
+11                  Nlep_S1 == 2    288.638
+12                 Njets_S1 == 0    214.786
+13              PTISR1 > 250 GeV    33.5363
+14                  RISR1 > 0.95    11.9441
+
+Processing plotb2.C()...
+h1 (DY) 9.89393
+h2 (TT) 25.3823
+h3 (WJ) 55.2392
+h4 (ZZ) 11.9441
+h5 (WW) 67.3252
+h6 (WZ) 8.72579
+h7 (ZJ) 4.99765
+h8 (ST) 16.6581
+h  200.166

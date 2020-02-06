@@ -1,0 +1,302 @@
+Thu Feb  6 10:28:59 CST 2020
+/home/graham/root
+graham
+ 
+fl  =  LLVV
+ 
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95    11.6561 +-   0.227072
+ZZTo2L2Nu_13TeV_powheg_pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95    63.6366 +-    5.16161
+WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17_102X
+
+Processing getbkg.C()...
+Weighted event TOTAL 
+14                  RISR1 > 0.95    75.2927 +-     5.1666
+===================================LLVV
+/home/graham/root
+graham
+ 
+fl  =  Other
+ 
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95          0 +-          0
+WWTo4Q_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95    2.01395 +-   0.607227
+WWToLNuQQ_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95  0.0751013 +-    0.03066
+ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95   0.091771 +-  0.0254527
+ZZTo2Q2Nu_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95   0.144868 +- 0.00764583
+ZZTo4L_13TeV_powheg_pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95      7.886 +-   0.839377
+WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95   0.258616 +-   0.182869
+WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95   0.535089 +-   0.366599
+WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8_v2_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95   0.046087 +-    0.07287
+WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95    2.04597 +-    1.44672
+GluGluHToZZTo4L_M125_13TeV_powheg2_JHUGenV7011_pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95    1.28968 +-   0.744599
+VHToGG_M125_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95   0.288923 +-     0.2043
+VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X
+
+Processing getbkg.C()...
+Weighted event TOTAL 
+14                  RISR1 > 0.95    14.6761 +-    1.98424
+===================================Other
+/home/graham/root
+graham
+ 
+fl  =  VJets
+ 
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95          0 +-          0
+WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95          0 +-          0
+WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95      34.28 +-    6.72287
+WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95    17.1309 +-    2.17563
+WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95    3.02275 +-   0.351388
+WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95   0.562063 +-    0.10095
+WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95  0.0441593 +-  0.0127477
+WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95 2.65671e-05 +- 2.65671e-05
+WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95          0 +-          0
+ZJetsToNuNu_HT-100To200_13TeV-madgraph_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95    3.93766 +-   0.984415
+ZJetsToNuNu_HT-200To400_13TeV-madgraph_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95    1.26479 +-   0.223585
+ZJetsToNuNu_HT-400To600_13TeV-madgraph_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95   0.357403 +-  0.0776963
+ZJetsToNuNu_HT-600To800_13TeV-madgraph_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95  0.0791492 +-  0.0559669
+ZJetsToNuNu_HT-800To1200_13TeV-madgraph_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95          0 +-          0
+ZJetsToNuNu_HT-1200To2500_13TeV-madgraph_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95          0 +-          0
+ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph_Fall17_102X
+
+Processing getbkg.C()...
+Weighted event TOTAL 
+14                  RISR1 > 0.95     60.679 +-    7.14789
+===================================VJets
+/home/graham/root
+graham
+ 
+fl  =  DY_All
+ 
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95   0.813437 +-   0.813437
+DYJetsToLL_M-4to50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95          0 +-          0
+DYJetsToLL_M-4to50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95   0.080484 +-   0.080484
+DYJetsToLL_M-4to50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95  0.0264499 +-  0.0264499
+DYJetsToLL_M-4to50_HT-600toInf_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95    3.74075 +-    2.15972
+DYJetsToLL_M-50_HT-70to100_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95     2.0028 +-    1.15632
+DYJetsToLL_M-50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95    1.41609 +-   0.578117
+DYJetsToLL_M-50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95   0.839223 +-   0.171306
+DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95   0.786469 +-  0.0920493
+DYJetsToLL_M-50_HT-600to800_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95   0.265548 +-  0.0609208
+DYJetsToLL_M-50_HT-800to1200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95  0.0168107 +-  0.0168107
+DYJetsToLL_M-50_HT-1200to2500_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95          0 +-          0
+DYJetsToLL_M-50_HT-2500toInf_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg.C()...
+Weighted event TOTAL 
+14                  RISR1 > 0.95    9.98806 +-     2.6545
+===================================DY_All
+/home/graham/root
+graham
+ 
+fl  =  Top
+ 
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95    19.0001 +-    1.57787
+TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95    3.72601 +-    0.71707
+TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95    3.04235 +-    0.60847
+TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95   0.111321 +-  0.0642717
+ST_s-channel_4f_leptonDecays_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95          0 +-          0
+ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95    4.11202 +-    2.37407
+ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95    3.82294 +-    1.10361
+ST_tW_antitop_5f_inclusiveDecays_TuneCP5_PSweights_13TeV-powheg-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95    3.73296 +-    1.07762
+ST_tW_top_5f_inclusiveDecays_TuneCP5_PSweights_13TeV-powheg-pythia8_Fall17_102X
+
+Processing getbkg2.C()...
+Weighted event contribution 
+14                  RISR1 > 0.95 0.00919829 +- 0.00265532
+ST_tWll_5f_LO_TuneCP5_PSweights_13TeV-madgraph-pythia8_Fall17_102X
+
+Processing getbkg.C()...
+Weighted event TOTAL 
+14                  RISR1 > 0.95    37.5569 +-    3.37546
+===================================Top
+Thu Feb  6 10:29:17 CST 2020
