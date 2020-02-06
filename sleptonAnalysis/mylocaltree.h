@@ -24,6 +24,8 @@
 	auto& Njet_ISR0 = s.Njet_ISR[0];
 	auto& Njet_S0 = s.Njet_S[0];
 	auto& Nlep_S0 = s.Nlep_S[0];
+	auto& Nlepa_S0 = s.Nlep_a[0];
+	auto& Nlepb_S0 = s.Nlep_b[0];
 	auto& MS0 = s.MS[0];
 	auto& PS0 = s.PS[0];
 	auto& PTISR0 = s.PTISR[0];
@@ -34,6 +36,8 @@
 	auto& Njet_ISR1 = s.Njet_ISR[1];
 	auto& Njet_S1 = s.Njet_S[1];
 	auto& Nlep_S1 = s.Nlep_S[1];
+	auto& Nlepa_S1 = s.Nlep_a[1];
+	auto& Nlepb_S1 = s.Nlep_b[1];
 	auto& MS1 = s.MS[1];
 	auto& PS1 = s.PS[1];
 	auto& PTISR1 = s.PTISR[1];

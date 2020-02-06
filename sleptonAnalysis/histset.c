@@ -34,7 +34,8 @@ class histset{
                        ind_CategoryHist,
                        ind_MTTHist, ind_MTTpHist, ind_LeptonsCategory,
                        ind_NjetHist, ind_PTISR0Hist, ind_PTISR1Hist, 
-                       ind_RISR1Hist,
+                       ind_RISR1Hist, 
+                       ind_NlepS1Hist, ind_mNlepabHist,
                        numTH1Hist};
        enum th2d_index{numTH2Hist};
 	
@@ -111,6 +112,40 @@ void PrintCuts(boost::dynamic_bitset<> mybits){
          }
       }
       cout << " -----------cutStrings---------------------" << endl;
+}
+
+void PrintCuts2(boost::dynamic_bitset<> mybits){
+
+// Here we assume that the passed bitset is the one corresponding 
+// to our current list. 
+
+   const char *cutStrings[ ] = {" None ",
+                                " >= 2 leptons ",
+                                " ID'd lepton pair ",
+                                " Isolated lepton pair ",
+                                " Prompt lepton pair ", 
+                                " Same-flavor lepton pair ", 
+                                " Opposite-sign lepton pair ",
+                                " Exactly two leptons ",
+                                " No b-jets ",
+                                " MET > 200 GeV ",
+                                " Njet > 0 ",
+                                " Njets_S1 == 0 ", 
+                                " PTISR1 > 250 GeV ", 
+                                " RISR1 > 0.95 "};
+
+   unsigned int num_bits = mybits.size();
+      cout << "   " << endl;
+      for (unsigned int i=0; i<num_bits; i++){
+         string mystring = cutStrings[i];
+         if (mybits.test(i)) {
+            cout << mystring << " PASS " << endl;
+         }
+         else{
+            cout << mystring << " FAIL " << endl;
+         }
+      }
+      cout << " -----------cutStrings2--------------------" << endl;
 }
 
 bool xcut(boost::dynamic_bitset<> mybits, int kCut){
@@ -303,6 +338,9 @@ void histset::init(){
 	TH1Manager.at(ind_ECutFlowHist) = new MyTH1D("ECutFlowHist", "ECutFlow; Cut; Weighted events", 12, -1.5, 10.5);
 	TH1Manager.at(ind_ECutFlowHist2) = new MyTH1D("ECutFlowHist2", "ECutFlow; Cut; Weighted events", 14, -1.5, 12.5);
 	TH1Manager.at(ind_CategoryHist) = new MyTH1D("CategoryHist", "Categories; Category; Weighted events", 8, -0.5, 7.5);
+	TH1Manager.at(ind_NlepS1Hist) = new MyTH1D("NlepS1Hist", "Nleptons S1; Nleptons S1; Weighted events", 6, -0.5, 5.5);
+	TH1Manager.at(ind_mNlepabHist) = new MyTH1D("mNlepabHist", "min(Nlepab) S1; min(Nlepab) S1; Weighted events", 6, -0.5, 5.5);
+//                       ind_NlepS1Hist, ind_mNlepabHist,
 }
 template <class type>
 void printvec(std::ofstream& f, std::vector<type> vec){
@@ -614,6 +652,12 @@ void histset::AnalyzeEntry(myselector& s){
        if(pass)FillTH1(ind_CutFlowHist2, i, w);
        if(ecut(bcuts,i))FillTH1(ind_ECutFlowHist2, i, w);
     }
+     if(bcuts.all()){
+// Passes all cuts
+//                       ind_NlepS1Hist, ind_mNlepabHist,
+       FillTH1(ind_NlepS1Hist, Nlep_S1, w);
+       FillTH1(ind_mNlepabHist, min(Nlepa_S1,Nlepb_S1), w);
+     }
 
   bool lgeninfo = false;
 
@@ -654,6 +698,7 @@ void histset::AnalyzeEntry(myselector& s){
   }
 
   if(nseen <=10)PrintCuts(bpcuts);
+  if(nseen <=10)PrintCuts2(bcuts);
 
 }
 #endif
