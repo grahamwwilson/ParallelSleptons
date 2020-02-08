@@ -28,14 +28,14 @@ class histset{
 
 	   //bookeeping enumeration: (if we do this we dont need to worry about hist ptr copies and merging)
 
-       enum th1d_index{ind_METHist, ind_MS0Hist, ind_MISR0Hist, 
+       enum th1d_index{ind_METHist, ind_MS1Hist, ind_MISR1Hist, 
                        ind_CutFlowHist, ind_CutFlowHist2, ind_RISR0Hist, ind_MLLHist,
                        ind_ECutFlowHist, ind_ECutFlowHist2,
                        ind_CategoryHist,
                        ind_MTTHist, ind_MTTpHist, ind_LeptonsCategory,
                        ind_NjetHist, ind_PTISR0Hist, ind_PTISR1Hist, 
                        ind_RISR1Hist, 
-                       ind_NlepS1Hist, ind_mNlepabHist,
+                       ind_NlepS1Hist, ind_mNlepabHist, ind_MaxSIP3DHist,
                        numTH1Hist};
        enum th2d_index{numTH2Hist};
 	
@@ -321,8 +321,8 @@ void histset::init(){
 
 //init TH1D
 	TH1Manager.at(ind_METHist) = new MyTH1D("METHist", "MET;GeV;Entries per 5 GeV bin", 140, 100.0, 800.0);
-	TH1Manager.at(ind_MS0Hist) = new MyTH1D("MS0Hist", "MS0;GeV;Entries per 5 GeV bin", 50, 0.0, 250.0);
-	TH1Manager.at(ind_MISR0Hist) = new MyTH1D("MISR0Hist", "MISR0;GeV;Entries per 5 GeV bin", 100, 0.0, 500.0);
+	TH1Manager.at(ind_MS1Hist) = new MyTH1D("MS1Hist", "MS1;GeV;Entries per 5 GeV bin", 50, 0.0, 250.0);
+	TH1Manager.at(ind_MISR1Hist) = new MyTH1D("MISR1Hist", "MISR1;GeV;Entries per 5 GeV bin", 100, 0.0, 500.0);
 	TH1Manager.at(ind_MLLHist) = new MyTH1D("MLLHist", "MLL;GeV;Entries per 5 GeV bin", 100, 0.0, 500.0);
 	TH1Manager.at(ind_MTTHist) = new MyTH1D("MTTHist", "Mtautau;GeV;Entries per 5 GeV bin", 102, -10.0, 500.0);
 	TH1Manager.at(ind_MTTpHist) = new MyTH1D("MTTpHist", "Mtautaup;GeV;Entries per 5 GeV bin", 200, -500.0, 500.0);
@@ -340,6 +340,8 @@ void histset::init(){
 	TH1Manager.at(ind_CategoryHist) = new MyTH1D("CategoryHist", "Categories; Category; Weighted events", 8, -0.5, 7.5);
 	TH1Manager.at(ind_NlepS1Hist) = new MyTH1D("NlepS1Hist", "Nleptons S1; Nleptons S1; Weighted events", 6, -0.5, 5.5);
 	TH1Manager.at(ind_mNlepabHist) = new MyTH1D("mNlepabHist", "min(Nlepab) S1; min(Nlepab) S1; Weighted events", 6, -0.5, 5.5);
+	TH1Manager.at(ind_MaxSIP3DHist) = new MyTH1D("MaxSIP3DHist", "max(SIP3D); max(SIP3D); Weighted events", 50, 0.0, 10.0);
+
 //                       ind_NlepS1Hist, ind_mNlepabHist,
 }
 template <class type>
@@ -444,10 +446,12 @@ void histset::AnalyzeEntry(myselector& s){
     int Nisolated = 0;
     int Nprompt = 0;
 // Count leptons: positive, negative, IDd, isolated, prompt.
+    double maxsip3d = 0.0;
     for(int i=0; i<Nlep; i++){
         if(ID_lep[i] >=3)Nidentified +=1;
         if(MiniIso_lep[i]*PT_lep[i] < 6.0)Nisolated +=1;
         if(abs(SIP3D_lep[i]) < 4.0)Nprompt +=1;
+        if(abs(SIP3D_lep[i]) > maxsip3d) maxsip3d = abs(SIP3D_lep[i]);
         if(Charge_lep[i] >= 1){
            Nposl += 1;
         }
@@ -610,11 +614,23 @@ void histset::AnalyzeEntry(myselector& s){
     if( Is_3L ) FillTH1(ind_LeptonsCategory, 3.0, w);
     if( Is_4L ) FillTH1(ind_LeptonsCategory, 4.0, w);
 
-    if(bpcuts.all()){
+/*    if(bpcuts.all()){
 // Require all cuts are passed
        FillTH1(ind_METHist, MET, w);
 	   FillTH1(ind_MS0Hist, MS0, w);
 	   FillTH1(ind_MISR0Hist, MISR0, w);
+	   FillTH1(ind_NjetHist, Njet, w);
+    }
+*/
+
+
+// Histograms for potential additional cuts
+    if(bcuts.all()){
+       FillTH1(ind_MLLHist, mll, w);
+       FillTH1(ind_MTTHist, mtautau, w);
+       FillTH1(ind_MTTpHist, mtautaup, w);
+	   FillTH1(ind_MS1Hist, MS1, w);
+	   FillTH1(ind_MISR1Hist, MISR1, w);
 	   FillTH1(ind_NjetHist, Njet, w);
     }
 
@@ -623,13 +639,8 @@ void histset::AnalyzeEntry(myselector& s){
     if(xcut(bpcuts, kPTISR0)) FillTH1(ind_PTISR0Hist, PTISR0, w);
     if(xcut(bcuts, kRISR1)) FillTH1(ind_RISR1Hist, RISR1, w);
     if(xcut(bcuts, kPTISR1)) FillTH1(ind_PTISR1Hist, PTISR1, w);
-
-// Histograms for potential additional cuts - here both require 2 leptons
-    if(bpcuts.all()){
-       FillTH1(ind_MLLHist, mll, w);
-       FillTH1(ind_MTTHist, mtautau, w);
-       FillTH1(ind_MTTpHist, mtautaup, w);
-    }
+    if(xcut(bcuts, kMET)) FillTH1(ind_METHist, MET, w);
+    if(xcut(bcuts, kPROMPT)) FillTH1(ind_MaxSIP3DHist, maxsip3d, w);
     
 // Cut Flow 1
     FillTH1(ind_CutFlowHist, -1.0, w);
