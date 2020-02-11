@@ -121,8 +121,7 @@ void PrintCuts2(boost::dynamic_bitset<> mybits){
 // Here we assume that the passed bitset is the one corresponding 
 // to our current list. 
 
-   const char *cutStrings[ ] = {" None ",
-                                " >= 2 leptons ",
+   const char *cutStrings[ ] = {" >= 2 leptons ",
                                 " ID'd lepton pair ",
                                 " Isolated lepton pair ",
                                 " Prompt lepton pair ", 
