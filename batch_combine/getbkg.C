@@ -1,14 +1,11 @@
-void getbkg(string dtype="BKG"){
+void getbkg(string dtype="BKG", string histo = "CutFlowHist2"){
 
-//   string rootfile = dtype+"/susyHists.root";
    string rootfile = "tmp.root";
    
-   string histname = dtype+"CutFlowHist2";
+   string histname = dtype+histo;
 
    TFile *f = new TFile(rootfile.c_str());
    TH1D *h = (TH1D*)f->Get(histname.c_str());
-
-//   enum cutNames{kLeptons, kID, kISO, kPROMPT, kSF, kOS, k2L, kbjet, kMET, kPTISR0, kRISR0, numCuts};
 
    const char *cutStrings[ ] = {" None ",
                                 " >= 2 leptons ",
@@ -25,13 +22,12 @@ void getbkg(string dtype="BKG"){
                                 " PTISR1 > 250 GeV ", 
                                 " RISR1 > 0.95 "};
 
-//   cout << "Cut flow for " << dtype << " events " << endl;
    cout << "Weighted event TOTAL " << endl;
    
    for (int i=14; i<=14; i++){
-      string mystring = cutStrings[i-1];
+//      string mystring = cutStrings[i-1];
 
-      cout << setw(2) << i << " " << setw(30) << mystring 
+      cout << setw(2) << i << " " 
            << setw(10) << h->GetBinContent(i) << " +- " 
            << setw(10) << h->GetBinError(i) << endl;
 
