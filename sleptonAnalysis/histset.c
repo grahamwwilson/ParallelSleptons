@@ -30,8 +30,9 @@ class histset{
 
        enum th1d_index{ind_METHist, ind_MS1Hist, ind_MISR1Hist, 
                        ind_CutFlowHist, ind_CutFlowHist2, ind_RISR0Hist, ind_MLLHist,
-                       ind_ECutFlowHist, ind_ECutFlowHist2,
-                       ind_CategoryHist,
+                       ind_ECutFlowHist, ind_ECutFlowHist2, 
+                       ind_CutFlowHist3, ind_ECutFlowHist3, ind_MCutFlowHist3, 
+                       ind_CategoryHist, ind_MperpHist, ind_MperpHist2, ind_MperpHist3,
                        ind_MTTHist, ind_MTTpHist, ind_LeptonsCategory,
                        ind_NjetHist, ind_PTISR0Hist, ind_PTISR1Hist, 
                        ind_RISR1Hist, 
@@ -334,10 +335,21 @@ void histset::init(){
 	TH1Manager.at(ind_LeptonsCategory) = new MyTH1D("LeptonsCategory", 
         "Lepton Exclusive Multiplicity; Category ;Entries per bin", 5, -0.5, 4.5 );
 	TH1Manager.at(ind_CutFlowHist) = new MyTH1D("CutFlowHist", "CutFlow; Cut; Weighted events", 12, -1.5, 10.5);
+
 	TH1Manager.at(ind_CutFlowHist2) = new MyTH1D("CutFlowHist2", "CutFlow; Cut; Weighted events", 14, -1.5, 12.5);
 	TH1Manager.at(ind_MCutFlowHist2) = new MyTH1D("MCutFlowHist2", "MCutFlow; Cut; Weighted events", 8192, -0.5, 8191.5);
-	TH1Manager.at(ind_ECutFlowHist) = new MyTH1D("ECutFlowHist", "ECutFlow; Cut; Weighted events", 12, -1.5, 10.5);
 	TH1Manager.at(ind_ECutFlowHist2) = new MyTH1D("ECutFlowHist2", "ECutFlow; Cut; Weighted events", 14, -1.5, 12.5);
+
+	TH1Manager.at(ind_CutFlowHist3)  = new MyTH1D("CutFlowHist3", "CutFlow; Cut; Weighted events", 14, -1.5, 12.5);
+	TH1Manager.at(ind_MCutFlowHist3) = new MyTH1D("MCutFlowHist3", "MCutFlow; Cut; Weighted events", 8192, -0.5, 8191.5);
+	TH1Manager.at(ind_ECutFlowHist3) = new MyTH1D("ECutFlowHist3", "ECutFlow; Cut; Weighted events", 14, -1.5, 12.5);
+
+	TH1Manager.at(ind_MperpHist) = new MyTH1D("MperpHist", "Mperp; Mperp (GeV); Weighted events", 50, 0.0, 50.0);
+	TH1Manager.at(ind_MperpHist2) = new MyTH1D("MperpHist2", "Mperp; Mperp (GeV); Weighted events", 50, 0.0, 50.0);
+	TH1Manager.at(ind_MperpHist3) = new MyTH1D("MperpHist3", "Mperp; Mperp (GeV); Weighted events", 50, 0.0, 50.0);
+
+	TH1Manager.at(ind_ECutFlowHist) = new MyTH1D("ECutFlowHist", "ECutFlow; Cut; Weighted events", 12, -1.5, 10.5);
+
 	TH1Manager.at(ind_CategoryHist) = new MyTH1D("CategoryHist", "Categories; Category; Weighted events", 8, -0.5, 7.5);
 	TH1Manager.at(ind_NlepS1Hist) = new MyTH1D("NlepS1Hist", "Nleptons S1; Nleptons S1; Weighted events", 6, -0.5, 5.5);
 	TH1Manager.at(ind_mNlepabHist) = new MyTH1D("mNlepabHist", "min(Nlepab) S1; min(Nlepab) S1; Weighted events", 6, -0.5, 5.5);
@@ -511,6 +523,24 @@ void histset::AnalyzeEntry(myselector& s){
     if( PTISR1 > 250.0 )           bcuts.set(kPTISR1);
     if( RISR1 > 0.95 )             bcuts.set(kRISR1);
 
+// Nbjet_ISR1
+// N_S[1] = Njet_S[1] + NSV_S[1]
+
+    boost::dynamic_bitset<> becuts(numCuts2);
+    if( Nlep >= 2 )                becuts.set(kLeptons);
+    if( Nidentified >= 2)          becuts.set(kID);
+    if( Nisolated >= 2)            becuts.set(kISO);
+    if( Nprompt >= 2)              becuts.set(kPROMPT);
+    if( Nele >= 2 || Nmu >= 2 )    becuts.set(kSF);
+    if( Nnegl > 0 && Nposl > 0)    becuts.set(kOS);
+    if( Nlep == 2 )                becuts.set(k2L);
+    if( Nbjet_ISR1 == 0 )          becuts.set(kbjet);      //Erich
+    if( MET > 200.0 )              becuts.set(kMET); 
+    if( RISR1 < 0.98 )             becuts.set(kNjetISR1);  //Erich
+    if( Njet_S1 + NSV_S1 == 0 )    becuts.set(kNjetS1);    //Erich
+    if( PTISR1 > 200.0 )           becuts.set(kPTISR1);    //Erich
+    if( RISR1 > 0.95 )             becuts.set(kRISR1);
+
     bool elepair = (Nele >=2);
     bool mupair = (Nmu >=2);
 
@@ -660,6 +690,19 @@ void histset::AnalyzeEntry(myselector& s){
        if(pass)FillTH1(ind_CutFlowHist2, i, w);
        if(ecut(bcuts,i))FillTH1(ind_ECutFlowHist2, i, w);
     }
+
+// Cut Flow 3
+    FillTH1(ind_CutFlowHist3, -1.0, w);
+    for (int i=0; i<numCuts2; i++){
+       bool pass = true;
+       for (int j=0; j<=i; j++){
+          if(!becuts.test(j))pass = false;
+       }
+       if(pass)FillTH1(ind_CutFlowHist3, i, w);
+       if(ecut(becuts,i))FillTH1(ind_ECutFlowHist3, i, w);
+    }
+
+
     if(bcuts.all()){
 // Passes all cuts
 //                       ind_NlepS1Hist, ind_mNlepabHist,
@@ -669,8 +712,15 @@ void histset::AnalyzeEntry(myselector& s){
 
 // Weight distribution
     FillTH1(ind_WeightHist, w, w);
-    unsigned long maskvalue = bcuts.to_ulong();
-    FillTH1(ind_MCutFlowHist2, maskvalue, w);
+    unsigned long maskvalue2 = bcuts.to_ulong();
+    FillTH1(ind_MCutFlowHist2, maskvalue2, w);
+
+    unsigned long maskvalue3 = bcuts.to_ulong();
+    FillTH1(ind_MCutFlowHist3, maskvalue3, w);
+
+   if(bpcuts.all())FillTH1(ind_MperpHist, Mperp, w);
+   if(bcuts.all())FillTH1(ind_MperpHist2, Mperp, w);
+   if(becuts.all())FillTH1(ind_MperpHist3, Mperp, w);
    
   bool lgeninfo = false;
 

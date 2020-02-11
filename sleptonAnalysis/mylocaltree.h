@@ -22,7 +22,9 @@
 
 	//susy variables for category 0 
 	auto& Njet_ISR0 = s.Njet_ISR[0];
+	auto& Nbjet_ISR0 = s.Nbjet_ISR[0];
 	auto& Njet_S0 = s.Njet_S[0];
+    auto& NSV_S0 = s.NSV_S[0];
 	auto& Nlep_S0 = s.Nlep_S[0];
 	auto& Nlepa_S0 = s.Nlep_a[0];
 	auto& Nlepb_S0 = s.Nlep_b[0];
@@ -34,7 +36,9 @@
 
 	//susy variables for category 1
 	auto& Njet_ISR1 = s.Njet_ISR[1];
+	auto& Nbjet_ISR1 = s.Nbjet_ISR[1];
 	auto& Njet_S1 = s.Njet_S[1];
+    auto& NSV_S1 = s.NSV_S[1];
 	auto& Nlep_S1 = s.Nlep_S[1];
 	auto& Nlepa_S1 = s.Nlep_a[1];
 	auto& Nlepb_S1 = s.Nlep_b[1];
@@ -43,6 +47,9 @@
 	auto& PTISR1 = s.PTISR[1];
 	auto& RISR1 = s.RISR[1];
 	auto& MISR1 = s.MISR[1];
+    auto& MX3a = s.MX3a_BoostT[1];
+    auto& MX3b = s.MX3b_BoostT[1];
+    double Mperp = sqrt(max(0.5*(MX3a*MX3a + MX3b*MX3b),0.0));
 
 	auto MET = *(s.MET);
 	auto MET_phi = *(s.MET_phi);
