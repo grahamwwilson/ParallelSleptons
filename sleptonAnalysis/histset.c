@@ -16,7 +16,7 @@ using MyTH1D = ROOT::TThreadedObject<TH1D>;
 using MyTH2D = ROOT::TThreadedObject<TH2D>;
 
 //ROOT::TThreadedObject<int> nseen;
-int nseen = 0;  // TODO FIX could be race condition
+//int nseen = 0;  // TODO FIX could be race condition
 
 class histset{
 	
@@ -416,10 +416,10 @@ void histset::AnalyzeEntry(myselector& s){
    	
     bool lprint = false;
 
-    unsigned int tid = ROOT::Internal::TThreadedObjectUtils::GetTThreadedObjectIndex();
-    cout << "Thread ID? " << tid << endl;
+//    unsigned int tid = ROOT::Internal::TThreadedObjectUtils::GetTThreadedObjectIndex();
+    auto nseen = ROOT::Internal::TThreadedObjectUtils::GetTThreadedObjectIndex();
+//    cout << "Thread ID? " << nseen << endl;
 
-    nseen += 1;
     if(nseen==1)cout << "Saw tag " << _tag << endl;
     int MP,MC;
     bool SignalSample = GetMasses(_tag, &MP, &MC);
@@ -711,7 +711,7 @@ void histset::AnalyzeEntry(myselector& s){
   }
 
   if(nseen <=10){
-     cout << "Event weight set to " << w << endl;
+     cout << "nseen  = " << nseen << " Event weight set to " << w << endl;
      PrintCuts(bpcuts);
      PrintCuts2(bcuts);
   }
