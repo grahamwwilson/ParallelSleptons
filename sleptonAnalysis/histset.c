@@ -710,7 +710,7 @@ void histset::AnalyzeEntry(myselector& s){
   }
   }
 
-  if(nseen <=10){
+  if(nseen == 1){
      cout << "nseen  = " << nseen << " Event weight set to " << w << endl;
      PrintCuts(bpcuts);
      PrintCuts2(bcuts);
