@@ -36,6 +36,7 @@ class histset{
                        ind_NjetHist, ind_PTISR0Hist, ind_PTISR1Hist, 
                        ind_RISR1Hist, 
                        ind_NlepS1Hist, ind_mNlepabHist, ind_MaxSIP3DHist,
+                       ind_WeightHist, ind_MCutFlowHist2, ind_IsoHist,
                        numTH1Hist};
        enum th2d_index{numTH2Hist};
 	
@@ -135,16 +136,17 @@ void PrintCuts2(boost::dynamic_bitset<> mybits){
                                 " RISR1 > 0.95 "};
 
    unsigned int num_bits = mybits.size();
-      cout << "   " << endl;
-      for (unsigned int i=0; i<num_bits; i++){
-         string mystring = cutStrings[i];
-         if (mybits.test(i)) {
-            cout << mystring << " PASS " << endl;
-         }
-         else{
-            cout << mystring << " FAIL " << endl;
-         }
-      }
+   cout << "   " << endl;
+   cout << "   " << mybits.to_ulong();
+   for (unsigned int i=0; i<num_bits; i++){
+       string mystring = cutStrings[i];
+       if (mybits.test(i)) {
+          cout << mystring << " PASS " << endl;
+       }
+       else{
+          cout << mystring << " FAIL " << endl;
+       }
+   }
       cout << " -----------cutStrings2--------------------" << endl;
 }
 
@@ -228,8 +230,6 @@ bool ecut3(const boost::dynamic_bitset<>& mybits, int kCut){
    if(testvalue == pow(2, kCut)) pass = true; 
    return pass;
 }
-
-
 
 bool nocut(double& count, double weight){
 	count = count + weight;
@@ -335,12 +335,15 @@ void histset::init(){
         "Lepton Exclusive Multiplicity; Category ;Entries per bin", 5, -0.5, 4.5 );
 	TH1Manager.at(ind_CutFlowHist) = new MyTH1D("CutFlowHist", "CutFlow; Cut; Weighted events", 12, -1.5, 10.5);
 	TH1Manager.at(ind_CutFlowHist2) = new MyTH1D("CutFlowHist2", "CutFlow; Cut; Weighted events", 14, -1.5, 12.5);
+	TH1Manager.at(ind_MCutFlowHist2) = new MyTH1D("MCutFlowHist2", "MCutFlow; Cut; Weighted events", 16384, -0.5, 16383.5);
 	TH1Manager.at(ind_ECutFlowHist) = new MyTH1D("ECutFlowHist", "ECutFlow; Cut; Weighted events", 12, -1.5, 10.5);
 	TH1Manager.at(ind_ECutFlowHist2) = new MyTH1D("ECutFlowHist2", "ECutFlow; Cut; Weighted events", 14, -1.5, 12.5);
 	TH1Manager.at(ind_CategoryHist) = new MyTH1D("CategoryHist", "Categories; Category; Weighted events", 8, -0.5, 7.5);
 	TH1Manager.at(ind_NlepS1Hist) = new MyTH1D("NlepS1Hist", "Nleptons S1; Nleptons S1; Weighted events", 6, -0.5, 5.5);
 	TH1Manager.at(ind_mNlepabHist) = new MyTH1D("mNlepabHist", "min(Nlepab) S1; min(Nlepab) S1; Weighted events", 6, -0.5, 5.5);
 	TH1Manager.at(ind_MaxSIP3DHist) = new MyTH1D("MaxSIP3DHist", "max(SIP3D); max(SIP3D); Weighted events", 50, 0.0, 10.0);
+	TH1Manager.at(ind_WeightHist) = new MyTH1D("WeightHist", "Weight; Weight; Weighted events", 2000, -1.0, 1.0);
+	TH1Manager.at(ind_IsoHist) = new MyTH1D("IsoHist", "Isolation; Isolation (GeV); Weighted events", 40, 0.0, 20.0);
 
 //                       ind_NlepS1Hist, ind_mNlepabHist,
 }
@@ -447,9 +450,11 @@ void histset::AnalyzeEntry(myselector& s){
     int Nprompt = 0;
 // Count leptons: positive, negative, IDd, isolated, prompt.
     double maxsip3d = 0.0;
+    double maxisovalue = 0.0;
     for(int i=0; i<Nlep; i++){
         if(ID_lep[i] >=3)Nidentified +=1;
         if(MiniIso_lep[i]*PT_lep[i] < 6.0)Nisolated +=1;
+        if(MiniIso_lep[i]*PT_lep[i] > maxisovalue)maxisovalue = MiniIso_lep[i]*PT_lep[i];
         if(abs(SIP3D_lep[i]) < 4.0)Nprompt +=1;
         if(abs(SIP3D_lep[i]) > maxsip3d) maxsip3d = abs(SIP3D_lep[i]);
         if(Charge_lep[i] >= 1){
@@ -515,7 +520,6 @@ void histset::AnalyzeEntry(myselector& s){
     if(bpcuts.all() && mupair  )FillTH1(ind_CategoryHist,5.0,w);
     if(bcuts.all() && elepair  )FillTH1(ind_CategoryHist,6.0,w);
     if(bcuts.all() && mupair   )FillTH1(ind_CategoryHist,7.0,w);
-
 
 // x and y momentum components of each lepton
     double px[4];
@@ -641,6 +645,7 @@ void histset::AnalyzeEntry(myselector& s){
     if(xcut(bcuts, kPTISR1)) FillTH1(ind_PTISR1Hist, PTISR1, w);
     if(xcut(bcuts, kMET)) FillTH1(ind_METHist, MET, w);
     if(xcut(bcuts, kPROMPT)) FillTH1(ind_MaxSIP3DHist, maxsip3d, w);
+    if(xcut(bcuts, kISO)) FillTH1(ind_IsoHist, maxisovalue, w);
     
 // Cut Flow 1
     FillTH1(ind_CutFlowHist, -1.0, w);
@@ -663,13 +668,18 @@ void histset::AnalyzeEntry(myselector& s){
        if(pass)FillTH1(ind_CutFlowHist2, i, w);
        if(ecut(bcuts,i))FillTH1(ind_ECutFlowHist2, i, w);
     }
-     if(bcuts.all()){
+    if(bcuts.all()){
 // Passes all cuts
 //                       ind_NlepS1Hist, ind_mNlepabHist,
        FillTH1(ind_NlepS1Hist, Nlep_S1, w);
        FillTH1(ind_mNlepabHist, min(Nlepa_S1,Nlepb_S1), w);
-     }
+    }
 
+// Weight distribution
+    FillTH1(ind_WeightHist, w, w);
+    unsigned long maskvalue = bcuts.to_ulong();
+    FillTH1(ind_MCutFlowHist2, maskvalue, w);
+   
   bool lgeninfo = false;
 
   if(lgeninfo){
@@ -708,8 +718,11 @@ void histset::AnalyzeEntry(myselector& s){
   }
   }
 
-  if(nseen <=10)PrintCuts(bpcuts);
-  if(nseen <=10)PrintCuts2(bcuts);
+  if(nseen <=10){
+     cout << "Event weight set to " << w << endl;
+     PrintCuts(bpcuts);
+     PrintCuts2(bcuts);
+  }
 
 }
 #endif
