@@ -416,6 +416,9 @@ void histset::AnalyzeEntry(myselector& s){
    	
     bool lprint = false;
 
+    unsigned int tid = ROOT::Internal::TThreadedObjectUtils::GetTThreadedObjectIndex();
+    cout << "Thread ID? " << tid << endl;
+
     nseen += 1;
     if(nseen==1)cout << "Saw tag " << _tag << endl;
     int MP,MC;
