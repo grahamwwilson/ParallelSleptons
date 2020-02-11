@@ -102,7 +102,8 @@ void PrintCuts(boost::dynamic_bitset<> mybits){
                                 " RISR0 > 0.95 "};
 
    unsigned int num_bits = mybits.size();
-      cout << "   " << endl;
+   cout << "   " << endl;
+   cout << " Mask:  " << mybits.to_ulong() << endl;
       for (unsigned int i=0; i<num_bits; i++){
          string mystring = cutStrings[i];
          if (mybits.test(i)) {
