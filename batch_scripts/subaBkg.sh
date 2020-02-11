@@ -4,6 +4,7 @@
 #
 
 VALUE=${1-Bkgd}
+NTHREADS=${2-16}
 
 echo $VALUE
 
@@ -17,7 +18,7 @@ do
    echo $name
 #   listfile=${name}.list
 
-   sbatch job_launch.sh ${name} KUAnalysis BKG 
+   sbatch --cpus-per-task=${NTHREADS} job_launch.sh ${name} KUAnalysis BKG ${NTHREADS}
 
 done
 
