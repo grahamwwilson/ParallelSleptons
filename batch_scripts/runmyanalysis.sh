@@ -10,7 +10,8 @@ CODEDIR=/home/${USER}/slepton/ParallelSleptons/sleptonAnalysis
 INPUT=${1-dataHPC}
 TREE=$2 
 TAG=$3
-echo ${INPUT} ${TREE} ${TAG}
+NTHREADS=$4
+echo ${INPUT} ${TREE} ${TAG} ${NTHREADS}
 
 INPUTLIST=/home/${USER}/slepton/ParallelSleptons/batch_scripts/datalists2/${INPUT}.list
 
@@ -26,7 +27,7 @@ pwd
 
 #input is: num files, numthreads,  yourdata.list
 # Note any change to the thread count needs to also be in the job description file ..
-python2 ${CODEDIR}/runmacro.py 0 16 ${INPUTLIST} ${TREE} ${TAG} "susyHists.root" "RECREATE"
+python2 ${CODEDIR}/runmacro.py 0 ${NTHREADS} ${INPUTLIST} ${TREE} ${TAG} "susyHists.root" "RECREATE"
 
 date
 

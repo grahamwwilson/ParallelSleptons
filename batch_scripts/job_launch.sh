@@ -13,6 +13,9 @@ USER=gwwilson
 VERSION=$1
 TREE=$2
 TAG=$3
+# defaults to 16 but can be over-ridden
+# needs to be no larger than specified by cpus-per-task
+NTHREADS=${4-16}
 echo 'Version '$VERSION
 
 pwd
@@ -40,8 +43,9 @@ echo "Now in directory "
 pwd
 
 echo "Start execution"
+echo "Specified NTHREADS: "${NTHREADS}
 
-./runmyanalysis.sh ${VERSION} ${TREE} ${TAG}
+./runmyanalysis.sh ${VERSION} ${TREE} ${TAG} ${NTHREADS}
 
 date
 

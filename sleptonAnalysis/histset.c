@@ -137,7 +137,7 @@ void PrintCuts2(boost::dynamic_bitset<> mybits){
 
    unsigned int num_bits = mybits.size();
    cout << "   " << endl;
-   cout << "   " << mybits.to_ulong();
+   cout << " Mask:  " << mybits.to_ulong() << endl;
    for (unsigned int i=0; i<num_bits; i++){
        string mystring = cutStrings[i];
        if (mybits.test(i)) {
@@ -335,7 +335,7 @@ void histset::init(){
         "Lepton Exclusive Multiplicity; Category ;Entries per bin", 5, -0.5, 4.5 );
 	TH1Manager.at(ind_CutFlowHist) = new MyTH1D("CutFlowHist", "CutFlow; Cut; Weighted events", 12, -1.5, 10.5);
 	TH1Manager.at(ind_CutFlowHist2) = new MyTH1D("CutFlowHist2", "CutFlow; Cut; Weighted events", 14, -1.5, 12.5);
-	TH1Manager.at(ind_MCutFlowHist2) = new MyTH1D("MCutFlowHist2", "MCutFlow; Cut; Weighted events", 16384, -0.5, 16383.5);
+	TH1Manager.at(ind_MCutFlowHist2) = new MyTH1D("MCutFlowHist2", "MCutFlow; Cut; Weighted events", 8192, -0.5, 8191.5);
 	TH1Manager.at(ind_ECutFlowHist) = new MyTH1D("ECutFlowHist", "ECutFlow; Cut; Weighted events", 12, -1.5, 10.5);
 	TH1Manager.at(ind_ECutFlowHist2) = new MyTH1D("ECutFlowHist2", "ECutFlow; Cut; Weighted events", 14, -1.5, 12.5);
 	TH1Manager.at(ind_CategoryHist) = new MyTH1D("CategoryHist", "Categories; Category; Weighted events", 8, -0.5, 7.5);
@@ -378,7 +378,6 @@ void histset::FillTH2(int index, double x, double y){
 void histset::WriteHist(std::string outputfilename, std::string TFileOption){
 
 	TFile* outfile = new TFile(outputfilename.c_str(),TFileOption.c_str());
-
 
 	for(int i=0; i<numTH1Hist; i++){
 		//do a check for entries, merge isnt safe on 0 entry histograms
@@ -617,16 +616,6 @@ void histset::AnalyzeEntry(myselector& s){
     if( Is_2L ) FillTH1(ind_LeptonsCategory, 2.0, w);
     if( Is_3L ) FillTH1(ind_LeptonsCategory, 3.0, w);
     if( Is_4L ) FillTH1(ind_LeptonsCategory, 4.0, w);
-
-/*    if(bpcuts.all()){
-// Require all cuts are passed
-       FillTH1(ind_METHist, MET, w);
-	   FillTH1(ind_MS0Hist, MS0, w);
-	   FillTH1(ind_MISR0Hist, MISR0, w);
-	   FillTH1(ind_NjetHist, Njet, w);
-    }
-*/
-
 
 // Histograms for potential additional cuts
     if(bcuts.all()){
