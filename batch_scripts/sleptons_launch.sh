@@ -1,0 +1,1 @@
+sbatch job_launch.sh SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X_0 SMS SS

@@ -2,8 +2,8 @@
 #
 #
 
-path=/home/gwwilson/work/SUSYNANO-14_01_20/Fall17_102X
-#path=/home/gwwilson/work/SUSYNANO-14_01_20/Fall17_102X_SMS
+#path=/home/gwwilson/work/SUSYNANO-14_01_20/Fall17_102X
+path=/home/gwwilson/work/SUSYNANO-14_01_20/Fall17_102X_SMS
 
 rlistfile=${path}/RootFiles.list
 

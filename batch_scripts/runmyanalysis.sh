@@ -12,7 +12,7 @@ TREE=$2
 TAG=$3
 echo ${INPUT} ${TREE} ${TAG}
 
-INPUTLIST=/home/${USER}/slepton/ParallelSleptons/batch_scripts/datalists/${INPUT}.list
+INPUTLIST=/home/${USER}/slepton/ParallelSleptons/batch_scripts/datalists2/${INPUT}.list
 
 #Execute this from execution directory, so that we can have several output files in parallel
 
@@ -26,7 +26,7 @@ pwd
 
 #input is: num files, numthreads,  yourdata.list
 # Note any change to the thread count needs to also be in the job description file ..
-python2 ${CODEDIR}/runmacro.py 0 24 ${INPUTLIST} ${TREE} ${TAG} "susyHists.root" "RECREATE"
+python2 ${CODEDIR}/runmacro.py 0 16 ${INPUTLIST} ${TREE} ${TAG} "susyHists.root" "RECREATE"
 
 date
 
