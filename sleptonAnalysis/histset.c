@@ -132,7 +132,7 @@ void PrintCuts2(boost::dynamic_bitset<> mybits){
                                 " No b-jets ",
                                 " MET > 200 GeV ",
                                 " Njet > 0 ",
-                                " Njets_S1 == 0 ", 
+                                " Njet_S1 == 0 ", 
                                 " PTISR1 > 250 GeV ", 
                                 " RISR1 > 0.95 "};
 
@@ -150,6 +150,58 @@ void PrintCuts2(boost::dynamic_bitset<> mybits){
    }
       cout << " -----------cutStrings2--------------------" << endl;
 }
+
+void PrintCuts3(boost::dynamic_bitset<> mybits){
+
+// Here we assume that the passed bitset is the one corresponding 
+// to our current list. 
+/*
+    boost::dynamic_bitset<> becuts(numCuts2);
+    if( Nlep >= 2 )                becuts.set(kLeptons);
+    if( Nidentified >= 2)          becuts.set(kID);
+    if( Nisolated >= 2)            becuts.set(kISO);
+    if( Nprompt >= 2)              becuts.set(kPROMPT);
+    if( Nele >= 2 || Nmu >= 2 )    becuts.set(kSF);
+    if( Nnegl > 0 && Nposl > 0)    becuts.set(kOS);
+    if( Nlep == 2 )                becuts.set(k2L);
+    if( Nbjet_ISR1 == 0 )          becuts.set(kbjet);      //Erich
+    if( MET > 200.0 )              becuts.set(kMET); 
+    if( RISR1 <= 0.98 )            becuts.set(kNjetISR1);  //Erich
+    if( Njet_S1 + NSV_S1 == 0 )    becuts.set(kNjetS1);    //Erich
+    if( PTISR1 > 200.0 )           becuts.set(kPTISR1);    //Erich
+    if( RISR1 > 0.95 )             becuts.set(kRISR1);
+*/
+
+   const char *cutStrings[ ] = {" >= 2 leptons ",
+                                " ID'd lepton pair ",
+                                " Isolated lepton pair ",
+                                " Prompt lepton pair ", 
+                                " Same-flavor lepton pair ", 
+                                " Opposite-sign lepton pair ",
+                                " Exactly two leptons ",
+                                " No b-jets in ISR system",
+                                " MET > 200 GeV ",
+                                " RISR <= 0.98 ",
+                                " NjetS1 + NSVS1 = 0 ", 
+                                " PTISR1 > 200 GeV ", 
+                                " RISR1 > 0.95 "};
+
+   unsigned int num_bits = mybits.size();
+   cout << "   " << endl;
+   cout << " Mask:  " << mybits.to_ulong() << endl;
+   for (unsigned int i=0; i<num_bits; i++){
+       string mystring = cutStrings[i];
+       if (mybits.test(i)) {
+          cout << mystring << " PASS " << endl;
+       }
+       else{
+          cout << mystring << " FAIL " << endl;
+       }
+   }
+      cout << " -----------cutStrings3--------------------" << endl;
+}
+
+
 
 bool xcut(boost::dynamic_bitset<> mybits, int kCut){
 // New style with boost:dynamic_bitset.
@@ -177,6 +229,37 @@ bool xcut(boost::dynamic_bitset<> mybits, int kCut){
    } 
    return pass;
 }
+
+bool xxcut(boost::dynamic_bitset<> mybits, int kCut1, int kCut2){
+// New style with boost:dynamic_bitset.
+// Read in bitset with all the cuts that are satisfied
+// and check whether the event would pass a selection with 
+// cuts kCut1 and kCut2 removed.
+
+// With dynamic_bitset need to figure out the current size
+
+   unsigned int num_bits = mybits.size();
+
+   boost::dynamic_bitset<> bpcuts(num_bits);
+   boost::dynamic_bitset<> bncuts(num_bits);
+
+   bpcuts = mybits;
+   bncuts = mybits.flip();
+
+   bool pass = false;
+   if(bpcuts.all()){
+      pass = true;
+   }
+   else{
+      unsigned long testvalue = bncuts.to_ulong();
+      if ( testvalue == pow(2, kCut1) ) pass = true;
+      if ( testvalue == pow(2, kCut2) ) pass = true;
+      if ( testvalue == pow(2, kCut1) + pow(2, kCut2) ) pass = true;
+   } 
+   return pass;
+}
+
+
 
 bool ecut(boost::dynamic_bitset<> mybits, int kCut){
 // New style with boost:dynamic_bitset.
@@ -340,9 +423,9 @@ void histset::init(){
 	TH1Manager.at(ind_MCutFlowHist2) = new MyTH1D("MCutFlowHist2", "MCutFlow; Cut; Weighted events", 8192, -0.5, 8191.5);
 	TH1Manager.at(ind_ECutFlowHist2) = new MyTH1D("ECutFlowHist2", "ECutFlow; Cut; Weighted events", 14, -1.5, 12.5);
 
-	TH1Manager.at(ind_CutFlowHist3)  = new MyTH1D("CutFlowHist3", "CutFlow; Cut; Weighted events", 14, -1.5, 12.5);
-	TH1Manager.at(ind_MCutFlowHist3) = new MyTH1D("MCutFlowHist3", "MCutFlow; Cut; Weighted events", 8192, -0.5, 8191.5);
-	TH1Manager.at(ind_ECutFlowHist3) = new MyTH1D("ECutFlowHist3", "ECutFlow; Cut; Weighted events", 14, -1.5, 12.5);
+	TH1Manager.at(ind_CutFlowHist3)  = new MyTH1D("CutFlowHist3", "CutFlow; Cut; Weighted events", 15, -1.5, 13.5);
+	TH1Manager.at(ind_MCutFlowHist3) = new MyTH1D("MCutFlowHist3", "MCutFlow; Cut; Weighted events", 16384, -0.5, 16383.5);
+	TH1Manager.at(ind_ECutFlowHist3) = new MyTH1D("ECutFlowHist3", "ECutFlow; Cut; Weighted events", 15, -1.5, 13.5);
 
 	TH1Manager.at(ind_MperpHist) = new MyTH1D("MperpHist", "Mperp; Mperp (GeV); Weighted events", 50, 0.0, 50.0);
 	TH1Manager.at(ind_MperpHist2) = new MyTH1D("MperpHist2", "Mperp; Mperp (GeV); Weighted events", 50, 0.0, 50.0);
@@ -495,6 +578,9 @@ void histset::AnalyzeEntry(myselector& s){
     enum cutNames2{kNjetISR1=9, kNjetS1=10, kPTISR1=11, kRISR1=12, 
                    numCuts2=13};
 
+    enum cutNames3{kbjetISR1 = 7, kSVS1=9, kRISRH=13, 
+                   numCuts3=14};
+
     boost::dynamic_bitset<> bpcuts(numCuts);
     if( Nlep >= 2 )                bpcuts.set(kLeptons);
     if( Nidentified >= 2)          bpcuts.set(kID);
@@ -526,7 +612,7 @@ void histset::AnalyzeEntry(myselector& s){
 // Nbjet_ISR1
 // N_S[1] = Njet_S[1] + NSV_S[1]
 
-    boost::dynamic_bitset<> becuts(numCuts2);
+    boost::dynamic_bitset<> becuts(numCuts3);
     if( Nlep >= 2 )                becuts.set(kLeptons);
     if( Nidentified >= 2)          becuts.set(kID);
     if( Nisolated >= 2)            becuts.set(kISO);
@@ -534,12 +620,13 @@ void histset::AnalyzeEntry(myselector& s){
     if( Nele >= 2 || Nmu >= 2 )    becuts.set(kSF);
     if( Nnegl > 0 && Nposl > 0)    becuts.set(kOS);
     if( Nlep == 2 )                becuts.set(k2L);
-    if( Nbjet_ISR1 == 0 )          becuts.set(kbjet);      //Erich
+    if( Nbjet_ISR1 == 0 )          becuts.set(kbjetISR1);  //Erich
     if( MET > 200.0 )              becuts.set(kMET); 
-    if( RISR1 < 0.98 )             becuts.set(kNjetISR1);  //Erich
-    if( Njet_S1 + NSV_S1 == 0 )    becuts.set(kNjetS1);    //Erich
+    if( NSV_S1 == 0 )              becuts.set(kSVS1);      //Erich
+    if( Njet_S1 == 0 )             becuts.set(kNjetS1);   
     if( PTISR1 > 200.0 )           becuts.set(kPTISR1);    //Erich
     if( RISR1 > 0.95 )             becuts.set(kRISR1);
+    if( RISR1 <= 0.98 )            becuts.set(kRISRH);     //Erich
 
     bool elepair = (Nele >=2);
     bool mupair = (Nmu >=2);
@@ -651,7 +738,7 @@ void histset::AnalyzeEntry(myselector& s){
     if( Is_4L ) FillTH1(ind_LeptonsCategory, 4.0, w);
 
 // Histograms for potential additional cuts
-    if(bcuts.all()){
+    if(becuts.all()){
        FillTH1(ind_MLLHist, mll, w);
        FillTH1(ind_MTTHist, mtautau, w);
        FillTH1(ind_MTTpHist, mtautaup, w);
@@ -663,11 +750,11 @@ void histset::AnalyzeEntry(myselector& s){
 // xcut removes a particular cut
     if(xcut(bpcuts, kRISR0)) FillTH1(ind_RISR0Hist, RISR0, w);
     if(xcut(bpcuts, kPTISR0)) FillTH1(ind_PTISR0Hist, PTISR0, w);
-    if(xcut(bcuts, kRISR1)) FillTH1(ind_RISR1Hist, RISR1, w);
-    if(xcut(bcuts, kPTISR1)) FillTH1(ind_PTISR1Hist, PTISR1, w);
-    if(xcut(bcuts, kMET)) FillTH1(ind_METHist, MET, w);
-    if(xcut(bcuts, kPROMPT)) FillTH1(ind_MaxSIP3DHist, maxsip3d, w);
-    if(xcut(bcuts, kISO)) FillTH1(ind_IsoHist, maxisovalue, w);
+    if(xxcut(becuts, kRISR1, kRISRH)) FillTH1(ind_RISR1Hist, RISR1, w);
+    if(xcut(becuts, kPTISR1)) FillTH1(ind_PTISR1Hist, PTISR1, w);
+    if(xcut(becuts, kMET)) FillTH1(ind_METHist, MET, w);
+    if(xcut(becuts, kPROMPT)) FillTH1(ind_MaxSIP3DHist, maxsip3d, w);
+    if(xcut(becuts, kISO)) FillTH1(ind_IsoHist, maxisovalue, w);
     
 // Cut Flow 1
     FillTH1(ind_CutFlowHist, -1.0, w);
@@ -693,7 +780,7 @@ void histset::AnalyzeEntry(myselector& s){
 
 // Cut Flow 3
     FillTH1(ind_CutFlowHist3, -1.0, w);
-    for (int i=0; i<numCuts2; i++){
+    for (int i=0; i<numCuts3; i++){
        bool pass = true;
        for (int j=0; j<=i; j++){
           if(!becuts.test(j))pass = false;
