@@ -1,4 +1,4 @@
-void getbkg2(string dtype="BKG", string histo="CutFlowHist2"){
+void getbkg2(string dtype="BKG", string histo="CutFlowHist3", int ibin=15){
 
    string rootfile = "specific.root";   
  
@@ -24,10 +24,8 @@ void getbkg2(string dtype="BKG", string histo="CutFlowHist2"){
 
    cout << "Weighted event contribution " << endl;
    
-   for (int i=14; i<=14; i++){
-      cout << setw(2) << i << " "  
-           << setw(10) << h->GetBinContent(i) << " +- " 
-           << setw(10) << h->GetBinError(i) << endl;
-   }
+//   for (int i=14; i<=14; i++){
+      cout << setw(10) << h->GetBinContent(ibin) << " +- " 
+           << setw(10) << h->GetBinError(ibin) << endl;
    f->Close();
 }

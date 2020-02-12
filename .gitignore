@@ -16,4 +16,6 @@ compiledthreads
 
 *.swp
 ExecutionDirectory/*
+Tests
+Tests/*
 *.log

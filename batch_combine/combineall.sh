@@ -4,11 +4,11 @@ date
 
 #. ~/setenv.sh
 
-#./gcombine.sh LLVV
-#./gcombine.sh Other
-#./gcombine.sh VJets
-#./gcombine.sh DY_All
-#./gcombine.sh Top
+./gcombine.sh LLVV
+./gcombine.sh Other
+./gcombine.sh VJets
+./gcombine.sh DY_All
+./gcombine.sh Top
 
 ./gcombine.sh All
 

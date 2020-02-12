@@ -1,4 +1,4 @@
-void getbkg(string dtype="BKG", string histo = "CutFlowHist2"){
+void getbkg(string dtype="BKG", string histo = "CutFlowHist3", int ibin=15){
 
    string rootfile = "tmp.root";
    
@@ -24,13 +24,12 @@ void getbkg(string dtype="BKG", string histo = "CutFlowHist2"){
 
    cout << "Weighted event TOTAL " << endl;
    
-   for (int i=14; i<=14; i++){
+//   for (int i=14; i<=14; i++){
 //      string mystring = cutStrings[i-1];
 
-      cout << setw(2) << i << " " 
-           << setw(10) << h->GetBinContent(i) << " +- " 
-           << setw(10) << h->GetBinError(i) << endl;
+      cout << setw(10) << h->GetBinContent(ibin) << " +- " 
+           << setw(10) << h->GetBinError(ibin) << endl;
 
-   }
+//   }
    f->Close();
 }

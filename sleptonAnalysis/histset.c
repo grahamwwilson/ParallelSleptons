@@ -620,9 +620,9 @@ void histset::AnalyzeEntry(myselector& s){
     if( Nele >= 2 || Nmu >= 2 )    becuts.set(kSF);
     if( Nnegl > 0 && Nposl > 0)    becuts.set(kOS);
     if( Nlep == 2 )                becuts.set(k2L);
-    if( Nbjet_ISR1 == 0 )          becuts.set(kbjetISR1);  //Erich
+    if( Nbjet_ISR1 == 0 )          becuts.set(kbjetISR1);  //Erich - not really different
     if( MET > 200.0 )              becuts.set(kMET); 
-    if( NSV_S1 == 0 )              becuts.set(kSVS1);      //Erich
+    if( NSV_S1 == 0 )              becuts.set(kSVS1);      //Erich 
     if( Njet_S1 == 0 )             becuts.set(kNjetS1);   
     if( PTISR1 > 200.0 )           becuts.set(kPTISR1);    //Erich
     if( RISR1 > 0.95 )             becuts.set(kRISR1);
