@@ -6,7 +6,7 @@
 echo $USER
 
 path=/home/${USER}/slepton/ParallelSleptons/batch_scripts/datalists2
-flistfile=${path}/All.flist
+flistfile=${path}/Faults.flist
 
 rpath=/home/${USER}/slepton/ParallelSleptons/ExecutionDirectory
 
