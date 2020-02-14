@@ -4,6 +4,7 @@
 #
 
 VALUE=${1-Sleptons}
+NTHREADS=${2-16}
 
 echo $VALUE
 
@@ -17,7 +18,7 @@ do
    echo $name
 #   listfile=${name}.list
 
-   sbatch job_launch.sh ${name} SMS SS
+   sbatch --cpus-per-task=${NTHREADS} job_launch.sh ${name} SMS SS ${NTHREADS}
 
 done
 
