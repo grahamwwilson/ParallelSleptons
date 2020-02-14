@@ -512,9 +512,10 @@ void histset::AnalyzeEntry(myselector& s){
     bool lprint = false;
 
 //    unsigned int tid = ROOT::Internal::TThreadedObjectUtils::GetTThreadedObjectIndex();
-    auto nseen = ROOT::Internal::TThreadedObjectUtils::GetTThreadedObjectIndex();
+//    auto nseen = ROOT::Internal::TThreadedObjectUtils::GetTThreadedObjectIndex();
 //    cout << "Thread ID? " << nseen << endl;
 
+/*
     if(nseen==1)cout << "Saw tag " << _tag << endl;
     int MP,MC;
     bool SignalSample = GetMasses(_tag, &MP, &MC);
@@ -527,6 +528,7 @@ void histset::AnalyzeEntry(myselector& s){
           cout << "Bkgd sample" << endl;
        }
     }
+*/
 
     double PI =4.0*atan(1.0);
 
@@ -709,7 +711,7 @@ void histset::AnalyzeEntry(myselector& s){
 
        if(ltaudebug){
 //|| nseen < 1000 || bpcuts.all() ){
-       cout << "nseen : " << nseen << endl;
+//       cout << "nseen : " << nseen << endl;
        cout << "Event selection " << bpcuts.all() << endl;
        cout << "MET:    " << vMET.Px() << " " << vMET.Py() << " " 
                           << vMET.Pz() << " " << vMET.M() << endl;
@@ -786,7 +788,7 @@ void histset::AnalyzeEntry(myselector& s){
           if(!becuts.test(j))pass = false;
        }
        if(pass)FillTH1(ind_CutFlowHist3, i, w);
-//       if(ecut(becuts,i))FillTH1(ind_ECutFlowHist3, i, w);
+       if(ecut(becuts,i))FillTH1(ind_ECutFlowHist3, i, w);
     }
 
     if(bcuts.all()){
@@ -801,7 +803,7 @@ void histset::AnalyzeEntry(myselector& s){
     unsigned long maskvalue2 = bcuts.to_ulong();
     FillTH1(ind_MCutFlowHist2, maskvalue2, w);
 
-    unsigned long maskvalue3 = bcuts.to_ulong();
+    unsigned long maskvalue3 = becuts.to_ulong();
     FillTH1(ind_MCutFlowHist3, maskvalue3, w);
 
    if(bpcuts.all())FillTH1(ind_MperpHist, Mperp, w);
@@ -846,11 +848,13 @@ void histset::AnalyzeEntry(myselector& s){
   }
   }
 
+/*
   if(nseen == 1){
      cout << "nseen  = " << nseen << " Event weight set to " << w << endl;
      PrintCuts(bpcuts);
      PrintCuts2(bcuts);
   }
+*/
 
 }
 #endif
