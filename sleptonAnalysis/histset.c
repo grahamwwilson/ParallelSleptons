@@ -801,7 +801,7 @@ void histset::AnalyzeEntry(myselector& s){
     unsigned long maskvalue2 = bcuts.to_ulong();
     FillTH1(ind_MCutFlowHist2, maskvalue2, w);
 
-    unsigned long maskvalue3 = becuts.to_ulong();
+    unsigned long maskvalue3 = bcuts.to_ulong();
     FillTH1(ind_MCutFlowHist3, maskvalue3, w);
 
    if(bpcuts.all())FillTH1(ind_MperpHist, Mperp, w);
