@@ -85,7 +85,7 @@ histset::histset(std::string tag = ""){
 
 }
 
-void PrintCuts(boost::dynamic_bitset<> mybits){
+void PrintCuts(const boost::dynamic_bitset<> &mybits ){
 
 // Here we assume that the passed bitset is the one corresponding 
 // to our current list. 
@@ -117,7 +117,7 @@ void PrintCuts(boost::dynamic_bitset<> mybits){
       cout << " -----------cutStrings---------------------" << endl;
 }
 
-void PrintCuts2(boost::dynamic_bitset<> mybits){
+void PrintCuts2(const boost::dynamic_bitset<> &mybits){
 
 // Here we assume that the passed bitset is the one corresponding 
 // to our current list. 
@@ -151,7 +151,7 @@ void PrintCuts2(boost::dynamic_bitset<> mybits){
       cout << " -----------cutStrings2--------------------" << endl;
 }
 
-void PrintCuts3(boost::dynamic_bitset<> mybits){
+void PrintCuts3(const boost::dynamic_bitset<> &mybits){
 
 // Here we assume that the passed bitset is the one corresponding 
 // to our current list. 
@@ -203,7 +203,7 @@ void PrintCuts3(boost::dynamic_bitset<> mybits){
 
 
 
-bool xcut(boost::dynamic_bitset<> mybits, int kCut){
+bool xcut(const boost::dynamic_bitset<> &mybits, int kCut){
 // New style with boost:dynamic_bitset.
 // Read in bitset with all the cuts that are satisfied
 // and check whether all the cuts are satisfied or the event only 
@@ -217,7 +217,7 @@ bool xcut(boost::dynamic_bitset<> mybits, int kCut){
    boost::dynamic_bitset<> bncuts(num_bits);
 
    bpcuts = mybits;
-   bncuts = mybits.flip();
+   bncuts = bpcuts.flip();
 
    bool pass = false;
    if(bpcuts.all()){
@@ -230,7 +230,7 @@ bool xcut(boost::dynamic_bitset<> mybits, int kCut){
    return pass;
 }
 
-bool xxcut(boost::dynamic_bitset<> mybits, int kCut1, int kCut2){
+bool xxcut(const boost::dynamic_bitset<> &mybits, int kCut1, int kCut2){
 // New style with boost:dynamic_bitset.
 // Read in bitset with all the cuts that are satisfied
 // and check whether the event would pass a selection with 
@@ -244,7 +244,7 @@ bool xxcut(boost::dynamic_bitset<> mybits, int kCut1, int kCut2){
    boost::dynamic_bitset<> bncuts(num_bits);
 
    bpcuts = mybits;
-   bncuts = mybits.flip();
+   bncuts = bpcuts.flip();
 
    bool pass = false;
    if(bpcuts.all()){
@@ -260,8 +260,8 @@ bool xxcut(boost::dynamic_bitset<> mybits, int kCut1, int kCut2){
 }
 
 
-
-bool ecut(boost::dynamic_bitset<> mybits, int kCut){
+/*
+bool ecut2(const boost::dynamic_bitset<> &mybits, int kCut){
 // New style with boost:dynamic_bitset.
 // Check whether all except one cut is satisfied.
 // ie. assess how many events would recovered if this cut was removed
@@ -279,8 +279,9 @@ bool ecut(boost::dynamic_bitset<> mybits, int kCut){
    if(testvalue == pow(2, kCut)) pass = true; 
    return pass;
 }
+*/
 
-bool ecut2(const boost::dynamic_bitset<>& mybits, int kCut){
+bool ecut(const boost::dynamic_bitset<> &mybits, int kCut){
 // New style with boost:dynamic_bitset.
 // Check whether all except one cut is satisfied.
 // ie. assess how many events would recovered if this cut was removed
@@ -301,7 +302,7 @@ bool ecut2(const boost::dynamic_bitset<>& mybits, int kCut){
    return pass;
 }
 
-bool ecut3(const boost::dynamic_bitset<>& mybits, int kCut){
+bool ecut3(const boost::dynamic_bitset<> &mybits, int kCut){
 // New style with boost:dynamic_bitset.
 // Check whether all except one cut is satisfied.
 // ie. assess how many events would recovered if this cut was removed
@@ -613,6 +614,8 @@ void histset::AnalyzeEntry(myselector& s){
 
 // Nbjet_ISR1
 // N_S[1] = Njet_S[1] + NSV_S[1]
+
+// https://www.geeksforgeeks.org/c-boostdynamic_bitset-class-with-examples/
 
     boost::dynamic_bitset<> becuts(numCuts3);
     if( Nlep >= 2 )                becuts.set(kLeptons);
