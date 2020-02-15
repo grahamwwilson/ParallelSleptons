@@ -633,6 +633,8 @@ void histset::AnalyzeEntry(myselector& s){
     if( RISR1 > 0.95 )             becuts.set(kRISR1);
     if( RISR1 <= 0.98 )            becuts.set(kRISRH);     //Erich
 
+    const boost::dynamic_bitset<uint16_t> cbecuts(numCuts3, becuts.to_ulong());
+
     bool elepair = (Nele >=2);
     bool mupair = (Nmu >=2);
 
@@ -743,7 +745,7 @@ void histset::AnalyzeEntry(myselector& s){
     if( Is_4L ) FillTH1(ind_LeptonsCategory, 4.0, w);
 
 // Histograms for potential additional cuts
-    if(becuts.all()){
+    if(cbecuts.all()){
        FillTH1(ind_MLLHist, mll, w);
        FillTH1(ind_MTTHist, mtautau, w);
        FillTH1(ind_MTTpHist, mtautaup, w);
@@ -755,11 +757,11 @@ void histset::AnalyzeEntry(myselector& s){
 // xcut removes a particular cut
     if(xcut(bpcuts, kRISR0)) FillTH1(ind_RISR0Hist, RISR0, w);
     if(xcut(bpcuts, kPTISR0)) FillTH1(ind_PTISR0Hist, PTISR0, w);
-    if(xxcut(becuts, kRISR1, kRISRH)) FillTH1(ind_RISR1Hist, RISR1, w);
-    if(xcut(becuts, kPTISR1)) FillTH1(ind_PTISR1Hist, PTISR1, w);
-    if(xcut(becuts, kMET)) FillTH1(ind_METHist, MET, w);
-    if(xcut(becuts, kPROMPT)) FillTH1(ind_MaxSIP3DHist, maxsip3d, w);
-    if(xcut(becuts, kISO)) FillTH1(ind_IsoHist, maxisovalue, w);
+    if(xxcut(cbecuts, kRISR1, kRISRH)) FillTH1(ind_RISR1Hist, RISR1, w);
+    if(xcut(cbecuts, kPTISR1)) FillTH1(ind_PTISR1Hist, PTISR1, w);
+    if(xcut(cbecuts, kMET)) FillTH1(ind_METHist, MET, w);
+    if(xcut(cbecuts, kPROMPT)) FillTH1(ind_MaxSIP3DHist, maxsip3d, w);
+    if(xcut(cbecuts, kISO)) FillTH1(ind_IsoHist, maxisovalue, w);
     
 // Cut Flow 1
     FillTH1(ind_CutFlowHist, -1.0, w);
@@ -788,10 +790,10 @@ void histset::AnalyzeEntry(myselector& s){
     for (int i=0; i<numCuts3; i++){
        bool pass = true;
        for (int j=0; j<=i; j++){
-          if(!becuts.test(j))pass = false;
+          if(!cbecuts.test(j))pass = false;
        }
        if(pass)FillTH1(ind_CutFlowHist3, i, w);
-       if(ecut(becuts,i))FillTH1(ind_ECutFlowHist3, i, w);
+       if(ecut(cbecuts,i))FillTH1(ind_ECutFlowHist3, i, w);
     }
 
     if(bcuts.all()){
@@ -811,7 +813,7 @@ void histset::AnalyzeEntry(myselector& s){
 
    if(bpcuts.all())FillTH1(ind_MperpHist, Mperp, w);
    if(bcuts.all())FillTH1(ind_MperpHist2, Mperp, w);
-   if(becuts.all())FillTH1(ind_MperpHist3, Mperp, w);
+   if(cbecuts.all())FillTH1(ind_MperpHist3, Mperp, w);
    
   bool lgeninfo = false;
 
