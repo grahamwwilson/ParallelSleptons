@@ -434,7 +434,7 @@ void histset::init(){
 
 	TH1Manager.at(ind_ECutFlowHist) = new MyTH1D("ECutFlowHist", "ECutFlow; Cut; Weighted events", 12, -1.5, 10.5);
 
-	TH1Manager.at(ind_CategoryHist) = new MyTH1D("CategoryHist", "Categories; Category; Weighted events", 8, -0.5, 7.5);
+	TH1Manager.at(ind_CategoryHist) = new MyTH1D("CategoryHist", "Categories; Category; Weighted events", 20, -0.5, 19.5);
 	TH1Manager.at(ind_NlepS1Hist) = new MyTH1D("NlepS1Hist", "Nleptons S1; Nleptons S1; Weighted events", 6, -0.5, 5.5);
 	TH1Manager.at(ind_mNlepabHist) = new MyTH1D("mNlepabHist", "min(Nlepab) S1; min(Nlepab) S1; Weighted events", 6, -0.5, 5.5);
 	TH1Manager.at(ind_MaxSIP3DHist) = new MyTH1D("MaxSIP3DHist", "max(SIP3D); max(SIP3D); Weighted events", 50, 0.0, 10.0);
@@ -786,13 +786,20 @@ void histset::AnalyzeEntry(myselector& s){
     }
 
 // Cut Flow 3
+    bool lsel3 = false;
     FillTH1(ind_CutFlowHist3, -1.0, w);
     for (int i=0; i<numCuts3; i++){
        bool pass = true;
        for (int j=0; j<=i; j++){
           if(!cbecuts.test(j))pass = false;
        }
-       if(pass)FillTH1(ind_CutFlowHist3, i, w);
+       if(pass){
+          FillTH1(ind_CutFlowHist3, i, w);
+          if(i==numCuts3-1){
+             lsel3 = true;
+             FillTH1(ind_CategoryHist,10.0,w);
+          }
+       }
        if(ecut(cbecuts,i))FillTH1(ind_ECutFlowHist3, i, w);
     }
 
@@ -813,7 +820,19 @@ void histset::AnalyzeEntry(myselector& s){
 
    if(bpcuts.all())FillTH1(ind_MperpHist, Mperp, w);
    if(bcuts.all())FillTH1(ind_MperpHist2, Mperp, w);
-   if(cbecuts.all())FillTH1(ind_MperpHist3, Mperp, w);
+   if(lsel3){
+      if(cbecuts.all()){
+         FillTH1(ind_MperpHist3, Mperp, w);
+         FillTH1(ind_CategoryHist,11.0,w);
+      }
+      else{
+         FillTH1(ind_CategoryHist,12.0,w);
+      }
+   }
+   else{
+       if(cbecuts.all())FillTH1(ind_CategoryHist,13.0,w);     
+   }
+   if(cbecuts.all())FillTH1(ind_CategoryHist,14.0,w);  
    
   bool lgeninfo = false;
 
