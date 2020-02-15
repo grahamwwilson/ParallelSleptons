@@ -825,6 +825,7 @@ void histset::AnalyzeEntry(myselector& s){
    if(lsel3){
       if(cbecuts.all()){
          cout << "Event Selected pre 11" << endl;
+         cout << "Event Mperp = " << Mperp << endl;
          FillTH1(ind_MperpHist3, Mperp, w);  // How is this never filled
          FillTH1(ind_CategoryHist,11.0,w);   // but this is on the WWToLNuQQ sample
          cout << "Event Selected post 11" << endl;
