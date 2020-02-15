@@ -797,6 +797,7 @@ void histset::AnalyzeEntry(myselector& s){
           FillTH1(ind_CutFlowHist3, i, w);
           if(i==numCuts3-1){
              lsel3 = true;
+             cout << "Event Selected at 10" << endl;
              FillTH1(ind_CategoryHist,10.0,w);
           }
        }
@@ -820,10 +821,13 @@ void histset::AnalyzeEntry(myselector& s){
 
    if(bpcuts.all())FillTH1(ind_MperpHist, Mperp, w);
    if(bcuts.all())FillTH1(ind_MperpHist2, Mperp, w);
+
    if(lsel3){
       if(cbecuts.all()){
-         FillTH1(ind_MperpHist3, Mperp, w);
-         FillTH1(ind_CategoryHist,11.0,w);
+         cout << "Event Selected pre 11" << endl;
+         FillTH1(ind_MperpHist3, Mperp, w);  // How is this never filled
+         FillTH1(ind_CategoryHist,11.0,w);   // but this is on the WWToLNuQQ sample
+         cout << "Event Selected post 11" << endl;
       }
       else{
          FillTH1(ind_CategoryHist,12.0,w);
