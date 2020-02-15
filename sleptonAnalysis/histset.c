@@ -85,7 +85,7 @@ histset::histset(std::string tag = ""){
 
 }
 
-void PrintCuts(const boost::dynamic_bitset<> &mybits ){
+void PrintCuts(const boost::dynamic_bitset<uint16_t> &mybits ){
 
 // Here we assume that the passed bitset is the one corresponding 
 // to our current list. 
@@ -117,7 +117,7 @@ void PrintCuts(const boost::dynamic_bitset<> &mybits ){
       cout << " -----------cutStrings---------------------" << endl;
 }
 
-void PrintCuts2(const boost::dynamic_bitset<> &mybits){
+void PrintCuts2(const boost::dynamic_bitset<uint16_t> &mybits){
 
 // Here we assume that the passed bitset is the one corresponding 
 // to our current list. 
@@ -151,12 +151,12 @@ void PrintCuts2(const boost::dynamic_bitset<> &mybits){
       cout << " -----------cutStrings2--------------------" << endl;
 }
 
-void PrintCuts3(const boost::dynamic_bitset<> &mybits){
+void PrintCuts3(const boost::dynamic_bitset<uint16_t> &mybits){
 
 // Here we assume that the passed bitset is the one corresponding 
 // to our current list. 
 /*
-    boost::dynamic_bitset<> becuts(numCuts2);
+    boost::dynamic_bitset<uint16_t> becuts(numCuts2);
     if( Nlep >= 2 )                becuts.set(kLeptons);
     if( Nidentified >= 2)          becuts.set(kID);
     if( Nisolated >= 2)            becuts.set(kISO);
@@ -203,7 +203,7 @@ void PrintCuts3(const boost::dynamic_bitset<> &mybits){
 
 
 
-bool xcut(const boost::dynamic_bitset<> &mybits, int kCut){
+bool xcut(const boost::dynamic_bitset<uint16_t> &mybits, int kCut){
 // New style with boost:dynamic_bitset.
 // Read in bitset with all the cuts that are satisfied
 // and check whether all the cuts are satisfied or the event only 
@@ -213,8 +213,8 @@ bool xcut(const boost::dynamic_bitset<> &mybits, int kCut){
 
    unsigned int num_bits = mybits.size();
 
-   boost::dynamic_bitset<> bpcuts(num_bits);
-   boost::dynamic_bitset<> bncuts(num_bits);
+   boost::dynamic_bitset<uint16_t> bpcuts(num_bits);
+   boost::dynamic_bitset<uint16_t> bncuts(num_bits);
 
    bpcuts = mybits;
    bncuts = bpcuts.flip();
@@ -230,7 +230,7 @@ bool xcut(const boost::dynamic_bitset<> &mybits, int kCut){
    return pass;
 }
 
-bool xxcut(const boost::dynamic_bitset<> &mybits, int kCut1, int kCut2){
+bool xxcut(const boost::dynamic_bitset<uint16_t> &mybits, int kCut1, int kCut2){
 // New style with boost:dynamic_bitset.
 // Read in bitset with all the cuts that are satisfied
 // and check whether the event would pass a selection with 
@@ -240,8 +240,8 @@ bool xxcut(const boost::dynamic_bitset<> &mybits, int kCut1, int kCut2){
 
    unsigned int num_bits = mybits.size();
 
-   boost::dynamic_bitset<> bpcuts(num_bits);
-   boost::dynamic_bitset<> bncuts(num_bits);
+   boost::dynamic_bitset<uint16_t> bpcuts(num_bits);
+   boost::dynamic_bitset<uint16_t> bncuts(num_bits);
 
    bpcuts = mybits;
    bncuts = bpcuts.flip();
@@ -261,15 +261,15 @@ bool xxcut(const boost::dynamic_bitset<> &mybits, int kCut1, int kCut2){
 
 
 /*
-bool ecut2(const boost::dynamic_bitset<> &mybits, int kCut){
+bool ecut2(const boost::dynamic_bitset<uint16_t> &mybits, int kCut){
 // New style with boost:dynamic_bitset.
 // Check whether all except one cut is satisfied.
 // ie. assess how many events would recovered if this cut was removed
 
    unsigned int num_bits = mybits.size();
 
-   boost::dynamic_bitset<> bpcuts(num_bits);
-   boost::dynamic_bitset<> bncuts(num_bits);
+   boost::dynamic_bitset<uint16_t> bpcuts(num_bits);
+   boost::dynamic_bitset<uint16_t> bncuts(num_bits);
 
    bpcuts = mybits;
    bncuts = mybits.flip();
@@ -281,15 +281,15 @@ bool ecut2(const boost::dynamic_bitset<> &mybits, int kCut){
 }
 */
 
-bool ecut(const boost::dynamic_bitset<> &mybits, int kCut){
+bool ecut(const boost::dynamic_bitset<uint16_t> &mybits, int kCut){
 // New style with boost:dynamic_bitset.
 // Check whether all except one cut is satisfied.
 // ie. assess how many events would recovered if this cut was removed
 
    unsigned int num_bits = mybits.size();
 
-   boost::dynamic_bitset<> bpcuts(num_bits);
-   boost::dynamic_bitset<> bncuts(num_bits);
+   boost::dynamic_bitset<uint16_t> bpcuts(num_bits);
+   boost::dynamic_bitset<uint16_t> bncuts(num_bits);
 
    bpcuts = mybits;
    bncuts = mybits;
@@ -302,13 +302,13 @@ bool ecut(const boost::dynamic_bitset<> &mybits, int kCut){
    return pass;
 }
 
-bool ecut3(const boost::dynamic_bitset<> &mybits, int kCut){
+bool ecut3(const boost::dynamic_bitset<uint16_t> &mybits, int kCut){
 // New style with boost:dynamic_bitset.
 // Check whether all except one cut is satisfied.
 // ie. assess how many events would recovered if this cut was removed
 
    unsigned int num_bits = mybits.size();
-   boost::dynamic_bitset<> bpcuts(num_bits);
+   boost::dynamic_bitset<uint16_t> bpcuts(num_bits);
    bpcuts = mybits;
    bool pass = false;
    unsigned long testvalue = (bpcuts.flip()).to_ulong();
@@ -584,7 +584,7 @@ void histset::AnalyzeEntry(myselector& s){
     enum cutNames3{kbjetISR1 = 7, kSVS1=9, kRISRH=13, 
                    numCuts3=14};
 
-    boost::dynamic_bitset<> bpcuts(numCuts);
+    boost::dynamic_bitset<uint16_t> bpcuts(numCuts);
     if( Nlep >= 2 )                bpcuts.set(kLeptons);
     if( Nidentified >= 2)          bpcuts.set(kID);
     if( Nisolated >= 2)            bpcuts.set(kISO);
@@ -597,7 +597,7 @@ void histset::AnalyzeEntry(myselector& s){
     if( PTISR0 > 200.0 )           bpcuts.set(kPTISR0);
     if( RISR0 > 0.95 )             bpcuts.set(kRISR0);
 
-    boost::dynamic_bitset<> bcuts(numCuts2);
+    boost::dynamic_bitset<uint16_t> bcuts(numCuts2);
     if( Nlep >= 2 )                bcuts.set(kLeptons);
     if( Nidentified >= 2)          bcuts.set(kID);
     if( Nisolated >= 2)            bcuts.set(kISO);
@@ -617,7 +617,7 @@ void histset::AnalyzeEntry(myselector& s){
 
 // https://www.geeksforgeeks.org/c-boostdynamic_bitset-class-with-examples/
 
-    boost::dynamic_bitset<> becuts(numCuts3);
+    boost::dynamic_bitset<uint16_t> becuts(numCuts3);
     if( Nlep >= 2 )                becuts.set(kLeptons);
     if( Nidentified >= 2)          becuts.set(kID);
     if( Nisolated >= 2)            becuts.set(kISO);
