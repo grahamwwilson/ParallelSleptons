@@ -473,6 +473,10 @@ void histset::FillTH2(int index, double x, double y){
 }
 void histset::WriteHist(std::string outputfilename, std::string TFileOption){
 
+    auto tid = ROOT::Internal::TThreadedObjectUtils::GetTThreadedObjectIndex();
+
+    cout << "WriteHist tid " << tid << endl;
+
 	TFile* outfile = new TFile(outputfilename.c_str(),TFileOption.c_str());
 
 	for(int i=0; i<numTH1Hist; i++){
@@ -513,7 +517,7 @@ void histset::AnalyzeEntry(myselector& s){
     bool lprint = false;
 
 //    unsigned int tid = ROOT::Internal::TThreadedObjectUtils::GetTThreadedObjectIndex();
-//    auto nseen = ROOT::Internal::TThreadedObjectUtils::GetTThreadedObjectIndex();
+    auto tid = ROOT::Internal::TThreadedObjectUtils::GetTThreadedObjectIndex();
 //    cout << "Thread ID? " << nseen << endl;
 
 /*
@@ -825,7 +829,8 @@ void histset::AnalyzeEntry(myselector& s){
    if(lsel3){
       if(cbecuts.all()){
          cout << "Event Selected pre 11" << endl;
-         cout << "Event Mperp = " << Mperp << endl;
+         cout << "Event Mperp = " << Mperp << " wt = " << w << endl;
+         cout << "Event tid = " << tid << " " << tid%16 << endl;
          FillTH1(ind_MperpHist3, Mperp, w);  // How is this never filled
          FillTH1(ind_CategoryHist,11.0,w);   // but this is on the WWToLNuQQ sample
          cout << "Event Selected post 11" << endl;
