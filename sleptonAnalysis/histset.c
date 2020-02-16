@@ -480,38 +480,38 @@ void histset::WriteHist(std::string outputfilename, std::string TFileOption){
 
 	TFile* outfile = new TFile(outputfilename.c_str(),TFileOption.c_str());
 
+//REMOVE ZERO ENTRY CHECKS AS THEY CAUSE NON-ZERO PARTS TO BE OMITTED
 	for(int i=0; i<numTH1Hist; i++){
 		//do a check for entries, merge isnt safe on 0 entry histograms
 		auto hptr = TH1Manager.at(i)->Get();		
         cout << "Histogram " << i << endl;
         hptr->Print();
 //		if(hptr->GetEntries() > 0){
-			auto histmerged = TH1Manager.at(i)->Merge();
-			TH1D* h = (TH1D*) histmerged->Clone();
-			std::string hname(h->GetName());
-			outfile->WriteObject(h, (_tag+hname).c_str() );
+	    auto histmerged = TH1Manager.at(i)->Merge();
+		TH1D* h = (TH1D*) histmerged->Clone();
+		std::string hname(h->GetName());
+		outfile->WriteObject(h, (_tag+hname).c_str() );
 /*		}
 		else{
 			auto h = TH1Manager.at(i)->Get()->Clone();
 			std::string hname(h->GetName());
 			outfile->WriteObject(h, (_tag+hname).c_str() );
-		}
-*/
+		} */
 	}
 
 	for(int i=0; i<numTH2Hist; i++){
 		auto hptr = TH2Manager.at(i)->Get();
-		if(hptr->GetEntries() > 0){
+//		if(hptr->GetEntries() > 0){
 			auto histmerged = TH2Manager.at(i)->Merge();
 			TH2D* h = (TH2D*) histmerged->Clone();
 			std::string hname(h->GetName());
 			outfile->WriteObject(h,(_tag+hname).c_str() );
-		}
+/*		}
 		else{
 			auto h = TH2Manager.at(i)->Get()->Clone();
 			std:;string hname(h->GetName());
 			outfile->WriteObject(h, (_tag+hname).c_str() );
-		}
+		} */
 	}
 	outfile->Close();	
 
