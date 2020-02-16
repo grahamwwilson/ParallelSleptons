@@ -482,6 +482,8 @@ void histset::WriteHist(std::string outputfilename, std::string TFileOption){
 	for(int i=0; i<numTH1Hist; i++){
 		//do a check for entries, merge isnt safe on 0 entry histograms
 		auto hptr = TH1Manager.at(i)->Get();		
+        cout << "Histogram " << i << endl;
+        hptr->Print();
 		if(hptr->GetEntries() > 0){
 			auto histmerged = TH1Manager.at(i)->Merge();
 			TH1D* h = (TH1D*) histmerged->Clone();
