@@ -37,7 +37,7 @@ class histset{
                        ind_NjetHist, ind_PTISR0Hist, ind_PTISR1Hist, 
                        ind_RISR1Hist, 
                        ind_NlepS1Hist, ind_mNlepabHist, ind_MaxSIP3DHist,
-                       ind_WeightHist, ind_MCutFlowHist2, ind_IsoHist,
+                       ind_WeightHist, ind_MCutFlowHist2, ind_IsoHist, ind_NullHist,
                        numTH1Hist};
        enum th2d_index{numTH2Hist};
 	
@@ -440,6 +440,7 @@ void histset::init(){
 	TH1Manager.at(ind_MaxSIP3DHist) = new MyTH1D("MaxSIP3DHist", "max(SIP3D); max(SIP3D); Weighted events", 50, 0.0, 10.0);
 	TH1Manager.at(ind_WeightHist) = new MyTH1D("WeightHist", "Weight; Weight; Weighted events", 2000, -1.0, 1.0);
 	TH1Manager.at(ind_IsoHist) = new MyTH1D("IsoHist", "Isolation; Isolation (GeV); Weighted events", 40, 0.0, 20.0);
+	TH1Manager.at(ind_NullHist) = new MyTH1D("NullHist", "Control for no entries; Variable; Weighted events", 40, 0.0, 20.0);
 
 //                       ind_NlepS1Hist, ind_mNlepabHist,
 }
