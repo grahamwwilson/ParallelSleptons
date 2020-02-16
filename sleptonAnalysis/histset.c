@@ -484,17 +484,18 @@ void histset::WriteHist(std::string outputfilename, std::string TFileOption){
 		auto hptr = TH1Manager.at(i)->Get();		
         cout << "Histogram " << i << endl;
         hptr->Print();
-		if(hptr->GetEntries() > 0){
+//		if(hptr->GetEntries() > 0){
 			auto histmerged = TH1Manager.at(i)->Merge();
 			TH1D* h = (TH1D*) histmerged->Clone();
 			std::string hname(h->GetName());
 			outfile->WriteObject(h, (_tag+hname).c_str() );
-		}
+/*		}
 		else{
 			auto h = TH1Manager.at(i)->Get()->Clone();
 			std::string hname(h->GetName());
 			outfile->WriteObject(h, (_tag+hname).c_str() );
 		}
+*/
 	}
 
 	for(int i=0; i<numTH2Hist; i++){
