@@ -486,32 +486,18 @@ void histset::WriteHist(std::string outputfilename, std::string TFileOption){
 		auto hptr = TH1Manager.at(i)->Get();		
         cout << "Histogram " << i << endl;
         hptr->Print();
-//		if(hptr->GetEntries() > 0){
 	    auto histmerged = TH1Manager.at(i)->Merge();
 		TH1D* h = (TH1D*) histmerged->Clone();
 		std::string hname(h->GetName());
 		outfile->WriteObject(h, (_tag+hname).c_str() );
-/*		}
-		else{
-			auto h = TH1Manager.at(i)->Get()->Clone();
-			std::string hname(h->GetName());
-			outfile->WriteObject(h, (_tag+hname).c_str() );
-		} */
 	}
 
 	for(int i=0; i<numTH2Hist; i++){
 		auto hptr = TH2Manager.at(i)->Get();
-//		if(hptr->GetEntries() > 0){
 			auto histmerged = TH2Manager.at(i)->Merge();
 			TH2D* h = (TH2D*) histmerged->Clone();
 			std::string hname(h->GetName());
 			outfile->WriteObject(h,(_tag+hname).c_str() );
-/*		}
-		else{
-			auto h = TH2Manager.at(i)->Get()->Clone();
-			std:;string hname(h->GetName());
-			outfile->WriteObject(h, (_tag+hname).c_str() );
-		} */
 	}
 	outfile->Close();	
 
@@ -519,16 +505,13 @@ void histset::WriteHist(std::string outputfilename, std::string TFileOption){
 void histset::AnalyzeEntry(myselector& s){
    	
     bool lprint = false;
-
-//    unsigned int tid = ROOT::Internal::TThreadedObjectUtils::GetTThreadedObjectIndex();
     auto tid = ROOT::Internal::TThreadedObjectUtils::GetTThreadedObjectIndex();
-//    cout << "Thread ID? " << nseen << endl;
 
 /*
-    if(nseen==1)cout << "Saw tag " << _tag << endl;
+    if(tid==1)cout << "Saw tag " << _tag << endl;
     int MP,MC;
     bool SignalSample = GetMasses(_tag, &MP, &MC);
-    if(nseen==1){
+    if(tid==1){
        if(SignalSample){
           cout << "Signal: MP = " << MP << endl;
           cout << "Signal: MC = " << MC << endl;
@@ -829,8 +812,9 @@ void histset::AnalyzeEntry(myselector& s){
 
    if(bpcuts.all())FillTH1(ind_MperpHist, Mperp, w);
    if(bcuts.all())FillTH1(ind_MperpHist2, Mperp, w);
+   if(becuts.all())FillTH1(ind_MperpHist3, Mperp, w);
 
-   if(lsel3){
+/*   if(lsel3){
       if(cbecuts.all()){
          cout << "Event Selected pre 11" << endl;
          cout << "Event Mperp = " << Mperp << " wt = " << w << endl;
@@ -847,6 +831,7 @@ void histset::AnalyzeEntry(myselector& s){
        if(cbecuts.all())FillTH1(ind_CategoryHist,13.0,w);     
    }
    if(cbecuts.all())FillTH1(ind_CategoryHist,14.0,w);  
+*/
    
   bool lgeninfo = false;
 
